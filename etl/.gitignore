@@ -1,0 +1,10 @@
+# Environment variables
+.env
+
+# Raw & processed data
+data/
+
+# Python cache & tests
+__pycache__/
+*.pyc
+.pytest_cache/
