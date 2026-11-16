@@ -177,35 +177,39 @@ def verify_counts(conn, expected_counts):
                 all_match = False
     return all_match
 
-def main():
-    print("Connecting to database...")
+def run_load_raw():
+    """Executes the raw data ingestion pipeline and returns summary stats."""
     with get_connection() as conn:
-        print("Initializing raw schema and tables...")
         init_raw_schema(conn)
-
         expected_counts = {}
 
         # 1. Load Root Files
-        print("Loading root metadata CSVs...")
         for tbl in ["course_details", "users_courses"]:
             rows = load_root_csv(conn, tbl)
             expected_counts[tbl] = rows
-            print(f"  Loaded raw.{tbl}: {rows:,} rows")
 
         # 2. Load Participant Files
-        print("Loading participant CSVs...")
         for tbl in ["daily_questions", "activity_level", "hrv", "oxygen", "sleep", "steps", "stress"]:
             rows = load_participant_csv(conn, tbl)
             expected_counts[tbl] = rows
-            print(f"  Loaded raw.{tbl}: {rows:,} rows")
 
-        # 3. Verification
         success = verify_counts(conn, expected_counts)
-        if success:
-            print("\nETL Raw Layer loaded and verified successfully!")
-        else:
-            print("\nWARNING: Row count verification failed!")
-            sys.exit(1)
+        if not success:
+            raise RuntimeError("Raw table row count verification failed!")
+
+    total_rows = sum(expected_counts.values())
+    return {
+        "status": "SUCCESS",
+        "counts": expected_counts,
+        "total_rows": total_rows
+    }
+
+
+def main():
+    print("Connecting to database and running raw loader...")
+    stats = run_load_raw()
+    print(f"\nRaw ingestion finished: {stats['total_rows']:,} rows loaded across {len(stats['counts'])} tables.")
+
 
 if __name__ == "__main__":
     main()

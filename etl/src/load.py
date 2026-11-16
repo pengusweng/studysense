@@ -233,9 +233,180 @@ def stage_and_upsert_table(
     return total_upserted
 
 
-def load_pipeline() -> dict:
+def _load_clean_facts(conn, summary: dict):
+    """Transforms and loads dimensions and fact tables into clean schema."""
+    # 1. Courses
+    logger.info("--> Loading clean.courses...")
+    df_raw_courses = pd.read_sql('SELECT * FROM raw.course_details;', conn)
+    df_clean_courses = transform_course_details(df_raw_courses)
+    course_cols = [
+        "course_id", "is_undergraduate", "start_date", "end_date", "semester",
+        "meets_monday", "meets_tuesday", "meets_wednesday", "meets_thursday", "meets_friday",
+        "start_time", "end_time"
+    ]
+    upserted_courses = stage_and_upsert_table(
+        conn, df_clean_courses, "courses", course_cols, pk_columns=["course_id"],
+        on_conflict_action="DO UPDATE"
+    )
+    summary["tables"]["courses"] = {"read": len(df_raw_courses), "loaded": len(df_clean_courses), "upserted": upserted_courses, "rejected": 0}
+    logger.info(f"Loaded courses: {len(df_clean_courses)} rows (upserted/updated: {upserted_courses})")
+
+    # 2. Participants
+    logger.info("--> Loading clean.participants...")
+    df_raw_users = pd.read_sql('SELECT * FROM raw.users_courses;', conn)
+    df_clean_participants = transform_users_courses(df_raw_users)
+    part_cols = ["participant_id", "university_id", "course_id", "has_wearable_data"]
+    upserted_parts = stage_and_upsert_table(
+        conn, df_clean_participants, "participants", part_cols, pk_columns=["participant_id"],
+        on_conflict_action="DO UPDATE"
+    )
+    summary["tables"]["participants"] = {"read": len(df_raw_users), "loaded": len(df_clean_participants), "upserted": upserted_parts, "rejected": 0}
+    logger.info(f"Loaded participants: {len(df_clean_participants)} rows (upserted: {upserted_parts})")
+
+    # 3. Daily Questions
+    logger.info("--> Loading clean.daily_questions...")
+    df_raw_dq = pd.read_sql('SELECT * FROM raw.daily_questions;', conn)
+    df_clean_dq, dq_stats = transform_daily_questions(df_raw_dq)
+    dq_cols = [
+        "participant_id", "scheduled_at", "sent_at", "start_at", "stop_at",
+        "original_sent_at", "is_resent", "timezone_offset_seconds", "delta_utc",
+        "stress_level", "anxiety_level"
+    ]
+    upserted_dq = stage_and_upsert_table(
+        conn, df_clean_dq, "daily_questions", dq_cols, pk_columns=["participant_id", "scheduled_at"],
+        on_conflict_action="DO UPDATE"
+    )
+    summary["tables"]["daily_questions"] = {"read": len(df_raw_dq), "loaded": len(df_clean_dq), "upserted": upserted_dq, "rejected": 0}
+    logger.info(f"Loaded daily_questions: {len(df_clean_dq)} rows (resent: {dq_stats['resent_count']}, clock-skew: {dq_stats['clock_skew_count']})")
+
+    # 4. Stress
+    logger.info("--> Loading clean.stress...")
+    df_raw_stress = pd.read_sql('SELECT * FROM raw.stress;', conn)
+    df_clean_stress, dropped_stress, nullified_count = transform_stress(df_raw_stress)
+    
+    stress_rejections = []
+    if not dropped_stress.empty:
+        for _, r in dropped_stress.iterrows():
+            stress_rejections.append({
+                "source_table": "stress",
+                "participant_id": int(r["participant_id"]),
+                "record_identifier": f"{r['measurement_date']} (older updated_at: {r['updated_at']})",
+                "rejection_reason": "Superseded duplicate measurement: older updated_at replaced by later recalculation",
+                "raw_payload": {
+                    "participant_id": int(r["participant_id"]),
+                    "measurement_date": str(r["measurement_date"]),
+                    "updated_at": str(r["updated_at"]),
+                    "stress_score": None if pd.isna(r["stress_score"]) else int(r["stress_score"]),
+                    "calculation_failed": bool(r["calculation_failed"])
+                }
+            })
+        record_rejected_records(conn, stress_rejections)
+
+    stress_cols = ["participant_id", "measurement_date", "updated_at", "stress_score", "calculation_failed"]
+    upserted_stress = stage_and_upsert_table(
+        conn,
+        df_clean_stress,
+        "stress",
+        stress_cols,
+        pk_columns=["participant_id", "measurement_date"],
+        on_conflict_action="DO UPDATE",
+        update_condition='clean.stress.updated_at <= EXCLUDED.updated_at'
+    )
+    summary["tables"]["stress"] = {
+        "read": len(df_raw_stress),
+        "loaded": len(df_clean_stress),
+        "upserted": upserted_stress,
+        "rejected": len(stress_rejections)
+    }
+    summary["total_rejected"] += len(stress_rejections)
+    logger.info(f"Loaded stress: {len(df_clean_stress)} rows (rejected superseded: {len(stress_rejections)}, nullified failed scores: {nullified_count})")
+
+    # 5. Sleep
+    logger.info("--> Loading clean.sleep...")
+    df_raw_sleep = pd.read_sql('SELECT * FROM raw.sleep;', conn)
+    df_clean_sleep = transform_sleep(df_raw_sleep)
+    sleep_cols = ["participant_id", "timestamp", "overall_score", "deep_sleep_minutes"]
+    upserted_sleep = stage_and_upsert_table(
+        conn, df_clean_sleep, "sleep", sleep_cols, pk_columns=["participant_id", "timestamp"],
+        on_conflict_action="DO NOTHING"
+    )
+    summary["tables"]["sleep"] = {"read": len(df_raw_sleep), "loaded": len(df_clean_sleep), "upserted": upserted_sleep, "rejected": 0}
+    logger.info(f"Loaded sleep: {len(df_clean_sleep)} rows")
+
+    # 6. Oxygen
+    logger.info("--> Loading clean.oxygen...")
+    df_raw_oxygen = pd.read_sql('SELECT * FROM raw.oxygen;', conn)
+    df_clean_oxygen, oxy_artifact_count = transform_oxygen(df_raw_oxygen)
+    oxygen_cols = ["participant_id", "timestamp", "spo2_percentage", "is_probable_artifact"]
+    upserted_oxygen = stage_and_upsert_table(
+        conn, df_clean_oxygen, "oxygen", oxygen_cols, pk_columns=["participant_id", "timestamp"],
+        on_conflict_action="DO NOTHING"
+    )
+    summary["tables"]["oxygen"] = {"read": len(df_raw_oxygen), "loaded": len(df_clean_oxygen), "upserted": upserted_oxygen, "rejected": 0}
+    logger.info(f"Loaded oxygen: {len(df_clean_oxygen)} rows (flagged artifacts: {oxy_artifact_count:,})")
+
+    # 7. Steps
+    logger.info("--> Loading clean.steps...")
+    df_raw_steps = pd.read_sql('SELECT * FROM raw.steps;', conn)
+    df_clean_steps, steps_high_count = transform_steps(df_raw_steps)
+    steps_cols = ["participant_id", "timestamp", "step_count", "is_high_intensity"]
+    upserted_steps = stage_and_upsert_table(
+        conn, df_clean_steps, "steps", steps_cols, pk_columns=["participant_id", "timestamp"],
+        on_conflict_action="DO NOTHING"
+    )
+    summary["tables"]["steps"] = {"read": len(df_raw_steps), "loaded": len(df_clean_steps), "upserted": upserted_steps, "rejected": 0}
+    logger.info(f"Loaded steps: {len(df_clean_steps)} rows (flagged high intensity: {steps_high_count:,})")
+
+    # 8. Activity Level
+    logger.info("--> Loading clean.activity_level...")
+    df_raw_act = pd.read_sql('SELECT * FROM raw.activity_level;', conn)
+    df_clean_act = transform_activity_level(df_raw_act)
+    act_cols = ["participant_id", "timestamp", "activity_level"]
+    upserted_act = stage_and_upsert_table(
+        conn, df_clean_act, "activity_level", act_cols, pk_columns=["participant_id", "timestamp"],
+        on_conflict_action="DO NOTHING"
+    )
+    summary["tables"]["activity_level"] = {"read": len(df_raw_act), "loaded": len(df_clean_act), "upserted": upserted_act, "rejected": 0}
+    logger.info(f"Loaded activity_level: {len(df_clean_act)} rows")
+
+    # 9. HRV
+    logger.info("--> Loading clean.hrv...")
+    df_raw_hrv = pd.read_sql('SELECT * FROM raw.hrv;', conn)
+    df_clean_hrv, hrv_stats = transform_hrv(df_raw_hrv)
+    hrv_cols = [
+        "participant_id", "timestamp", "rmssd", "coverage", "low_frequency", "high_frequency",
+        "is_valid_rmssd", "is_coverage_overcount"
+    ]
+    upserted_hrv = stage_and_upsert_table(
+        conn, df_clean_hrv, "hrv", hrv_cols, pk_columns=["participant_id", "timestamp"],
+        on_conflict_action="DO NOTHING"
+    )
+    summary["tables"]["hrv"] = {"read": len(df_raw_hrv), "loaded": len(df_clean_hrv), "upserted": upserted_hrv, "rejected": 0}
+    logger.info(f"Loaded hrv: {len(df_clean_hrv)} rows (zero RMSSD flagged: {hrv_stats['zero_rmssd_count']}, overcounts: {hrv_stats['coverage_overcount']})")
+
+
+def _load_daily_alignment(conn, summary: dict):
+    """Executes SQL alignment to refresh clean.daily_features and clean.v_ml_ready_daily_features."""
+    logger.info("--> Refreshing clean.daily_features (participant-day alignment)...")
+    with open(SQL_DIR / "002_daily_alignment.sql", "r", encoding="utf-8") as f:
+        align_sql = f.read()
+    with conn.cursor() as cur:
+        cur.execute(align_sql)
+        cur.execute("SELECT COUNT(*), COUNT(*) FILTER (WHERE has_both_modalities = TRUE) FROM clean.daily_features;")
+        total_days, ml_ready_days = cur.fetchone()
+    conn.commit()
+    summary["tables"]["daily_features"] = {"total_days": total_days, "ml_ready_days": ml_ready_days}
+    logger.info(f"Loaded clean.daily_features: {total_days:,} participant-days (both modalities / ML-ready: {ml_ready_days:,})")
+
+
+def load_pipeline(
+    include_clean: bool = True,
+    include_align: bool = True,
+    full_refresh: bool = False
+) -> dict:
     """
-    Executes the full staged load pipeline from raw into clean schema.
+    Executes the staged load pipeline from raw into clean schema.
+    Supports selective clean loading, alignment refresh, and full refresh.
     Returns audit summary statistics.
     """
     summary = {
@@ -247,187 +418,23 @@ def load_pipeline() -> dict:
     with get_connection() as conn:
         init_schemas(conn)
 
-        # ---------------------------------------------------------------------
-        # 1. Dimension: clean.courses
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.courses...")
-        df_raw_courses = pd.read_sql('SELECT * FROM raw.course_details;', conn)
-        df_clean_courses = transform_course_details(df_raw_courses)
-        course_cols = [
-            "course_id", "is_undergraduate", "start_date", "end_date", "semester",
-            "meets_monday", "meets_tuesday", "meets_wednesday", "meets_thursday", "meets_friday",
-            "start_time", "end_time"
-        ]
-        upserted_courses = stage_and_upsert_table(
-            conn, df_clean_courses, "courses", course_cols, pk_columns=["course_id"],
-            on_conflict_action="DO UPDATE"
-        )
-        summary["tables"]["courses"] = {"read": len(df_raw_courses), "loaded": len(df_clean_courses), "upserted": upserted_courses, "rejected": 0}
-        logger.info(f"Loaded courses: {len(df_clean_courses)} rows (upserted/updated: {upserted_courses})")
+        if full_refresh:
+            logger.info("Executing full refresh: truncating clean tables...")
+            with conn.cursor() as cur:
+                cur.execute("""
+                    TRUNCATE TABLE 
+                        clean.daily_features, clean.stress, clean.sleep, clean.oxygen, 
+                        clean.steps, clean.activity_level, clean.hrv, clean.daily_questions, 
+                        clean.participants, clean.courses, clean.rejected_records 
+                    CASCADE;
+                """)
+            conn.commit()
 
-        # ---------------------------------------------------------------------
-        # 2. Dimension: clean.participants
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.participants...")
-        df_raw_users = pd.read_sql('SELECT * FROM raw.users_courses;', conn)
-        df_clean_participants = transform_users_courses(df_raw_users)
-        part_cols = ["participant_id", "university_id", "course_id", "has_wearable_data"]
-        upserted_parts = stage_and_upsert_table(
-            conn, df_clean_participants, "participants", part_cols, pk_columns=["participant_id"],
-            on_conflict_action="DO UPDATE"
-        )
-        summary["tables"]["participants"] = {"read": len(df_raw_users), "loaded": len(df_clean_participants), "upserted": upserted_parts, "rejected": 0}
-        logger.info(f"Loaded participants: {len(df_clean_participants)} rows (upserted: {upserted_parts})")
+        if include_clean:
+            _load_clean_facts(conn, summary)
 
-        # ---------------------------------------------------------------------
-        # 3. Daily Fact: clean.daily_questions
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.daily_questions...")
-        df_raw_dq = pd.read_sql('SELECT * FROM raw.daily_questions;', conn)
-        df_clean_dq, dq_stats = transform_daily_questions(df_raw_dq)
-        dq_cols = [
-            "participant_id", "scheduled_at", "sent_at", "start_at", "stop_at",
-            "original_sent_at", "is_resent", "timezone_offset_seconds", "delta_utc",
-            "stress_level", "anxiety_level"
-        ]
-        upserted_dq = stage_and_upsert_table(
-            conn, df_clean_dq, "daily_questions", dq_cols, pk_columns=["participant_id", "scheduled_at"],
-            on_conflict_action="DO UPDATE"
-        )
-        summary["tables"]["daily_questions"] = {"read": len(df_raw_dq), "loaded": len(df_clean_dq), "upserted": upserted_dq, "rejected": 0}
-        logger.info(f"Loaded daily_questions: {len(df_clean_dq)} rows (resent: {dq_stats['resent_count']}, clock-skew: {dq_stats['clock_skew_count']})")
-
-        # ---------------------------------------------------------------------
-        # 4. Daily Fact: clean.stress
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.stress...")
-        df_raw_stress = pd.read_sql('SELECT * FROM raw.stress;', conn)
-        df_clean_stress, dropped_stress, nullified_count = transform_stress(df_raw_stress)
-        
-        # Audit and persist rejected superseded records
-        stress_rejections = []
-        if not dropped_stress.empty:
-            for _, r in dropped_stress.iterrows():
-                stress_rejections.append({
-                    "source_table": "stress",
-                    "participant_id": int(r["participant_id"]),
-                    "record_identifier": f"{r['measurement_date']} (older updated_at: {r['updated_at']})",
-                    "rejection_reason": "Superseded duplicate measurement: older updated_at replaced by later recalculation",
-                    "raw_payload": {
-                        "participant_id": int(r["participant_id"]),
-                        "measurement_date": str(r["measurement_date"]),
-                        "updated_at": str(r["updated_at"]),
-                        "stress_score": None if pd.isna(r["stress_score"]) else int(r["stress_score"]),
-                        "calculation_failed": bool(r["calculation_failed"])
-                    }
-                })
-            record_rejected_records(conn, stress_rejections)
-
-        stress_cols = ["participant_id", "measurement_date", "updated_at", "stress_score", "calculation_failed"]
-        upserted_stress = stage_and_upsert_table(
-            conn,
-            df_clean_stress,
-            "stress",
-            stress_cols,
-            pk_columns=["participant_id", "measurement_date"],
-            on_conflict_action="DO UPDATE",
-            update_condition='clean.stress.updated_at <= EXCLUDED.updated_at'
-        )
-        summary["tables"]["stress"] = {
-            "read": len(df_raw_stress),
-            "loaded": len(df_clean_stress),
-            "upserted": upserted_stress,
-            "rejected": len(stress_rejections)
-        }
-        summary["total_rejected"] += len(stress_rejections)
-        logger.info(f"Loaded stress: {len(df_clean_stress)} rows (rejected superseded: {len(stress_rejections)}, nullified failed scores: {nullified_count})")
-
-        # ---------------------------------------------------------------------
-        # 5. Daily Fact: clean.sleep
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.sleep...")
-        df_raw_sleep = pd.read_sql('SELECT * FROM raw.sleep;', conn)
-        df_clean_sleep = transform_sleep(df_raw_sleep)
-        sleep_cols = ["participant_id", "timestamp", "overall_score", "deep_sleep_minutes"]
-        upserted_sleep = stage_and_upsert_table(
-            conn, df_clean_sleep, "sleep", sleep_cols, pk_columns=["participant_id", "timestamp"],
-            on_conflict_action="DO NOTHING"
-        )
-        summary["tables"]["sleep"] = {"read": len(df_raw_sleep), "loaded": len(df_clean_sleep), "upserted": upserted_sleep, "rejected": 0}
-        logger.info(f"Loaded sleep: {len(df_clean_sleep)} rows")
-
-        # ---------------------------------------------------------------------
-        # 6. Daily Fact: clean.oxygen
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.oxygen...")
-        df_raw_oxygen = pd.read_sql('SELECT * FROM raw.oxygen;', conn)
-        df_clean_oxygen, oxy_artifact_count = transform_oxygen(df_raw_oxygen)
-        oxygen_cols = ["participant_id", "timestamp", "spo2_percentage", "is_probable_artifact"]
-        upserted_oxygen = stage_and_upsert_table(
-            conn, df_clean_oxygen, "oxygen", oxygen_cols, pk_columns=["participant_id", "timestamp"],
-            on_conflict_action="DO NOTHING"
-        )
-        summary["tables"]["oxygen"] = {"read": len(df_raw_oxygen), "loaded": len(df_clean_oxygen), "upserted": upserted_oxygen, "rejected": 0}
-        logger.info(f"Loaded oxygen: {len(df_clean_oxygen)} rows (flagged artifacts: {oxy_artifact_count:,})")
-
-        # ---------------------------------------------------------------------
-        # 7. Daily Fact: clean.steps
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.steps...")
-        df_raw_steps = pd.read_sql('SELECT * FROM raw.steps;', conn)
-        df_clean_steps, steps_high_count = transform_steps(df_raw_steps)
-        steps_cols = ["participant_id", "timestamp", "step_count", "is_high_intensity"]
-        upserted_steps = stage_and_upsert_table(
-            conn, df_clean_steps, "steps", steps_cols, pk_columns=["participant_id", "timestamp"],
-            on_conflict_action="DO NOTHING"
-        )
-        summary["tables"]["steps"] = {"read": len(df_raw_steps), "loaded": len(df_clean_steps), "upserted": upserted_steps, "rejected": 0}
-        logger.info(f"Loaded steps: {len(df_clean_steps)} rows (flagged high intensity: {steps_high_count:,})")
-
-        # ---------------------------------------------------------------------
-        # 8. Daily Fact: clean.activity_level
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.activity_level...")
-        df_raw_act = pd.read_sql('SELECT * FROM raw.activity_level;', conn)
-        df_clean_act = transform_activity_level(df_raw_act)
-        act_cols = ["participant_id", "timestamp", "activity_level"]
-        upserted_act = stage_and_upsert_table(
-            conn, df_clean_act, "activity_level", act_cols, pk_columns=["participant_id", "timestamp"],
-            on_conflict_action="DO NOTHING"
-        )
-        summary["tables"]["activity_level"] = {"read": len(df_raw_act), "loaded": len(df_clean_act), "upserted": upserted_act, "rejected": 0}
-        logger.info(f"Loaded activity_level: {len(df_clean_act)} rows")
-
-        # ---------------------------------------------------------------------
-        # 9. Daily Fact: clean.hrv
-        # ---------------------------------------------------------------------
-        logger.info("--> Loading clean.hrv...")
-        df_raw_hrv = pd.read_sql('SELECT * FROM raw.hrv;', conn)
-        df_clean_hrv, hrv_stats = transform_hrv(df_raw_hrv)
-        hrv_cols = [
-            "participant_id", "timestamp", "rmssd", "coverage", "low_frequency", "high_frequency",
-            "is_valid_rmssd", "is_coverage_overcount"
-        ]
-        upserted_hrv = stage_and_upsert_table(
-            conn, df_clean_hrv, "hrv", hrv_cols, pk_columns=["participant_id", "timestamp"],
-            on_conflict_action="DO NOTHING"
-        )
-        summary["tables"]["hrv"] = {"read": len(df_raw_hrv), "loaded": len(df_clean_hrv), "upserted": upserted_hrv, "rejected": 0}
-        logger.info(f"Loaded hrv: {len(df_clean_hrv)} rows (zero RMSSD flagged: {hrv_stats['zero_rmssd_count']}, overcounts: {hrv_stats['coverage_overcount']})")
-
-        # ---------------------------------------------------------------------
-        # 10. Temporal Alignment: clean.daily_features
-        # ---------------------------------------------------------------------
-        logger.info("--> Refreshing clean.daily_features (participant-day alignment)...")
-        with open(SQL_DIR / "002_daily_alignment.sql", "r", encoding="utf-8") as f:
-            align_sql = f.read()
-        with conn.cursor() as cur:
-            cur.execute(align_sql)
-            cur.execute("SELECT COUNT(*), COUNT(*) FILTER (WHERE has_both_modalities = TRUE) FROM clean.daily_features;")
-            total_days, ml_ready_days = cur.fetchone()
-        conn.commit()
-        summary["tables"]["daily_features"] = {"total_days": total_days, "ml_ready_days": ml_ready_days}
-        logger.info(f"Loaded clean.daily_features: {total_days:,} participant-days (both modalities / ML-ready: {ml_ready_days:,})")
+        if include_align:
+            _load_daily_alignment(conn, summary)
 
     # Write Markdown audit report
     write_audit_report(summary)
