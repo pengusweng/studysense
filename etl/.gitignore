@@ -1,4 +1,6 @@
-# Environment variables
+# Virtual environment
+.venv/
+
 .env
 
 # Raw & processed data
