@@ -262,3 +262,14 @@ ON CONFLICT (participant_id, date) DO UPDATE SET
     has_sensor_data = EXCLUDED.has_sensor_data,
     has_questionnaire_data = EXCLUDED.has_questionnaire_data,
     has_both_modalities = EXCLUDED.has_both_modalities;
+
+-- ----------------------------------------------------------------------------
+-- ML-Ready View: clean.v_ml_ready_daily_features
+-- Filtered view providing only observations where both wearable sensors and
+-- ground-truth questionnaire labels are present for model training.
+-- ----------------------------------------------------------------------------
+CREATE OR REPLACE VIEW clean.v_ml_ready_daily_features AS
+SELECT *
+FROM clean.daily_features
+WHERE has_both_modalities = TRUE;
+
