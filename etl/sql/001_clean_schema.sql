@@ -155,12 +155,6 @@ CREATE TABLE IF NOT EXISTS clean.stress (
 );
 
 -- ----------------------------------------------------------------------------
--- Indexes for ML team query patterns (time-range filtering and participant slices)
+-- Notes: Primary keys above (pk_*) automatically create btree indexes on 
+-- (participant_id, timestamp/date), serving ML team filtering and slice queries.
 -- ----------------------------------------------------------------------------
-CREATE INDEX IF NOT EXISTS idx_daily_questions_participant_time ON clean.daily_questions (participant_id, scheduled_at);
-CREATE INDEX IF NOT EXISTS idx_activity_level_participant_time ON clean.activity_level (participant_id, timestamp);
-CREATE INDEX IF NOT EXISTS idx_steps_participant_time ON clean.steps (participant_id, timestamp);
-CREATE INDEX IF NOT EXISTS idx_hrv_participant_time ON clean.hrv (participant_id, timestamp);
-CREATE INDEX IF NOT EXISTS idx_oxygen_participant_time ON clean.oxygen (participant_id, timestamp);
-CREATE INDEX IF NOT EXISTS idx_sleep_participant_time ON clean.sleep (participant_id, timestamp);
-CREATE INDEX IF NOT EXISTS idx_stress_participant_date ON clean.stress (participant_id, measurement_date);

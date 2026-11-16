@@ -2,11 +2,90 @@
 -- SQL Script: 002_daily_alignment.sql
 -- Clean Layer: Temporal Alignment Table (Unit of Analysis: participant-day)
 -- Aggregates multi-modal sensor streams and joins daily questionnaire responses.
+-- Fully idempotent with CREATE TABLE IF NOT EXISTS and ON CONFLICT DO UPDATE.
 -- ============================================================================
 
-DROP TABLE IF EXISTS clean.daily_features CASCADE;
+CREATE TABLE IF NOT EXISTS clean.daily_features (
+    participant_id SMALLINT NOT NULL REFERENCES clean.participants(participant_id),
+    date DATE NOT NULL,
+    total_steps INTEGER,
+    mean_steps_per_min NUMERIC(6, 2),
+    max_steps_per_min INTEGER,
+    active_minutes INTEGER,
+    sedentary_minutes INTEGER,
+    lightly_active_minutes INTEGER,
+    moderately_active_minutes INTEGER,
+    very_active_minutes INTEGER,
+    mean_rmssd NUMERIC(8, 3),
+    min_rmssd NUMERIC(8, 3),
+    max_rmssd NUMERIC(8, 3),
+    mean_coverage NUMERIC(5, 3),
+    mean_low_frequency NUMERIC(10, 3),
+    mean_high_frequency NUMERIC(10, 3),
+    hrv_reading_count INTEGER,
+    mean_spo2 NUMERIC(4, 1),
+    min_spo2 NUMERIC(4, 1),
+    max_spo2 NUMERIC(4, 1),
+    spo2_reading_count INTEGER,
+    artifact_spo2_count INTEGER,
+    sleep_overall_score NUMERIC(4, 1),
+    deep_sleep_minutes INTEGER,
+    fitbit_stress_score SMALLINT,
+    fitbit_stress_calc_failed BOOLEAN,
+    reported_stress_mean NUMERIC(5, 2),
+    reported_stress_min SMALLINT,
+    reported_stress_max SMALLINT,
+    reported_anxiety_mean NUMERIC(5, 2),
+    reported_anxiety_min SMALLINT,
+    reported_anxiety_max SMALLINT,
+    survey_response_count SMALLINT NOT NULL DEFAULT 0,
+    has_sensor_data BOOLEAN NOT NULL,
+    has_questionnaire_data BOOLEAN NOT NULL,
+    has_both_modalities BOOLEAN NOT NULL,
+    CONSTRAINT pk_daily_features PRIMARY KEY (participant_id, date)
+);
 
-CREATE TABLE clean.daily_features AS
+CREATE INDEX IF NOT EXISTS idx_daily_features_both_modalities ON clean.daily_features (has_both_modalities);
+
+-- Upsert daily alignment features
+INSERT INTO clean.daily_features (
+    participant_id,
+    date,
+    total_steps,
+    mean_steps_per_min,
+    max_steps_per_min,
+    active_minutes,
+    sedentary_minutes,
+    lightly_active_minutes,
+    moderately_active_minutes,
+    very_active_minutes,
+    mean_rmssd,
+    min_rmssd,
+    max_rmssd,
+    mean_coverage,
+    mean_low_frequency,
+    mean_high_frequency,
+    hrv_reading_count,
+    mean_spo2,
+    min_spo2,
+    max_spo2,
+    spo2_reading_count,
+    artifact_spo2_count,
+    sleep_overall_score,
+    deep_sleep_minutes,
+    fitbit_stress_score,
+    fitbit_stress_calc_failed,
+    reported_stress_mean,
+    reported_stress_min,
+    reported_stress_max,
+    reported_anxiety_mean,
+    reported_anxiety_min,
+    reported_anxiety_max,
+    survey_response_count,
+    has_sensor_data,
+    has_questionnaire_data,
+    has_both_modalities
+)
 WITH 
   dates_participants AS (
     SELECT DISTINCT participant_id, timestamp::date AS date FROM clean.steps
@@ -147,9 +226,39 @@ LEFT JOIN agg_hrv hrv ON dp.participant_id = hrv.participant_id AND dp.date = hr
 LEFT JOIN agg_oxygen oxy ON dp.participant_id = oxy.participant_id AND dp.date = oxy.date
 LEFT JOIN agg_sleep slp ON dp.participant_id = slp.participant_id AND dp.date = slp.date
 LEFT JOIN agg_stress str ON dp.participant_id = str.participant_id AND dp.date = str.date
-LEFT JOIN agg_questions q ON dp.participant_id = q.participant_id AND dp.date = q.date;
-
-ALTER TABLE clean.daily_features ADD CONSTRAINT pk_daily_features PRIMARY KEY (participant_id, date);
-ALTER TABLE clean.daily_features ADD CONSTRAINT fk_daily_features_participant FOREIGN KEY (participant_id) REFERENCES clean.participants(participant_id);
-CREATE INDEX IF NOT EXISTS idx_daily_features_participant_date ON clean.daily_features (participant_id, date);
-CREATE INDEX IF NOT EXISTS idx_daily_features_both_modalities ON clean.daily_features (has_both_modalities);
+LEFT JOIN agg_questions q ON dp.participant_id = q.participant_id AND dp.date = q.date
+ON CONFLICT (participant_id, date) DO UPDATE SET
+    total_steps = EXCLUDED.total_steps,
+    mean_steps_per_min = EXCLUDED.mean_steps_per_min,
+    max_steps_per_min = EXCLUDED.max_steps_per_min,
+    active_minutes = EXCLUDED.active_minutes,
+    sedentary_minutes = EXCLUDED.sedentary_minutes,
+    lightly_active_minutes = EXCLUDED.lightly_active_minutes,
+    moderately_active_minutes = EXCLUDED.moderately_active_minutes,
+    very_active_minutes = EXCLUDED.very_active_minutes,
+    mean_rmssd = EXCLUDED.mean_rmssd,
+    min_rmssd = EXCLUDED.min_rmssd,
+    max_rmssd = EXCLUDED.max_rmssd,
+    mean_coverage = EXCLUDED.mean_coverage,
+    mean_low_frequency = EXCLUDED.mean_low_frequency,
+    mean_high_frequency = EXCLUDED.mean_high_frequency,
+    hrv_reading_count = EXCLUDED.hrv_reading_count,
+    mean_spo2 = EXCLUDED.mean_spo2,
+    min_spo2 = EXCLUDED.min_spo2,
+    max_spo2 = EXCLUDED.max_spo2,
+    spo2_reading_count = EXCLUDED.spo2_reading_count,
+    artifact_spo2_count = EXCLUDED.artifact_spo2_count,
+    sleep_overall_score = EXCLUDED.sleep_overall_score,
+    deep_sleep_minutes = EXCLUDED.deep_sleep_minutes,
+    fitbit_stress_score = EXCLUDED.fitbit_stress_score,
+    fitbit_stress_calc_failed = EXCLUDED.fitbit_stress_calc_failed,
+    reported_stress_mean = EXCLUDED.reported_stress_mean,
+    reported_stress_min = EXCLUDED.reported_stress_min,
+    reported_stress_max = EXCLUDED.reported_stress_max,
+    reported_anxiety_mean = EXCLUDED.reported_anxiety_mean,
+    reported_anxiety_min = EXCLUDED.reported_anxiety_min,
+    reported_anxiety_max = EXCLUDED.reported_anxiety_max,
+    survey_response_count = EXCLUDED.survey_response_count,
+    has_sensor_data = EXCLUDED.has_sensor_data,
+    has_questionnaire_data = EXCLUDED.has_questionnaire_data,
+    has_both_modalities = EXCLUDED.has_both_modalities;
