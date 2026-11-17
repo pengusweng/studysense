@@ -65,7 +65,7 @@ export function PrivacySection({ storageOk, cleared, onClear }: Props) {
         >
           <p id="prefs-clear-text">
             This clears your choices, check-in answers and feedback, and ends any session in progress. Setup will be
-            offered again. Dark mode stays as set on this device.
+            offered again.
           </p>
           <div className={styles.actions}>
             <Button

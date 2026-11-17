@@ -2,16 +2,16 @@
 name: StudySense
 description: A study companion that treats wearable data as evidence, asks before it assumes, and is allowed to stay quiet.
 colors:
-  cloud-white: "#faf8fe"
-  pale-lavender: "#f2edfb"
-  iris: "#7759ba"
-  deep-iris: "#60449d"
-  ink: "#29243b"
-  sage: "#a8cfc7"
-  rule: "#e3daf3"
-  rule-strong: "#c9bce4"
-  pencil: "#625c75"
-  desk: "#ece5f8"
+  cloud-white: "#1d1928"
+  pale-lavender: "#2a2439"
+  iris: "#b095ec"
+  deep-iris: "#c4b0f7"
+  ink: "#ece7f7"
+  sage: "#355e55"
+  rule: "#2b2539"
+  rule-strong: "#4a4063"
+  pencil: "#a7a0bd"
+  desk: "#131019"
 typography:
   display:
     fontFamily: "Schibsted Grotesk, Segoe UI, system-ui, sans-serif"
@@ -117,12 +117,12 @@ components:
 
 **Creative North Star: "The Field Notebook"**
 
-StudySense is a bound notebook on a lavender desk. The left page is what the sensor observed. It is written in a mono log voice, with sensor values highlighted in sage. The right page is what the student concludes, in printed type, and their own hand-written marks are in iris. The whole system is built around this split: data is a lead and the student writes the conclusion. Every surface is a spread of graph-ruled pages with folios and an inked binding line. These are not floating cards on a gradient.
+StudySense is a bound notebook on a violet-black desk, under a lamp. The left page is what the sensor observed. It is written in a mono log voice, with sensor values highlighted in sage. The right page is what the student concludes, in printed type, and their own hand-written marks are in iris. The whole system is built around this split: data is a lead and the student writes the conclusion. Every surface is a spread of graph-ruled pages with folios and an inked binding line. These are not floating cards on a gradient.
 
 Density is calm and generous: one idea per spread, with lots of ruled space. The grid ruling is the world, a measuring surface, so it is never used as decoration elsewhere. The voice is tentative ("may", "estimated", "could mean") and the visuals match. Struck-through guesses, circled answers and margin notes show reasoning in progress rather than verdicts.
 
 **Key Characteristics:**
-- Two-page spreads on graph-ruled Cloud White paper, set on a Desk lavender ground.
+- Two-page spreads on graph-ruled slate paper (Cloud White, the paper token), set on a violet-black Desk ground. One theme, dark.
 - Three type voices, each with one job: print (Schibsted Grotesk), sensor log (Red Hat Mono), student's hand (Nanum Pen Script).
 - Colour carries meaning: sage means sensor evidence, iris means the student, deep iris means action.
 - Index-divider tabs replace a conventional nav bar.
@@ -130,7 +130,7 @@ Density is calm and generous: one idea per spread, with lots of ruled space. The
 
 ## Colors
 
-The palette is restrained lavender paper with one accent per meaning. No colour is decorative.
+The palette is slate paper under a lamp with one accent per meaning. No colour is decorative.
 
 ### Primary
 - **Deep Iris**: every action. This covers filled buttons, links, the demo tab, focus rings and the native accent colour. If something is Deep Iris, you can click it.
@@ -141,32 +141,32 @@ The palette is restrained lavender paper with one accent per meaning. No colour 
 
 ### Neutral
 - **Ink**: all printed text, the binding line (30% opacity), dashed plot split lines and the current tab's top edge.
-- **Pencil**: tentative and secondary text, such as hints, labels, folios, muted struck guesses and the footer. It has a 5.5:1 contrast ratio on Cloud White.
-- **Cloud White**: the paper.
+- **Pencil**: tentative and secondary text, such as hints, labels, folios, muted struck guesses and the footer. It has a 6.9:1 contrast ratio on the paper.
+- **Cloud White**: the paper (the name is issue #2's; the value is slate).
 - **Pale Lavender**: resting index tabs, and the hover state on secondary buttons.
 - **Rule**: the 24px graph ruling and hairlines.
 - **Rule Strong**: table and margin rules, tab borders and the scrollbar thumb.
 - **Desk**: the ground behind the notebook, and the header background.
 
-### Dark theme ("the notebook after dark")
-The same notebook under a desk lamp: a violet-black desk, slate paper and chalk-pale ink. Every colour keeps its job; only its value changes. The tokens are redefined in `globals.css` under `:root[data-theme="dark"]`, and under `prefers-color-scheme: dark` when the visitor has made no choice.
+### One theme: the notebook after dark
+StudySense has a single dark theme (the light theme and its switch were retired on 2026-11-17). It is the same notebook under a desk lamp: a violet-black desk, slate paper and chalk-pale ink. The token names are design issue #2's roles; their values are set once on `:root` in `globals.css`, with `color-scheme: dark`.
 
-| Token | Light | Dark | Dark contrast on paper |
-|---|---|---|---|
-| Desk | #ece5f8 | #131019 | — |
-| Cloud White (paper) | #faf8fe | #1d1928 | — |
-| Pale Lavender | #f2edfb | #2a2439 | — |
-| Ink | #29243b | #ece7f7 | 14.2:1 |
-| Pencil | #625c75 | #a7a0bd | 6.9:1 |
-| Iris | #7759ba | #b095ec | 6.8:1 |
-| Deep Iris | #60449d | #c4b0f7 | 8.9:1 |
-| Sage | #a8cfc7 | #355e55 | Ink on it 6.0:1 |
-| Rule | #e3daf3 | #2b2539 | — |
-| Rule Strong | #c9bce4 | #4a4063 | — |
+| Token | Value | Contrast on paper |
+|---|---|---|
+| Desk | #131019 | — |
+| Cloud White (paper) | #1d1928 | — |
+| Pale Lavender | #2a2439 | — |
+| Ink | #ece7f7 | 14.2:1 |
+| Pencil | #a7a0bd | 6.9:1 |
+| Iris | #b095ec | 6.8:1 |
+| Deep Iris | #c4b0f7 | 8.9:1 |
+| Sage | #355e55 | Ink on it 6.0:1 |
+| Rule | #2b2539 | — |
+| Rule Strong | #4a4063 | — |
 
-- **Actions turn pale.** In dark, Deep Iris is the lightest hue on the page, so a filled button is pale violet with paper-dark text (`--on-action`). It still leads, and it is still the only thing in Deep Iris.
-- **Depth by surface, not shadow.** Shadows barely read on dark paper. Paper that rests on the sheet (the support slip) uses `--paper-raised`, one step lighter.
-- **No module hard-codes a light colour.** Shadows use `rgb(var(--shadow-rgb) / a)`, Iris washes use `rgb(var(--iris-rgb) / a)`, and drawn SVG data URIs come from theme tokens (`--select-chevron`, `--iris-strike`).
+- **Actions are pale.** Deep Iris is the lightest hue on the page, so a filled button is pale violet with paper-dark text (`--on-action`). It leads, and it is still the only thing in Deep Iris.
+- **Depth by surface, not shadow.** Shadows barely read on dark paper. Paper that rests on the sheet (the support slip, the toast, the tooltip) uses `--paper-raised`, one step lighter.
+- **Colours come from tokens.** Shadows use `rgb(var(--shadow-rgb) / a)`, Iris washes use `rgb(var(--iris-rgb) / a)`, and drawn SVG data URIs come from tokens (`--select-chevron`, `--iris-strike`). Only the icons and `global-error.tsx`, which can't read CSS variables, repeat the hex values.
 
 ### Named Rules
 **The Sage Is Evidence Rule.** Sage marks only something a sensor recorded. Never use it for success states, buttons or decoration.
@@ -233,7 +233,7 @@ Depth is physical, not interface chrome. The notebook lifts off the desk and not
 
 ## Shapes
 
-Focus outlines round slightly (2px). Paper corners are nearly square (3px). Controls are gently rounded (6px). Index tabs round only at the top (8px 8px 0 0) and have no bottom border, so they read as part of the page below. Radios are true circles, and the theme switch is the one pill (a fully rounded track, 999px). Rules are hairlines (1px) for ruling and 1.5–2px for emphasis: the provenance underline, the reading line and the plot split.
+Focus outlines round slightly (2px). Paper corners are nearly square (3px). Controls are gently rounded (6px). Index tabs round only at the top (8px 8px 0 0) and have no bottom border, so they read as part of the page below. Radios are true circles. Rules are hairlines (1px) for ruling and 1.5–2px for emphasis: the provenance underline, the reading line and the plot split.
 
 ## Components
 
@@ -241,11 +241,11 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 - **Signature motif: the student's pen stroke.** One Iris hand-drawn line, used in exactly three places: the logo mark, the underline under "Studying.", and the circle around a chosen answer. Nothing else is decorated with it.
 - **Mark** (`components/atoms/LogoMark.tsx`): a notebook page set 4° off square (Cloud White, Ink outline, 2.5/32 corner), its margin line, two faint rules, and the pen stroke running off the right edge. Decorative (`aria-hidden`) wherever the wordmark or a label names StudySense.
 - **Lockup:** `<Wordmark mark />`, the mark at 1.2em left of the wordmark with a 0.35em gap, in the app header and landing nav. The footer keeps the wordmark alone.
-- **Icons:** `app/icon.svg` is the favicon (the mark without the rules, heavier strokes for 16px, with its own dark palette for dark browser UI). `app/apple-icon.tsx` renders the full mark on the Pale Lavender desk at 180px.
+- **Icons:** `app/icon.svg` is the favicon (the mark without the rules, heavier strokes for 16px). `app/apple-icon.tsx` renders the full mark on the Desk at 180px. Both use the dark palette's hex values.
 
 ### Buttons
 - **Shape:** gently rounded (6px), 44px minimum height, 1.5px border.
-- **Primary:** filled Deep Iris with Cloud White text, weight 600.
+- **Primary:** filled Deep Iris (pale violet) with paper-dark text (`--on-action`), weight 600.
 - **Hover / Focus:** on hover the primary button fills with Ink. Pressing nudges it down 1px. Focus shows a 2px Deep Iris outline offset by 3px.
 - **Secondary:** transparent with Deep Iris text and border. Pale Lavender on hover.
 - **Disabled:** Pale Lavender fill with Pencil text and a Rule Strong border.
@@ -254,11 +254,12 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 ### Tooltip
 - **Form:** a small print label (text-sm, Ink) on raised paper with a soft offset shadow, under its trigger; centred, or lined up with the trigger's right edge (`align="end"`) near the window's edge.
 - **Behaviour:** shows on mouse hover after 300ms and at once on keyboard focus; stays while the pointer is over it; Escape, blur or leaving close it. On touch, a tap shows it for 1.6s. It never holds anything that isn't said elsewhere; when the trigger's name already says it, it isn't announced twice (`describe={false}`).
-- **Use:** the theme switch below 480px, where the "Dark mode" label is hidden.
+- **Use:** none in the app since the theme switch was removed; it is kept as a system component and shown on `/review/components`.
 
 ### Toast
-- **Form:** one slip of raised paper at the foot of the window, centred, max 32rem: a print line (text-sm) and a "Close" text action.
-- **Behaviour:** the message is a polite live region. It stays at least 6s (7s by default), the countdown holds while hovered or focused, and it never carries an action that matters.
+- **Form:** one slip of raised paper at the foot of the window, centred, max 32rem: a printed tick in Ink, a print line (text-sm) and a "Close" text action. A 1.5px Rule Strong hairline along its foot is the time left; it draws back to the left edge.
+- **Behaviour:** the message is a polite live region. It is released after 5s; the countdown and the hairline both hold while it is hovered or focused, and it never carries an action that matters.
+- **Motion:** set down on the desk: it rises 28px from below, tilted -2.5°, and settles flat (520ms, ease-out), then the tick is written (360ms, after 280ms). Released by time or Close, it slides 18px back down and fades (240ms, ease-in), faster than it came. Under reduced motion it only fades in (200ms) and out, and the hairline stays still.
 - **Use:** confirmations that happened on the page just left. After setup, the Dashboard says "Your choice is saved for this visit. You can change it in Preferences." through a one-shot flash (`lib/flash.ts`) that is read once and cleared, so a reload doesn't repeat it.
 
 ### Not found and error pages
@@ -305,18 +306,13 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 - **Form:** one column on the sheet (max 46rem): "Preferences", a Pencil lede, then three sections ruled off above with print headings at text-lg. Every control reuses `AnswerList`, so picks are circled in Iris as in setup. Each hint ends with its default.
 - **Check-ins:** the setup question itself (one shared value in `lib/consent.ts`), then "When may it ask?" ("At my first pause" by default, or "Only after I end a session", which moves the check-in to the ended screen as "How did studying go?"). When check-ins are off or not chosen, the second question is disabled: set back in Pencil, with the reason in its hint.
 - **Estimate:** "Show it" / "Hide it". Hidden, the ready screen has no estimate note and the rules treat the estimate as unavailable. "How the estimate works" opens the shared paragraphs (`lib/estimateExplanation.ts`) in place.
-- **Privacy:** what the visit keeps, as a `LogTable` of kinds, never values. "Clear what this visit kept" unfolds an inline confirm naming what goes and that dark mode stays; Clear resets every store (`lib/visit.ts`) and a focused status line says setup will be offered again.
+- **Privacy:** what the visit keeps, as a `LogTable` of kinds, never values. "Clear what this visit kept" unfolds an inline confirm naming what goes; Clear resets every store (`lib/visit.ts`) and a focused status line says setup will be offered again.
 - **Changed:** "Saved for this visit." fades in under the section that changed (`role="status"`). When storage is blocked it says "Lasts for this page only.", and so does the lede.
 
 ### Setup spread (consent, issue #3)
 - **Form:** one notebook spread. The left page is the instrument's voice: "What StudySense uses" and a mono log (source, record, device, "replayed, not live"), then two printed lines. The right page is the student's: "One choice", a neutral answer list with nothing preselected, and the chosen answer circled in Iris.
 - **Actions:** the primary action is disabled until a pick, with the reason in words beside it ("Pick one to continue"). "Back" saves nothing. "No, keep quiet" is a full answer, with no warning.
 - **Shared parts:** Spread, LogTable, AnswerList, Hand, Highlight, Strike and HelpCorner live in `src/components`, shared by the landing page, the session and setup.
-
-### Theme switch
-- **Place:** on the desk, just right of the wordmark, sharing its line, in both the landing header and the app header. It is not a tab.
-- **Form:** a small Deep Iris switch (a 1.5px pill track and a round knob) with the label "Dark mode". Below 480px only the switch shows; its accessible name stays "Dark mode" (`role="switch"`) and a tooltip shows the label on hover, focus or tap.
-- **Behaviour:** it follows the system setting until the student flips it, then remembers the choice on this device. A head script applies a stored choice before first paint, so the other theme never flashes. Where supported, the swap cross-fades the whole page in 420ms; under reduced motion it is instant.
 
 ### Notebook spread
 The signature container. It takes a left page and a right page, can put the right page first, and supports an intro variant and a folio number. All landing content lives inside spreads, never inside cards.

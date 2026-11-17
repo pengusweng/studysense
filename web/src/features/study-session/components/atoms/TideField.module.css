@@ -86,8 +86,15 @@
 
 .wide {
   background: repeating-linear-gradient(to bottom, rgb(var(--iris-rgb) / 0.2) 0 1.5px, transparent 1.5px 96px);
+  /* No head start: at rest every Iris line lies on a fine rule, so the still sheet reads as one ruling.
+     The two speeds pull the layers apart once the tide runs. */
   animation-duration: 26s;
-  animation-delay: -7s;
+  transition: opacity 1.4s var(--proposal-ease-out);
+}
+
+/* Settled: the Iris ruling fades out, so lines frozen mid-drift never sit doubled on the still sheet. */
+.tide[data-phase="ended"] .wide {
+  opacity: 0;
 }
 
 .tide[data-phase="active"] .lines {

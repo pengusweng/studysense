@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Nanum_Pen_Script, Red_Hat_Mono, Schibsted_Grotesk } from "next/font/google";
-import { themeScript } from "@/lib/themeScript";
 import "./globals.css";
 
 const print = Schibsted_Grotesk({ subsets: ["latin"], variable: "--font-print", display: "swap" });
@@ -15,8 +14,8 @@ export const metadata: Metadata = {
 
 /**
  * Before first paint: marks the document as motion-capable, so scroll reveals can start hidden without
- * ever hiding content from visitors with JS disabled or reduced motion on, and applies a stored
- * light/dark choice so the page never flashes the other theme.
+ * ever hiding content from visitors with JS disabled or reduced motion on. StudySense has one theme
+ * (dark), set in globals.css, so nothing else runs here.
  */
 const motionFlag = `try{if(matchMedia('(prefers-reduced-motion: no-preference)').matches)document.documentElement.dataset.motion='on'}catch(e){}`;
 
@@ -24,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${print.variable} ${log.variable} ${hand.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: motionFlag + themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: motionFlag }} />
       </head>
       <body>{children}</body>
     </html>

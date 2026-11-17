@@ -27,14 +27,9 @@
 
 .brand {
   display: flex;
+  margin-right: auto; /* the tabs keep the far side */
   padding-bottom: 0.7rem;
   text-decoration: none;
-}
-
-/* The theme switch rests on the desk beside the wordmark, on the same line, clear of the tabs. */
-.theme {
-  margin-right: auto;
-  margin-left: var(--proposal-space-2);
 }
 
 .brand:hover {
@@ -69,10 +64,6 @@
   .brand {
     align-self: center;
     padding-bottom: 0;
-  }
-
-  .theme {
-    margin: 0 0 0 auto;
   }
 
   .nav {

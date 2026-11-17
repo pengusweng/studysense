@@ -27,7 +27,7 @@ STORY:
 1. Arrive: "Preferences", then "Changes apply straight away and last for this visit."
 2. Check-ins: the setup question (shared value), then "When may it ask?", disabled in words when check-ins are off.
 3. Estimate: show or hide it; read how it works in place.
-4. Privacy: what is kept, as kinds not values; clear with a confirm that names what goes and what stays (dark mode).
+4. Privacy: what is kept, as kinds not values; clear with a confirm that names what goes.
 
 ## Unresolved
 - Persistence beyond the visit is undecided; when it is decided, the lede and the privacy prose change.

@@ -124,7 +124,7 @@ export function ComponentsReview() {
             </Button>
           </div>
           <p className={styles.note}>
-            The toast stays at least 6 seconds, holds while hovered or focused, and closes by its button.
+            The toast is released after 5 seconds, holds while hovered or focused, and closes by its button.
           </p>
         </section>
 

@@ -4,27 +4,30 @@
  * Anything prefixed --proposal- is NOT confirmed by the design team yet.
  */
 :root {
-  /* Brand (issue #2) */
-  --cloud-white: #faf8fe;
-  --pale-lavender: #f2edfb;
-  --iris: #7759ba;
-  --deep-iris: #60449d;
-  --ink: #29243b;
-  --sage: #a8cfc7;
+  /* The notebook after dark, the only theme: violet-black desk, slate paper under a lamp, chalk-pale ink.
+     The token names are design issue #2's roles; the values are their dark counterparts (the light theme
+     was retired on 2026-11-17). Every hue keeps its job (Iris the student's hand, Deep Iris every action,
+     Sage sensor evidence); actions are pale so they lead. Contrast on the paper: ink 14:1, pencil 6.9:1,
+     iris 6.8:1, deep iris 8.9:1. */
+  --cloud-white: #1d1928;   /* the paper */
+  --pale-lavender: #2a2439; /* resting tabs, secondary hover */
+  --iris: #b095ec;
+  --deep-iris: #c4b0f7;
+  --ink: #ece7f7;
+  --sage: #355e55;
 
   /* Proposals: pending design-team approval */
-  --proposal-rule: #e3daf3;        /* notebook ruling, hairlines */
-  --proposal-rule-strong: #c9bce4; /* margin rule, table rules */
-  --proposal-pencil: #625c75;      /* tentative / secondary text, 5.5:1 on cloud white */
-  --proposal-desk: #ece5f8;        /* ground behind the notebook */
+  --proposal-rule: #2b2539;        /* notebook ruling, hairlines */
+  --proposal-rule-strong: #4a4063; /* margin rule, table rules */
+  --proposal-pencil: #a7a0bd;      /* tentative / secondary text, 6.9:1 on the paper */
+  --proposal-desk: #131019;        /* ground behind the notebook */
 
-  /* Theme plumbing: values every theme must set, so no module hard-codes a light-only colour. */
-  --on-action: var(--cloud-white); /* text on a filled Deep Iris or Ink control */
-  --paper-raised: var(--cloud-white); /* paper resting on the sheet (the support slip) */
-  --shadow-rgb: 41 36 59;          /* ink-tinted shadows: rgb(var(--shadow-rgb) / a) */
-  --iris-rgb: 119 89 186;          /* Iris washes: rgb(var(--iris-rgb) / a) */
-  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%2329243b' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  --iris-strike: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 20 3.5, 45 7.5, 70 4.5 S 95 5.5, 99 3.5' fill='none' stroke='%237759BA' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  --on-action: #1d1928;            /* text on a filled Deep Iris or Ink control */
+  --paper-raised: #29233a;         /* paper resting on the sheet; shadows barely read, so it is lighter */
+  --shadow-rgb: 0 0 0;             /* shadows: rgb(var(--shadow-rgb) / a) */
+  --iris-rgb: 176 149 236;         /* Iris washes: rgb(var(--iris-rgb) / a) */
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23ece7f7' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --iris-strike: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 20 3.5, 45 7.5, 70 4.5 S 95 5.5, 99 3.5' fill='none' stroke='%23b095ec' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
 
   --proposal-space-1: 0.25rem;
   --proposal-space-2: 0.5rem;
@@ -54,71 +57,11 @@
   --font-log-stack: var(--font-log), ui-monospace, monospace;
   --font-hand-stack: var(--font-hand), "Segoe Print", cursive;
 
-  color-scheme: light;
+  color-scheme: dark;
   accent-color: var(--deep-iris);
   scrollbar-color: var(--proposal-rule-strong) var(--proposal-desk);
 }
 
-/*
- * Dark theme. An explicit choice (html[data-theme], set by the head script and the toggle) wins; with no
- * choice and no script, the visitor's system setting decides.
- */
-:root[data-theme="dark"] {
-  /* The notebook after dark: violet-black desk, slate paper under a lamp, chalk-pale ink. Every hue keeps
-     its job (Iris the student's hand, Deep Iris every action, Sage sensor evidence); actions turn pale
-     so they still lead. Contrast on paper: ink 14:1, pencil 6.9:1, iris 6.8:1, deep iris 8.9:1. */
-  --cloud-white: #1d1928;
-  --pale-lavender: #2a2439;
-  --iris: #b095ec;
-  --deep-iris: #c4b0f7;
-  --ink: #ece7f7;
-  --sage: #355e55;
-  --proposal-rule: #2b2539;
-  --proposal-rule-strong: #4a4063;
-  --proposal-pencil: #a7a0bd;
-  --proposal-desk: #131019;
-  --on-action: #1d1928;
-  --paper-raised: #29233a; /* shadows barely read on dark paper, so a raised slip is lighter instead */
-  --shadow-rgb: 0 0 0;
-  --iris-rgb: 176 149 236;
-  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23ece7f7' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  --iris-strike: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 20 3.5, 45 7.5, 70 4.5 S 95 5.5, 99 3.5' fill='none' stroke='%23b095ec' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
-  color-scheme: dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    /* The notebook after dark: violet-black desk, slate paper under a lamp, chalk-pale ink. Every hue keeps
-       its job (Iris the student's hand, Deep Iris every action, Sage sensor evidence); actions turn pale
-       so they still lead. Contrast on paper: ink 14:1, pencil 6.9:1, iris 6.8:1, deep iris 8.9:1. */
-    --cloud-white: #1d1928;
-    --pale-lavender: #2a2439;
-    --iris: #b095ec;
-    --deep-iris: #c4b0f7;
-    --ink: #ece7f7;
-    --sage: #355e55;
-    --proposal-rule: #2b2539;
-    --proposal-rule-strong: #4a4063;
-    --proposal-pencil: #a7a0bd;
-    --proposal-desk: #131019;
-    --on-action: #1d1928;
-    --paper-raised: #29233a; /* shadows barely read on dark paper, so a raised slip is lighter instead */
-  --paper-raised: #29233a; /* shadows barely read on dark paper, so a raised slip is lighter instead */
-    --shadow-rgb: 0 0 0;
-    --iris-rgb: 176 149 236;
-    --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23ece7f7' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    --iris-strike: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 20 3.5, 45 7.5, 70 4.5 S 95 5.5, 99 3.5' fill='none' stroke='%23b095ec' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
-    color-scheme: dark;
-  }
-}
-
-/* Switching themes eases every colour at once (the toggle wraps the swap in a view transition where
-   supported; this is the cross-fade's timing). */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 420ms;
-  animation-timing-function: var(--proposal-ease-out);
-}
 
 *,
 *::before,

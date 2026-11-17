@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { Wordmark } from "@/components/atoms/Wordmark";
 import { NavLink } from "@/components/molecules/NavLink";
-import { ThemeToggle } from "@/components/molecules/ThemeToggle";
 import styles from "./AppShell.module.css";
 
 /** The three persistent destinations (docs/AGENTS.md §4). Everything else is a contextual flow. */
@@ -13,7 +12,7 @@ const DESTINATIONS = [
 ];
 
 /**
- * App chrome: the wordmark and the theme switch on the desk, and the destinations as index tabs standing on the top edge of the
+ * App chrome: the wordmark on the desk, and the destinations as index tabs standing on the top edge of the
  * page's sheet. Pages render their own Sheet directly below.
  */
 export function AppShell({ children }: { children: ReactNode }) {
@@ -24,7 +23,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link href="/" className={styles.brand} aria-label="StudySense home">
             <Wordmark mark />
           </Link>
-          <ThemeToggle className={styles.theme} />
           <nav aria-label="App" className={styles.nav}>
             <ul className={styles.tabs}>
               {DESTINATIONS.map((d) => (

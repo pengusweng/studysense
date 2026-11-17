@@ -44,6 +44,7 @@
 .brand {
   display: flex;
   align-items: baseline;
+  margin-right: auto; /* the tabs keep the far side */
   gap: 0.7rem;
   padding-bottom: 0.7rem;
   color: var(--ink);
@@ -53,13 +54,6 @@
 
 .brand:hover {
   text-decoration: none;
-}
-
-/* The theme switch sits on the desk beside the wordmark, sharing its line; the tabs keep the far side. */
-.theme {
-  margin-right: auto;
-  margin-left: var(--proposal-space-2);
-  padding-bottom: 0.2rem;
 }
 
 .subject {
@@ -144,7 +138,6 @@
   }
 
   .brand,
-  .theme,
   .inner .demo {
     animation: header-in 600ms var(--proposal-ease-out) both;
   }
@@ -181,11 +174,6 @@
   }
 
   .brand {
-    align-self: center;
-    padding-bottom: 0;
-  }
-
-  .theme {
     align-self: center;
     padding-bottom: 0;
   }

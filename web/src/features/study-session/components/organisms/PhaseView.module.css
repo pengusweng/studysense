@@ -91,6 +91,17 @@
   text-align: left;
 }
 
+/* With no mark to hang from (unavailable, loading), the note joins the centred column at the lede's measure. */
+.estimate > section:is([data-kind="unavailable"], [data-kind="loading"]) {
+  max-width: min(30rem, 100%);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.body .estimate > section:is([data-kind="unavailable"], [data-kind="loading"]) :global(p) {
+  text-align: center;
+}
+
 /* The end-of-session check-in: a left-set note under the lede, centred as a block. */
 .aside {
   width: 100%;
