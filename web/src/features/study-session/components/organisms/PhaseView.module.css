@@ -90,3 +90,22 @@
 .body .estimate :global(p) {
   text-align: left;
 }
+
+/* The end-of-session check-in: a left-set note under the lede, centred as a block. */
+.aside {
+  width: 100%;
+  margin-bottom: var(--proposal-space-3);
+}
+
+.aside:empty {
+  display: none;
+}
+
+.body .aside :global(p) {
+  text-align: left;
+}
+
+/* Its one quiet line after an answer stays centred under the word. */
+.body .aside :global(p[role="status"]) {
+  text-align: center;
+}

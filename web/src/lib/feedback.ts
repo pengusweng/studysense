@@ -29,3 +29,7 @@ export function useFeedbackHistory(): FeedbackEntry[] {
 export function recordFeedback(entry: FeedbackEntry) {
   store.write([...store.read(), entry]);
 }
+
+export function clearFeedback() {
+  store.write([]);
+}

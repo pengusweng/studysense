@@ -46,6 +46,33 @@
   outline-offset: 2px;
 }
 
+/* Not applicable right now: set back in Pencil, the choice kept but not pressable. */
+.fieldset:disabled .option {
+  cursor: not-allowed;
+}
+
+.fieldset:disabled .legend,
+.fieldset:disabled .label {
+  color: var(--proposal-pencil);
+}
+
+.fieldset:disabled .option:hover .label {
+  text-decoration: none;
+}
+
+.fieldset:disabled .input {
+  border-color: var(--proposal-rule-strong);
+  cursor: not-allowed;
+}
+
+.fieldset:disabled .input::before {
+  background: var(--proposal-pencil);
+}
+
+.fieldset:disabled .circle {
+  stroke: var(--proposal-rule-strong);
+}
+
 /* A drawn round mark: one answer only. */
 .input {
   appearance: none;

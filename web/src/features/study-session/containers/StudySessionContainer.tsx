@@ -12,12 +12,13 @@ import {
   type SessionStatus,
 } from "@/lib/sessionStatus";
 import { useDemoRecord } from "@/lib/useDemoRecord";
+import { usePreferences } from "@/lib/preferences";
 import { useEstimate } from "../hooks/useEstimate";
 import { TideField } from "../components/atoms/TideField";
 import { ReadyView } from "../components/organisms/ReadyView";
 import { FocusView } from "../components/organisms/FocusView";
 import { EndedView } from "../components/organisms/EndedView";
-import type { SessionPhase } from "../types";
+import type { EstimateView, SessionPhase } from "../types";
 import styles from "./StudySessionContainer.module.css";
 
 /** Matches --proposal-dur-chrome: how long the chrome takes to return once a session ends. */
@@ -31,6 +32,8 @@ function lockScrollWhileChromeMoves(root: HTMLElement) {
   root.dataset.chrome = "moving";
   lockTimer = window.setTimeout(() => delete root.dataset.chrome, CHROME_MS);
 }
+
+const HIDDEN: EstimateView = { kind: "unavailable", reason: "none" };
 
 const PHASE: Record<SessionStatus, SessionPhase> = { none: "ready", active: "active", paused: "paused", ended: "ended" };
 
@@ -56,6 +59,9 @@ export function StudySessionContainer() {
   const status = useKnownSessionStatus();
   const { record, days, check, choose } = useDemoRecord();
   const estimate = useEstimate(record, check);
+  const { showEstimate } = usePreferences();
+  // A hidden estimate isn't shown, and the response rules don't lean on it either.
+  const ruleEstimate: EstimateView = showEstimate ? estimate : HIDDEN;
   const [moved, setMoved] = useState(false);
   const announce = useRef<string>("");
 
@@ -114,7 +120,7 @@ export function StudySessionContainer() {
           record={record}
           check={check}
           days={days}
-          estimate={estimate}
+          estimate={showEstimate ? estimate : null}
           onChoose={choose}
           onStart={() => go("active")}
         />
@@ -122,7 +128,7 @@ export function StudySessionContainer() {
       {focused && (
         <FocusView
           phase={phase}
-          estimate={estimate}
+          estimate={ruleEstimate}
           takeFocus={moved}
           onPause={() => go("paused")}
           onResume={() => go("active")}
@@ -134,6 +140,7 @@ export function StudySessionContainer() {
           record={record}
           check={check}
           days={days}
+          estimate={ruleEstimate}
           onChoose={choose}
           takeFocus={moved}
           onStartAnother={() => go("active")}

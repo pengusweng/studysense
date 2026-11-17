@@ -33,7 +33,7 @@ export function FocusView({ phase, estimate, takeFocus, onPause, onResume, onEnd
   const main = useRef<HTMLButtonElement>(null);
   const checkIn = useRef<CheckInHandle>(null);
   const copy = COPY[phase];
-  const due = useCheckInDue();
+  const due = useCheckInDue("pause");
   // Read when the phase changes, not tracked: answering must not pull focus back to the controls by itself.
   const dueNow = useRef(due);
   useEffect(() => {

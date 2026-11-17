@@ -1,0 +1,90 @@
+/* The sections of the Preferences page: ruled off, a print heading, then their controls. */
+.section {
+  padding: var(--proposal-space-4) 0 var(--proposal-space-3);
+  border-top: 1px solid var(--proposal-rule-strong);
+}
+
+.heading {
+  margin: 0 0 var(--proposal-space-4);
+  font: 700 var(--proposal-text-lg) / 1.3 var(--font-print-stack);
+  letter-spacing: -0.01em;
+}
+
+/* Two questions in one section sit a clear step apart. */
+.section fieldset + fieldset {
+  margin-top: var(--proposal-space-4);
+}
+
+.prose {
+  margin: 0 0 var(--proposal-space-3);
+  max-width: 60ch;
+}
+
+.disclose {
+  font-size: var(--proposal-text-sm);
+}
+
+/* The explanation unfolds under its link on the same paper, ruled off above. */
+.panel {
+  margin-top: var(--proposal-space-3);
+  padding-top: var(--proposal-space-3);
+  border-top: 1px solid var(--proposal-rule-strong);
+  max-width: 60ch;
+}
+
+.panel:focus {
+  outline: none;
+}
+
+.panel p {
+  margin: 0 0 var(--proposal-space-2);
+}
+
+.panel p:last-child {
+  margin-bottom: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--proposal-space-3) var(--proposal-space-4);
+  margin-top: var(--proposal-space-4);
+}
+
+/* The clear confirmation unfolds in place of its button. */
+.confirm {
+  margin-top: var(--proposal-space-4);
+  max-width: 60ch;
+}
+
+.confirm:focus {
+  outline: none;
+}
+
+.confirm p {
+  margin: 0;
+}
+
+.cleared {
+  min-height: 1.5em;
+  margin: var(--proposal-space-3) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.cleared:focus {
+  outline: none;
+}
+
+:global(html[data-motion="on"]) .panel,
+:global(html[data-motion="on"]) .confirm {
+  animation: unfold 260ms var(--proposal-ease-out);
+}
+
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}

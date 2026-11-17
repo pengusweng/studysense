@@ -1,4 +1,5 @@
 import { readConsent, useKnownConsent } from "./consent";
+import { readPreferences, useKnownPreferences, type AskWhen } from "./preferences";
 import { createSessionValue } from "./sessionValue";
 
 /**
@@ -22,14 +23,22 @@ function optedIn(consent: ReturnType<typeof readConsent> | null): boolean {
   return consent !== null && consent !== "undecided" && consent.checkIns === "yes";
 }
 
-/** Whether the question is still due this session: the student opted in during setup and hasn't been asked. */
-export function useCheckInDue(): boolean {
+/**
+ * Whether the question is due at this moment of the session: the student opted in during setup, hasn't been
+ * asked yet, and chose this moment in Preferences (the first pause by default, or only after ending).
+ */
+export function useCheckInDue(moment: AskWhen): boolean {
   const consent = useKnownConsent();
+  const prefs = useKnownPreferences();
   const state = store.useKnownValue();
-  return optedIn(consent) && state === "unasked";
+  return optedIn(consent) && prefs?.askWhen === moment && state === "unasked";
 }
 
-/** Leaving a pause with the question untouched is an outcome too, and it isn't asked again this session. */
+/**
+ * Leaving a pause with the question untouched is an outcome too, and it isn't asked again this session.
+ * Only when the question belongs to the pause: one saved for the end of the session hasn't been asked yet.
+ */
 export function closeUnanswered() {
+  if (readPreferences().askWhen !== "pause") return;
   if (optedIn(readConsent()) && store.read() === "unasked") store.write("no_response");
 }

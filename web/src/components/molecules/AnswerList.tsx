@@ -8,18 +8,20 @@ type Props<T extends string> = {
   options: { id: T; label: string }[];
   value: T | null;
   onChange: (answer: T) => void;
+  /** Not applicable right now; the hint should say why. */
+  disabled?: boolean;
 };
 
 /**
  * One neutral question with a few plain answers and nothing preselected, set as a notebook answer list.
  * The chosen answer is circled in the student's ink (Iris). Used by the landing check-in and setup.
  */
-export function AnswerList<T extends string>({ question, hint, options, value, onChange }: Props<T>) {
+export function AnswerList<T extends string>({ question, hint, options, value, onChange, disabled }: Props<T>) {
   const name = useId();
   const hintId = `${name}-hint`;
 
   return (
-    <fieldset className={styles.fieldset} aria-describedby={hint ? hintId : undefined}>
+    <fieldset className={styles.fieldset} aria-describedby={hint ? hintId : undefined} disabled={disabled}>
       <legend className={styles.legend}>{question}</legend>
       {hint && (
         <p id={hintId} className={styles.hint}>

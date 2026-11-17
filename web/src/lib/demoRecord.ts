@@ -21,6 +21,7 @@ function parse(raw: unknown): DemoRecord | null {
 const store = createSessionValue<DemoRecord>("studysense.demoRecord", DEFAULT_DEMO_RECORD, parse);
 
 export const useDemoRecordValue = store.useValue;
+export const resetDemoRecord = () => store.write(DEFAULT_DEMO_RECORD);
 
 /** "Mon 24 Feb 2025", read as a calendar date with no time zone shift. */
 export function formatRecordDate(iso: string): string {

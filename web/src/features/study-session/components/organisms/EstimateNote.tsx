@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { TextButton } from "@/components/atoms/TextButton";
 import { formatParticipant, formatRecordDate, type DemoRecord } from "@/lib/demoRecord";
+import { ESTIMATE_LEAD, ESTIMATE_MISSING, ESTIMATE_MODEL, ESTIMATE_SOURCE } from "@/lib/estimateExplanation";
 import { profileByCode } from "@/lib/profiles";
 import { ProfileMark } from "../atoms/ProfileMark";
 import type { EstimateView } from "../../types";
@@ -115,22 +116,9 @@ export function EstimateNote({ view, record }: Props) {
             trigger.current?.focus();
           }}
         >
-          <p>
-            It comes from one recorded day of another student’s Fitbit data in the SSAQS dataset, replayed for the
-            demo. Nothing is measured from you.
-          </p>
-          {copy.explain === "estimate" ? (
-            <p>
-              A model sorts days into four profiles by splitting stress and anxiety at the midpoint. That split is a
-              course threshold, not a clinical one, and the model’s guesses are rough.
-            </p>
-          ) : (
-            <p>
-              A model sorts days into four profiles, but when more than half of a day’s readings are missing it
-              doesn’t guess.
-            </p>
-          )}
-          <p>So treat it as a lead, not a verdict. If it doesn’t fit, you can correct it or ignore it.</p>
+          <p>{ESTIMATE_SOURCE}</p>
+          <p>{copy.explain === "estimate" ? ESTIMATE_MODEL : ESTIMATE_MISSING}</p>
+          <p>{ESTIMATE_LEAD}</p>
         </div>
       )}
     </section>

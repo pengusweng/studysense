@@ -1,0 +1,27 @@
+/* One column on the sheet: the title, then ruled sections, read top to bottom like a notebook page. */
+.page {
+  width: min(46rem, 100%);
+  padding: var(--proposal-space-5) clamp(1rem, 4vw, 3.75rem) var(--proposal-space-6);
+}
+
+.title {
+  margin: 0 0 var(--proposal-space-2);
+  font: 800 var(--proposal-text-xl) / 1.08 var(--font-print-stack);
+  letter-spacing: -0.025em;
+}
+
+.lede {
+  margin: 0 0 var(--proposal-space-5);
+  color: var(--proposal-pencil);
+}
+
+.slot {
+  min-height: 40rem;
+}
+
+.help {
+  margin-top: var(--proposal-space-4);
+  padding-top: var(--proposal-space-3);
+  border-top: 1px solid var(--proposal-rule-strong);
+  font-size: var(--proposal-text-sm);
+}

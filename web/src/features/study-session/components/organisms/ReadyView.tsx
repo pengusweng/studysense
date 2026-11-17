@@ -12,7 +12,8 @@ type Props = {
   record: DemoRecord;
   check: RecordCheck;
   days: DemoDays | null;
-  estimate: EstimateView;
+  /** Null when the student chose to hide the estimate in Preferences. */
+  estimate: EstimateView | null;
   onChoose: (record: DemoRecord) => void;
   onStart: () => void;
 };
@@ -24,9 +25,11 @@ export function ReadyView({ record, check, days, estimate, onChoose, onStart }: 
       <div className={styles.body}>
         <h1 className={styles.title}>Ready to study.</h1>
         <p className={styles.lede}>Nothing runs until you start. You can pause or end at any time.</p>
-        <div className={styles.estimate}>
-          <EstimateNote view={estimate} record={record} />
-        </div>
+        {estimate && (
+          <div className={styles.estimate}>
+            <EstimateNote view={estimate} record={record} />
+          </div>
+        )}
         <Button className={styles.primary} onClick={onStart}>
           Start studying
         </Button>

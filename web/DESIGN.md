@@ -279,6 +279,13 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 
 - **Next time:** feedback is kept for the visit in `lib/feedback.ts`. A dismissed suggestion is skipped and an accepted one is offered first. Copy says only that StudySense "uses this to choose what it offers next"; it never says it learned.
 
+### Preferences (issue #7)
+- **Form:** one column on the sheet (max 46rem): "Preferences", a Pencil lede, then three sections ruled off above with print headings at text-lg. Every control reuses `AnswerList`, so picks are circled in Iris as in setup. Each hint ends with its default.
+- **Check-ins:** the setup question itself (one shared value in `lib/consent.ts`), then "When may it ask?" ("At my first pause" by default, or "Only after I end a session", which moves the check-in to the ended screen as "How did studying go?"). When check-ins are off or not chosen, the second question is disabled: set back in Pencil, with the reason in its hint.
+- **Estimate:** "Show it" / "Hide it". Hidden, the ready screen has no estimate note and the rules treat the estimate as unavailable. "How the estimate works" opens the shared paragraphs (`lib/estimateExplanation.ts`) in place.
+- **Privacy:** what the visit keeps, as a `LogTable` of kinds, never values. "Clear what this visit kept" unfolds an inline confirm naming what goes and that dark mode stays; Clear resets every store (`lib/visit.ts`) and a focused status line says setup will be offered again.
+- **Changed:** "Saved for this visit." fades in under the section that changed (`role="status"`). When storage is blocked it says "Lasts for this page only.", and so does the lede.
+
 ### Setup spread (consent, issue #3)
 - **Form:** one notebook spread. The left page is the instrument's voice: "What StudySense uses" and a mono log (source, record, device, "replayed, not live"), then two printed lines. The right page is the student's: "One choice", a neutral answer list with nothing preselected, and the chosen answer circled in Iris.
 - **Actions:** the primary action is disabled until a pick, with the reason in words beside it ("Pick one to continue"). "Back" saves nothing. "No, keep quiet" is a full answer, with no warning.

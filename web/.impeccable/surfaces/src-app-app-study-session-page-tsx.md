@@ -58,7 +58,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 ## Unresolved
 - Predictions need a source: the trained model is not in the repo, so the ready screen's estimate note always shows "No estimate for this session". The evaluated policy would return every day as uncertain or missing evidence.
 - LSLA, LSHA and HSLA have no specific response rules (AGENTS.md §14.4); they take the generic path. "Ask a clarifying question" is not reachable, because uncertain evidence defaults to abstaining.
-- Next: Preferences (opt-in, interruption level, explanation and privacy controls, reset).
+- Preferences can move the check-in to the ended screen ("How did studying go?", focus on the question, then "Start another session"), and can hide the estimate, which also keeps it out of the response rules.
 
 ## Decisions (2026-11-17)
 - The estimate note sits on the ready screen, between the invitation and Start. The full-screen view keeps its single word.

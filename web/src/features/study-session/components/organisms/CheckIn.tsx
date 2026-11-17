@@ -24,7 +24,6 @@ const ANSWERS: { id: Answer; label: string }[] = [
 /** Matches the fold transition in CheckIn.module.css. */
 const FOLD_MS = 420;
 
-const QUIET = "StudySense will stay quiet for the rest of this session.";
 
 type Step = "question" | "response" | "said" | "support" | "help" | "closed";
 type Offer = Extract<ResponseDecision, { kind: "offer" }>;
@@ -32,8 +31,10 @@ type Offer = Extract<ResponseDecision, { kind: "offer" }>;
 type Props = {
   /** The question is still due this session (opted in, not yet asked). */
   due: boolean;
-  /** The day's estimate, one input to the response rules. */
+  /** The day's estimate, one input to the response rules (unavailable when the student hid it). */
   estimate: EstimateView;
+  /** Where it is asked: on the first pause, or once the session has ended (Preferences). */
+  moment?: "pause" | "end";
   /** Called when the check-in is finished and focus should return to the session's controls. */
   onSettled: () => void;
 };
@@ -49,7 +50,12 @@ function motionOn() {
  * follows it: a rule-picked suggestion with Accept, Dismiss and Correct (issue #7), or silence.
  * Every way out is a defined state: an answer, skip, not now, or simply resuming (no response).
  */
-export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, estimate, onSettled }, ref) {
+export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
+  { due, estimate, moment = "pause", onSettled },
+  ref,
+) {
+  // After the session has ended there is nothing left to stay quiet for.
+  const quiet = moment === "pause" ? " StudySense will stay quiet for the rest of this session." : "";
   const id = useId();
   const history = useFeedbackHistory();
   const [step, setStep] = useState<Step>("question");
@@ -112,7 +118,7 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, 
     // Recorded at once, so resuming mid-fold can't count as no response.
     recordCheckIn(outcome);
     if (outcome === "skipped" || outcome === "dismissed") return foldTo("closed");
-    show(chooseResponse({ estimate, checkIn: outcome, history }), `Noted. ${QUIET}`, null);
+    show(chooseResponse({ estimate, checkIn: outcome, history }), `Noted.${quiet}`, null);
   }
 
   function accept(suggestion: SupportId) {
@@ -130,7 +136,7 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, 
     setCorrected(true);
     show(
       chooseResponse({ estimate, checkIn: "swamped", correction, history }),
-      `Thanks, that’s noted. ${QUIET}`,
+      `Thanks, that’s noted.${quiet}`,
       "Thanks, that’s noted. Here is everything on offer.",
     );
   }
@@ -203,7 +209,7 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, 
         }}
       >
         <AnswerList
-          question="How is studying going?"
+          question={moment === "end" ? "How did studying go?" : "How is studying going?"}
           hint="Optional. Kept for this visit only, apart from the replayed data."
           options={ANSWERS}
           value={pick}

@@ -31,7 +31,7 @@ export function ChoicePage({ value, onChange, onConfirm, onBack, reopened, stora
       <div data-enter>
         <AnswerList
           question="During a session, may StudySense ask an occasional optional question?"
-          hint="You can skip any question it asks, and change this later."
+          hint="You can skip any question it asks, and change this later in Preferences."
           options={OPTIONS}
           value={value}
           onChange={onChange}
