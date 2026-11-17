@@ -1,5 +1,8 @@
+/* Lifted above its later siblings (the demo note): their entrance animations make each one its own
+   stacking layer, so the slip's own z-index alone could not clear them. */
 .corner {
   position: relative;
+  z-index: 5;
 }
 
 .line {
@@ -17,10 +20,10 @@
   width: min(30rem, calc(100vw - 2rem));
   padding: 0 var(--proposal-space-4) var(--proposal-space-2);
   border-radius: var(--proposal-radius-page);
-  background: var(--cloud-white);
+  background: var(--paper-raised);
   box-shadow:
-    0 1px 2px rgb(41 36 59 / 0.1),
-    0 24px 48px -24px rgb(41 36 59 / 0.4);
+    0 1px 2px rgb(var(--shadow-rgb) / 0.1),
+    0 24px 48px -24px rgb(var(--shadow-rgb) / 0.4);
 }
 
 .slip > section {
@@ -37,4 +40,9 @@
     right: auto;
     left: 0;
   }
+}
+
+/* The session body centres its paragraphs; the slip reads as a list, left to right. */
+.corner .slip :global(p) {
+  text-align: left;
 }

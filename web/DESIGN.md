@@ -66,6 +66,7 @@ rounded:
   page: "3px"
   control: "6px"
   tab: "8px"
+  pill: "999px"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -147,6 +148,26 @@ The palette is restrained lavender paper with one accent per meaning. No colour 
 - **Rule Strong**: table and margin rules, tab borders and the scrollbar thumb.
 - **Desk**: the ground behind the notebook, and the header background.
 
+### Dark theme ("the notebook after dark")
+The same notebook under a desk lamp: a violet-black desk, slate paper and chalk-pale ink. Every colour keeps its job; only its value changes. The tokens are redefined in `globals.css` under `:root[data-theme="dark"]`, and under `prefers-color-scheme: dark` when the visitor has made no choice.
+
+| Token | Light | Dark | Dark contrast on paper |
+|---|---|---|---|
+| Desk | #ece5f8 | #131019 | — |
+| Cloud White (paper) | #faf8fe | #1d1928 | — |
+| Pale Lavender | #f2edfb | #2a2439 | — |
+| Ink | #29243b | #ece7f7 | 14.2:1 |
+| Pencil | #625c75 | #a7a0bd | 6.9:1 |
+| Iris | #7759ba | #b095ec | 6.8:1 |
+| Deep Iris | #60449d | #c4b0f7 | 8.9:1 |
+| Sage | #a8cfc7 | #355e55 | Ink on it 6.0:1 |
+| Rule | #e3daf3 | #2b2539 | — |
+| Rule Strong | #c9bce4 | #4a4063 | — |
+
+- **Actions turn pale.** In dark, Deep Iris is the lightest hue on the page, so a filled button is pale violet with paper-dark text (`--on-action`). It still leads, and it is still the only thing in Deep Iris.
+- **Depth by surface, not shadow.** Shadows barely read on dark paper. Paper that rests on the sheet (the support slip) uses `--paper-raised`, one step lighter.
+- **No module hard-codes a light colour.** Shadows use `rgb(var(--shadow-rgb) / a)`, Iris washes use `rgb(var(--iris-rgb) / a)`, and drawn SVG data URIs come from theme tokens (`--select-chevron`, `--iris-strike`).
+
 ### Named Rules
 **The Sage Is Evidence Rule.** Sage marks only something a sensor recorded. Never use it for success states, buttons or decoration.
 
@@ -212,7 +233,7 @@ Depth is physical, not interface chrome. The notebook lifts off the desk and not
 
 ## Shapes
 
-Focus outlines round slightly (2px). Paper corners are nearly square (3px). Controls are gently rounded (6px). Index tabs round only at the top (8px 8px 0 0) and have no bottom border, so they read as part of the page below. Radios are true circles. Rules are hairlines (1px) for ruling and 1.5–2px for emphasis: the provenance underline, the reading line and the plot split.
+Focus outlines round slightly (2px). Paper corners are nearly square (3px). Controls are gently rounded (6px). Index tabs round only at the top (8px 8px 0 0) and have no bottom border, so they read as part of the page below. Radios are true circles, and the theme switch is the one pill (a fully rounded track, 999px). Rules are hairlines (1px) for ruling and 1.5–2px for emphasis: the provenance underline, the reading line and the plot split.
 
 ## Components
 
@@ -230,6 +251,11 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 - **Current section** (`aria-current="location"`): Cloud White, a 3px Ink top edge and weight 700, pulled fully up.
 - **Demo tab:** same tab geometry, filled Deep Iris.
 - **Below 920px:** the tabs form a sideways-scrolling row, and the demo becomes a normal rounded button.
+
+### Theme switch
+- **Place:** on the desk, just right of the wordmark, sharing its line, in both the landing header and the app header. It is not a tab.
+- **Form:** a small Deep Iris switch (a 1.5px pill track and a round knob) with the label "Dark mode". Below 480px only the switch shows; its accessible name stays "Dark mode" (`role="switch"`).
+- **Behaviour:** it follows the system setting until the student flips it, then remembers the choice on this device. A head script applies a stored choice before first paint, so the other theme never flashes. Where supported, the swap cross-fades the whole page in 420ms; under reduced motion it is instant.
 
 ### Notebook spread
 The signature container. It takes a left page and a right page, can put the right page first, and supports an intro variant and a folio number. All landing content lives inside spreads, never inside cards.

@@ -22,12 +22,12 @@
 }
 
 /* A reading the student's answer rules out: struck in ink, still legible. */
-/* Inline + cloned decoration so every wrapped line gets its own stroke. The stroke colour is Iris (#7759BA). */
+/* Inline + cloned decoration so every wrapped line gets its own stroke. The stroke is Iris, drawn per theme (--iris-strike in globals.css). */
 .strike {
   display: inline;
   padding: 0 0.15em;
   margin: 0 -0.15em;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 20 3.5, 45 7.5, 70 4.5 S 95 5.5, 99 3.5' fill='none' stroke='%237759BA' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  background-image: var(--iris-strike);
   background-repeat: no-repeat;
   background-position: 0 58%;
   background-size: 0% 0.6em;

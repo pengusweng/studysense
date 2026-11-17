@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { Wordmark } from "@/components/atoms/Wordmark";
+import { ThemeToggle } from "@/components/molecules/ThemeToggle";
 import { Hand } from "../atoms/Hand";
 import styles from "./LandingNav.module.css";
 
@@ -27,6 +28,7 @@ export function LandingNav({ sections, active, scrolled }: Props) {
             <Hand>studying, with evidence</Hand>
           </span>
         </Link>
+        <ThemeToggle className={styles.theme} />
 
         <nav aria-label="On this page" className={styles.tabsNav}>
           <ul className={styles.tabs}>

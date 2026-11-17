@@ -23,7 +23,7 @@
 
 .primary {
   background: var(--deep-iris);
-  color: var(--cloud-white);
+  color: var(--on-action);
 }
 
 .primary:hover:not(:disabled) {

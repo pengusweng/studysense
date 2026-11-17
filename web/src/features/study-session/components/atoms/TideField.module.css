@@ -23,11 +23,11 @@
 }
 
 .tide::after {
-  background: radial-gradient(ellipse 36% 30% at 50% 47%, rgb(119 89 186 / 0.1), transparent 70%);
+  background: radial-gradient(ellipse 36% 30% at 50% 47%, rgb(var(--iris-rgb) / 0.1), transparent 70%);
 }
 
 .tide::before {
-  background: radial-gradient(ellipse 26% 22% at 50% 50%, rgb(119 89 186 / 0.06), transparent 70%);
+  background: radial-gradient(ellipse 26% 22% at 50% 50%, rgb(var(--iris-rgb) / 0.06), transparent 70%);
   animation-name: lamp-b;
   animation-duration: 71s;
 }
@@ -85,7 +85,7 @@
 }
 
 .wide {
-  background: repeating-linear-gradient(to bottom, rgb(119 89 186 / 0.2) 0 1.5px, transparent 1.5px 96px);
+  background: repeating-linear-gradient(to bottom, rgb(var(--iris-rgb) / 0.2) 0 1.5px, transparent 1.5px 96px);
   animation-duration: 26s;
   animation-delay: -7s;
 }

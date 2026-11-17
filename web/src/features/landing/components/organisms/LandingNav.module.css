@@ -10,8 +10,8 @@
 /* Once the page moves, the header rests on a ruled edge so the spreads read as sliding beneath it. */
 .header[data-scrolled] {
   box-shadow:
-    0 1px 0 rgb(41 36 59 / 0.18),
-    0 10px 18px -16px rgb(41 36 59 / 0.35);
+    0 1px 0 rgb(var(--shadow-rgb) / 0.18),
+    0 10px 18px -16px rgb(var(--shadow-rgb) / 0.35);
 }
 
 /* One line, every item standing on the notebook's top edge. */
@@ -45,7 +45,6 @@
   display: flex;
   align-items: baseline;
   gap: 0.7rem;
-  margin-right: auto;
   padding-bottom: 0.7rem;
   color: var(--ink);
   text-decoration: none;
@@ -54,6 +53,13 @@
 
 .brand:hover {
   text-decoration: none;
+}
+
+/* The theme switch sits on the desk beside the wordmark, sharing its line; the tabs keep the far side. */
+.theme {
+  margin-right: auto;
+  margin-left: var(--proposal-space-2);
+  padding-bottom: 0.2rem;
 }
 
 .subject {
@@ -138,6 +144,7 @@
   }
 
   .brand,
+  .theme,
   .inner .demo {
     animation: header-in 600ms var(--proposal-ease-out) both;
   }
@@ -174,6 +181,11 @@
   }
 
   .brand {
+    align-self: center;
+    padding-bottom: 0;
+  }
+
+  .theme {
     align-self: center;
     padding-bottom: 0;
   }

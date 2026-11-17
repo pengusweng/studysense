@@ -12,8 +12,8 @@
   background-size: 24px 24px;
   background-position: -1px -1px;
   box-shadow:
-    0 1px 2px rgb(41 36 59 / 0.08),
-    0 28px 56px -28px rgb(41 36 59 / 0.32);
+    0 1px 2px rgb(var(--shadow-rgb) / 0.08),
+    0 28px 56px -28px rgb(var(--shadow-rgb) / 0.32);
 }
 
 @media (max-width: 640px) {
