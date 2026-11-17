@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { LandingContainer } from "@/features/landing/containers/LandingContainer";
 
 export default function Home() {
-  redirect("/dashboard");
+  return <LandingContainer />;
 }

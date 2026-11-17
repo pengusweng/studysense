@@ -1,0 +1,54 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--proposal-space-2);
+  min-height: 44px;
+  padding: 0.7rem 1.35rem;
+  border: 1.5px solid var(--deep-iris);
+  border-radius: var(--proposal-radius-control);
+  font: 600 var(--proposal-text-base) / 1.2 var(--font-print-stack);
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--proposal-ease-out),
+    color 160ms var(--proposal-ease-out),
+    transform 160ms var(--proposal-ease-out);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.primary {
+  background: var(--deep-iris);
+  color: var(--cloud-white);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--ink);
+  border-color: var(--ink);
+  text-decoration: none;
+}
+
+.secondary {
+  background: transparent;
+  color: var(--deep-iris);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--pale-lavender);
+  text-decoration: none;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  border-color: var(--proposal-rule-strong);
+  background: var(--pale-lavender);
+  color: var(--proposal-pencil);
+}
+
+.button[aria-busy="true"] {
+  cursor: progress;
+}

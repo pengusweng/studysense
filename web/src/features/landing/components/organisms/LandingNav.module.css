@@ -1,0 +1,205 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--proposal-desk);
+  padding: 0 clamp(0.75rem, 3vw, 2.5rem);
+  transition: box-shadow 250ms var(--proposal-ease-out);
+}
+
+/* Once the page moves, the header rests on a ruled edge so the spreads read as sliding beneath it. */
+.header[data-scrolled] {
+  box-shadow:
+    0 1px 0 rgb(41 36 59 / 0.18),
+    0 10px 18px -16px rgb(41 36 59 / 0.35);
+}
+
+/* One line, every item standing on the notebook's top edge. */
+.inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.3rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 1.25rem;
+}
+
+/* Shared tab geometry: the section tabs and the demo tab are the same object. */
+.tab,
+.inner .demo {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem 0.45rem;
+  border: 1px solid var(--proposal-rule-strong);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  font-size: var(--proposal-text-base);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+/* Wordmark on the desk, its hand-written subject line beside it, sharing the tabs' text line. */
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin-right: auto;
+  padding-bottom: 0.7rem;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.subject {
+  font-size: 1.3rem;
+  line-height: 1;
+  transform: rotate(-2deg);
+}
+
+.tabsNav {
+  min-width: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tab {
+  position: relative;
+  background: var(--pale-lavender);
+  color: var(--ink);
+  font-weight: 500;
+  transform: translateY(3px);
+  transition:
+    transform 260ms var(--proposal-ease-out),
+    background-color 200ms var(--proposal-ease-out);
+}
+
+.tab:hover {
+  background: var(--cloud-white);
+  transform: translateY(0);
+  text-decoration: none;
+}
+
+/* The tab for the spread being read is pulled up and turns to page paper. */
+.tab[aria-current="location"] {
+  background: var(--cloud-white);
+  border-color: var(--ink);
+  border-top-width: 3px;
+  padding-top: calc(0.5rem - 2px);
+  font-weight: 700;
+  transform: translateY(0);
+}
+
+.tab:focus-visible {
+  outline-offset: -4px;
+}
+
+/* The demo is the last tab, filled: Deep Iris is reserved for actions. */
+.inner .demo {
+  margin-left: 0.5rem;
+  border-color: var(--deep-iris);
+  font-weight: 600;
+}
+
+.inner .demo:hover {
+  border-color: var(--ink);
+}
+
+.inner .demo:active {
+  transform: none;
+}
+
+.inner .demo:focus-visible {
+  outline-offset: 3px;
+}
+
+/* Page load: the section tabs slide up out of the notebook once it has opened. */
+@media (prefers-reduced-motion: no-preference) {
+  .tabsNav {
+    overflow: hidden;
+    padding-top: 6px;
+    margin-top: -6px;
+  }
+
+  .tabs li {
+    animation: tab-rise 650ms var(--proposal-ease-out) both;
+    animation-delay: calc(900ms + var(--i, 0) * 90ms);
+  }
+
+  .brand,
+  .inner .demo {
+    animation: header-in 600ms var(--proposal-ease-out) both;
+  }
+}
+
+@keyframes tab-rise {
+  from {
+    transform: translateY(110%);
+  }
+}
+
+@keyframes header-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .subject {
+    display: none;
+  }
+}
+
+/* Narrow: wordmark and demo on the first row, the section tabs on a second row that scrolls sideways. */
+@media (max-width: 920px) {
+  .header {
+    position: static;
+  }
+
+  .inner {
+    flex-wrap: wrap;
+    padding-top: var(--proposal-space-3);
+    row-gap: var(--proposal-space-2);
+  }
+
+  .brand {
+    align-self: center;
+    padding-bottom: 0;
+  }
+
+  .inner .demo {
+    align-self: center;
+    border-radius: var(--proposal-radius-control);
+    border-bottom: 1.5px solid var(--deep-iris);
+    font-size: var(--proposal-text-sm);
+  }
+
+  .tabsNav {
+    order: 3;
+    flex: 1 0 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .tabsNav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    padding: 0.45rem 0.8rem 0.4rem;
+    min-height: 2.5rem;
+    font-size: var(--proposal-text-sm);
+  }
+}

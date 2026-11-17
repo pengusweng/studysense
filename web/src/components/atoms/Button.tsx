@@ -1,5 +1,22 @@
 import type { ButtonHTMLAttributes } from "react";
+import styles from "./Button.module.css";
 
-export function Button(props: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button {...props} style={{ padding: "8px 16px", cursor: "pointer", ...props.style }} />;
+export type ButtonVariant = "primary" | "secondary";
+
+type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: ButtonVariant;
+  loading?: boolean;
+};
+
+export function Button({ variant = "primary", loading = false, className, disabled, children, ...rest }: Props) {
+  return (
+    <button
+      {...rest}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      className={[styles.button, styles[variant], className].filter(Boolean).join(" ")}
+    >
+      {loading ? "Working…" : children}
+    </button>
+  );
 }

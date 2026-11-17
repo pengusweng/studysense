@@ -1,0 +1,63 @@
+/* The student's hand: Iris ink, used at three touchpoints only (hero line, ruled-out readings, boundaries). */
+.hand {
+  font-family: var(--font-hand-stack);
+  font-size: 1.15em;
+  line-height: 1;
+  color: var(--iris);
+  letter-spacing: 0.01em;
+}
+
+.writeOn {
+  display: inline-block;
+  animation: write-on 900ms var(--proposal-ease-out) both;
+}
+
+@keyframes write-on {
+  from {
+    clip-path: inset(-0.5em 100% -0.5em -0.5em);
+  }
+  to {
+    clip-path: inset(-0.5em -0.5em -0.5em -0.5em);
+  }
+}
+
+/* A reading the student's answer rules out: struck in ink, still legible. */
+/* Inline + cloned decoration so every wrapped line gets its own stroke. The stroke colour is Iris (#7759BA). */
+.strike {
+  display: inline;
+  padding: 0 0.15em;
+  margin: 0 -0.15em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 20 3.5, 45 7.5, 70 4.5 S 95 5.5, 99 3.5' fill='none' stroke='%237759BA' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 0 58%;
+  background-size: 0% 0.6em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition:
+    background-size 650ms var(--proposal-ease-out),
+    color 300ms var(--proposal-ease-out);
+}
+
+.struck {
+  background-size: 100% 0.6em;
+}
+
+.muted {
+  color: var(--proposal-pencil);
+}
+
+/* Strokes that draw in when their spread opens (see Spread.module.css for the reveal hook). */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-motion="on"]) :global([data-reveal]:not([data-in])) .strike[data-strike] {
+    background-size: 0% 0.6em;
+  }
+}
+
+/* Sage highlighter: only ever on sensor evidence. */
+.highlight {
+  background: linear-gradient(transparent 12%, var(--sage) 12%, var(--sage) 88%, transparent 88%);
+  padding: 0 0.3em;
+  margin: 0 -0.15em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
