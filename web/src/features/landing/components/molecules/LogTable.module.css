@@ -1,0 +1,79 @@
+.list {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-log-stack);
+  font-size: var(--proposal-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--proposal-space-2);
+  padding: 0.5rem 0;
+}
+
+/* Label plus a dotted leader, like a hand-ruled log. */
+.row dt {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: baseline;
+  gap: var(--proposal-space-2);
+  min-width: 0;
+  color: var(--proposal-pencil);
+}
+
+.row dt::after {
+  content: "";
+  flex: 1 1 1.5rem;
+  min-width: 1.5rem;
+  border-bottom: 1.5px dotted var(--proposal-rule-strong);
+}
+
+.row dd {
+  margin: 0;
+  flex: 0 1 auto;
+  max-width: 62%;
+  text-align: right;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.note {
+  display: block;
+  margin-top: 0.15rem;
+  font-weight: 400;
+  color: var(--proposal-pencil);
+  font-size: 0.8125rem;
+}
+
+/* The student's own margin note, slightly askew like real handwriting. */
+.handNote {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 1.7rem;
+  line-height: 1;
+  transform: rotate(-3deg);
+  transform-origin: right center;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .handNote {
+    transform-origin: left center;
+  }
+
+  .row {
+    flex-wrap: wrap;
+    gap: 0.1rem;
+  }
+  .row dt::after {
+    display: none;
+  }
+  .row dd {
+    flex-basis: 100%;
+    max-width: none;
+    text-align: left;
+  }
+}

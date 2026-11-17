@@ -1,18 +1,30 @@
 import type { Metadata } from "next";
-import { AppShell } from "@/components/organisms/AppShell";
+import { Nanum_Pen_Script, Red_Hat_Mono, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
 
+const print = Schibsted_Grotesk({ subsets: ["latin"], variable: "--font-print", display: "swap" });
+const log = Red_Hat_Mono({ subsets: ["latin"], variable: "--font-log", display: "swap" });
+const hand = Nanum_Pen_Script({ subsets: ["latin"], weight: "400", variable: "--font-hand", display: "swap" });
+
 export const metadata: Metadata = {
-  title: "StudySense",
-  description: "An empathic academic support system",
+  title: "StudySense: the data is a lead, you write the conclusion",
+  description:
+    "A non-clinical study companion for university students. It reads wearable data as evidence, asks before it assumes, and can choose to stay quiet.",
 };
+
+/**
+ * Marks the document as motion-capable before first paint, so scroll reveals can start hidden
+ * without ever hiding content from visitors with JS disabled or reduced motion on.
+ */
+const motionFlag = `try{if(matchMedia('(prefers-reduced-motion: no-preference)').matches)document.documentElement.dataset.motion='on'}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <AppShell>{children}</AppShell>
-      </body>
+    <html lang="en" className={`${print.variable} ${log.variable} ${hand.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: motionFlag }} />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
