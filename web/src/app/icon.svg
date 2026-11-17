@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .page { fill: #FAF8FE; stroke: #29243B; }
+    .margin { stroke: #29243B; stroke-opacity: .4; }
+    .pen { stroke: #7759BA; }
+    @media (prefers-color-scheme: dark) {
+      .page { fill: #2a2439; stroke: #ece7f7; }
+      .margin { stroke: #ece7f7; }
+      .pen { stroke: #b095ec; }
+    }
+  </style>
+  <g transform="rotate(-4 16 16)">
+    <rect class="page" x="5" y="3" width="22" height="26" rx="2.5" stroke-width="2"/>
+    <path class="margin" d="M10.5 4v24" stroke-width="1.6"/>
+  </g>
+  <path class="pen" d="M8 22 C 12 20.2, 15.5 23, 19.5 21 S 26 19.2, 29.5 19.8" fill="none" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,3 +1,4 @@
+/** The scaffold's API client (docs/AGENTS.md §11). Unused until the backend API exists; kept for it. */
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export async function http<T>(path: string, init?: RequestInit): Promise<T> {

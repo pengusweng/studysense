@@ -49,6 +49,60 @@
   color: var(--proposal-pencil);
 }
 
+/* Working: the button keeps its own colours (it is busy, not unavailable). */
 .button[aria-busy="true"] {
   cursor: progress;
+}
+
+.primary[aria-busy="true"] {
+  border-color: var(--deep-iris);
+  background: var(--deep-iris);
+  color: var(--on-action);
+}
+
+.secondary[aria-busy="true"] {
+  border-color: var(--deep-iris);
+  background: transparent;
+  color: var(--deep-iris);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 0.18em;
+  margin-left: -0.2em;
+  align-self: flex-end;
+  padding-bottom: 0.3em;
+}
+
+.dots span {
+  width: 0.22em;
+  height: 0.22em;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+:global(html[data-motion="on"]) .dots span {
+  animation: write-dot 1800ms var(--proposal-ease-in-out) infinite;
+}
+
+:global(html[data-motion="on"]) .dots span:nth-child(2) {
+  animation-delay: 300ms;
+}
+
+:global(html[data-motion="on"]) .dots span:nth-child(3) {
+  animation-delay: 600ms;
+}
+
+@keyframes write-dot {
+  0%,
+  15% {
+    opacity: 0;
+  }
+  35%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

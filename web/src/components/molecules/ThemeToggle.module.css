@@ -59,9 +59,18 @@
   background: var(--pale-lavender);
 }
 
-/* Narrow rows keep only the switch; its accessible name still says what it does. */
+/* Wide rows show the label, so the tooltip would only repeat it. */
+.tip {
+  display: none;
+}
+
+/* Narrow rows keep only the switch; its accessible name still says what it does, and the tooltip shows it. */
 @media (max-width: 480px) {
   .label {
     display: none;
+  }
+
+  .tip {
+    display: block;
   }
 }

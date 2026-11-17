@@ -237,12 +237,34 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 
 ## Components
 
+### Brand (issue #2)
+- **Signature motif: the student's pen stroke.** One Iris hand-drawn line, used in exactly three places: the logo mark, the underline under "Studying.", and the circle around a chosen answer. Nothing else is decorated with it.
+- **Mark** (`components/atoms/LogoMark.tsx`): a notebook page set 4° off square (Cloud White, Ink outline, 2.5/32 corner), its margin line, two faint rules, and the pen stroke running off the right edge. Decorative (`aria-hidden`) wherever the wordmark or a label names StudySense.
+- **Lockup:** `<Wordmark mark />`, the mark at 1.2em left of the wordmark with a 0.35em gap, in the app header and landing nav. The footer keeps the wordmark alone.
+- **Icons:** `app/icon.svg` is the favicon (the mark without the rules, heavier strokes for 16px, with its own dark palette for dark browser UI). `app/apple-icon.tsx` renders the full mark on the Pale Lavender desk at 180px.
+
 ### Buttons
 - **Shape:** gently rounded (6px), 44px minimum height, 1.5px border.
 - **Primary:** filled Deep Iris with Cloud White text, weight 600.
 - **Hover / Focus:** on hover the primary button fills with Ink. Pressing nudges it down 1px. Focus shows a 2px Deep Iris outline offset by 3px.
 - **Secondary:** transparent with Deep Iris text and border. Pale Lavender on hover.
 - **Disabled:** Pale Lavender fill with Pencil text and a Rule Strong border.
+- **Loading** (`loading`): keeps its own colours (busy, not unavailable), reads "Working" followed by three dots written in turn over 1.8s, never a spinner or a meter; `aria-busy` and a progress cursor; it can't be pressed twice. Nothing in the app waits yet, so it shows only on `/review/components`.
+
+### Tooltip
+- **Form:** a small print label (text-sm, Ink) on raised paper with a soft offset shadow, under its trigger; centred, or lined up with the trigger's right edge (`align="end"`) near the window's edge.
+- **Behaviour:** shows on mouse hover after 300ms and at once on keyboard focus; stays while the pointer is over it; Escape, blur or leaving close it. On touch, a tap shows it for 1.6s. It never holds anything that isn't said elsewhere; when the trigger's name already says it, it isn't announced twice (`describe={false}`).
+- **Use:** the theme switch below 480px, where the "Dark mode" label is hidden.
+
+### Toast
+- **Form:** one slip of raised paper at the foot of the window, centred, max 32rem: a print line (text-sm) and a "Close" text action.
+- **Behaviour:** the message is a polite live region. It stays at least 6s (7s by default), the countdown holds while hovered or focused, and it never carries an action that matters.
+- **Use:** confirmations that happened on the page just left. After setup, the Dashboard says "Your choice is saved for this visit. You can change it in Preferences." through a one-shot flash (`lib/flash.ts`) that is read once and cleared, so a reload doesn't repeat it.
+
+### Not found and error pages
+- **Form:** `NoticePage`, centred on the sheet inside the app shell: one heading in display-sm print, a Pencil line, the way on (primary plus a text link), and help.
+- **Not found:** "This page isn't in the notebook." / "The link may be old, or the page was never written." with "Go to the Dashboard" and "Back to the start". Unknown addresses reach it through the catch-all `app/(app)/[...missing]`, so the tabs and their styles are there; `app/not-found.tsx` is a bare fallback with only the lockup.
+- **Error:** "Something went wrong on this page." / "Nothing you chose is lost. Try again, or go back to the Dashboard." with "Try again" (`reset`) and "Go to the Dashboard". No codes or stack traces. `app/global-error.tsx` repeats it with inline colours if the root layout itself fails.
 
 ### Navigation (index tabs)
 - **Layout:** one line along the notebook's top edge. From left to right: the wordmark on the desk with a hand-written subject line, then the four section tabs (How it decides, Silence, The data, What it won't do), then "Open the demo" as the last tab.
@@ -293,7 +315,7 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 
 ### Theme switch
 - **Place:** on the desk, just right of the wordmark, sharing its line, in both the landing header and the app header. It is not a tab.
-- **Form:** a small Deep Iris switch (a 1.5px pill track and a round knob) with the label "Dark mode". Below 480px only the switch shows; its accessible name stays "Dark mode" (`role="switch"`).
+- **Form:** a small Deep Iris switch (a 1.5px pill track and a round knob) with the label "Dark mode". Below 480px only the switch shows; its accessible name stays "Dark mode" (`role="switch"`) and a tooltip shows the label on hover, focus or tap.
 - **Behaviour:** it follows the system setting until the student flips it, then remembers the choice on this device. A head script applies a stored choice before first paint, so the other theme never flashes. Where supported, the swap cross-fades the whole page in 420ms; under reduced motion it is instant.
 
 ### Notebook spread

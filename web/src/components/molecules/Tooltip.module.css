@@ -1,0 +1,54 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* A slip of raised paper under the trigger, in the quiet print voice. */
+.tip {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 50%;
+  --tip-x: -50%;
+  z-index: 20;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--proposal-radius-page);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font: 500 var(--proposal-text-sm) / 1.2 var(--font-print-stack);
+  white-space: nowrap;
+  box-shadow:
+    0 1px 2px rgb(var(--shadow-rgb) / 0.12),
+    0 8px 18px -8px rgb(var(--shadow-rgb) / 0.35);
+  transform: translate(var(--tip-x), 0);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tip[data-align="end"] {
+  left: auto;
+  right: 0;
+  --tip-x: 0;
+}
+
+.tip[data-open] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+:global(html[data-motion="on"]) .tip {
+  transition:
+    opacity 160ms var(--proposal-ease-out),
+    transform 160ms var(--proposal-ease-out),
+    visibility 0s linear 160ms;
+  transform: translate(var(--tip-x), -3px);
+}
+
+:global(html[data-motion="on"]) .tip[data-open] {
+  transform: translate(var(--tip-x), 0);
+  transition:
+    opacity 160ms var(--proposal-ease-out),
+    transform 160ms var(--proposal-ease-out),
+    visibility 0s;
+}

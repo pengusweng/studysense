@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { Spread } from "@/components/molecules/Spread";
 import { clearSetupDraft, setConsent, useKnownConsent, useSetupDraft, type CheckInsChoice } from "@/lib/consent";
+import { setFlash } from "@/lib/flash";
 import { sessionStorageAvailable } from "@/lib/sessionValue";
 import { useDemoRecord } from "@/lib/useDemoRecord";
 import { UsedPage } from "../components/organisms/UsedPage";
@@ -31,6 +32,8 @@ export function SetupContainer() {
     if (!value) return;
     setConsent({ checkIns: value });
     clearSetupDraft();
+    // Said on the Dashboard, since this page is gone by then.
+    setFlash("Your choice is saved for this visit. You can change it in Preferences.");
     router.push("/dashboard");
   }
 

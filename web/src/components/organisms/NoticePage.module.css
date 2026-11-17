@@ -1,0 +1,62 @@
+/* The lockup on the desk, for the fallback 404 that renders without the app shell. */
+.bare {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.25rem clamp(0.75rem, 3vw, 2.5rem) 1rem;
+}
+
+.bare a {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--proposal-space-3);
+  min-height: min(70vh, 40rem);
+  padding: var(--proposal-space-6) clamp(1rem, 4vw, 3.75rem);
+  text-align: center;
+}
+
+.title {
+  max-width: 18ch;
+  margin: 0;
+  font: 800 var(--proposal-text-display-sm) / 1.05 var(--font-print-stack);
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.line {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--proposal-pencil);
+  text-wrap: balance;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--proposal-space-3) var(--proposal-space-5);
+  margin: var(--proposal-space-3) 0 var(--proposal-space-2);
+}
+
+:global(html[data-motion="on"]) .body > * {
+  animation: arrive 700ms var(--proposal-ease-out) both;
+}
+
+:global(html[data-motion="on"]) .body > *:nth-child(n + 2) {
+  animation-delay: 90ms;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

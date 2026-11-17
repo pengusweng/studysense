@@ -1,6 +1,7 @@
 "use client";
 
 import { setTheme, useTheme } from "@/lib/theme";
+import { Tooltip } from "./Tooltip";
 import styles from "./ThemeToggle.module.css";
 
 /**
@@ -12,12 +13,15 @@ export function ThemeToggle({ className }: { className?: string }) {
   const dark = theme === "dark";
 
   return (
+    // On phones the label is hidden; the tooltip says it instead. Its name already says "Dark mode", so the
+    // tip isn't also announced as a description.
+    <Tooltip text="Dark mode" describe={false} className={className} tipClassName={styles.tip} align="end">
     <button
       type="button"
       role="switch"
       aria-checked={dark}
       aria-label="Dark mode"
-      className={[styles.toggle, className].filter(Boolean).join(" ")}
+      className={styles.toggle}
       data-ready={theme !== null || undefined}
       onClick={() => setTheme(dark ? "light" : "dark")}
     >
@@ -28,5 +32,6 @@ export function ThemeToggle({ className }: { className?: string }) {
         Dark mode
       </span>
     </button>
+    </Tooltip>
   );
 }

@@ -23,7 +23,7 @@ export function LandingNav({ sections, active, scrolled }: Props) {
     <header className={styles.header} data-scrolled={scrolled || undefined}>
       <div className={styles.inner}>
         <Link href="/" className={styles.brand} aria-label="StudySense home">
-          <Wordmark />
+          <Wordmark mark />
           <span className={styles.subject} aria-hidden="true">
             <Hand>studying, with evidence</Hand>
           </span>

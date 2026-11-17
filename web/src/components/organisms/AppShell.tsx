@@ -22,7 +22,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className={styles.header}>
         <div className={styles.inner}>
           <Link href="/" className={styles.brand} aria-label="StudySense home">
-            <Wordmark />
+            <Wordmark mark />
           </Link>
           <ThemeToggle className={styles.theme} />
           <nav aria-label="App" className={styles.nav}>

@@ -313,7 +313,7 @@ Things that affect the UI:
 - `reported_stress_*` and `reported_anxiety_*` are the ground-truth labels. They are model targets. Do not show them as if the student just entered them, and do not feed them to inference.
 - The data is per day. There is no minute-level or live signal for the UI to show.
 
-**No backend API exists in the repo.** The scaffold calls `GET /daily-features` and `POST /self-reports` against `NEXT_PUBLIC_API_URL`, but nothing serves them, and no model-serving endpoint is defined. Treat all API shapes as undecided.
+**No backend API exists in the repo.** The scaffold called `GET /daily-features` and `POST /self-reports` against `NEXT_PUBLIC_API_URL` (the self-report call went with `/self-report`; `src/lib/http.ts` is kept for the real API), but nothing serves them, and no model-serving endpoint is defined. Treat all API shapes as undecided.
 
 ---
 
@@ -324,7 +324,7 @@ The `development` scaffold (`feat(web): scaffold web architecture`) sets up the 
 | In the scaffold | Intended | 
 |---|---|
 | Nav has two links: Dashboard and Self-report | Three destinations: Dashboard, Study Session, Preferences. The check-in is a contextual flow, not a nav link |
-| `/self-report` page asks "How stressed do you feel today?" and "How anxious do you feel today?" on a 1 to 5 scale | An optional, neutral check-in about how studying is going and whether help is wanted. It must not resemble the SSAQS questionnaire or ask for self-diagnosis |
+| ~~`/self-report` page asks "How stressed do you feel today?" and "How anxious do you feel today?" on a 1 to 5 scale~~ **Resolved 2026-11-17:** the route and `features/self-report` were removed; `/self-report` now shows the 404 | An optional, neutral check-in about how studying is going and whether help is wanted (built as the check-in panel, issue #5). It must not resemble the SSAQS questionnaire or ask for self-diagnosis |
 | `StressBadge` labels the score low, medium, or high using cut-offs at 40 and 70 | No invented stress levels. The cut-offs are not from any source, and they read the Fitbit score backwards (higher is lower stress) |
 | Dashboard is three metric cards: Stress, Sleep, Steps | Dashboard leads with starting a study session, not physiological metrics |
 | No Study Session or Preferences feature | Both required for the MVP |

@@ -26,6 +26,7 @@
 }
 
 .brand {
+  display: flex;
   padding-bottom: 0.7rem;
   text-decoration: none;
 }

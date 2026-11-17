@@ -1,0 +1,71 @@
+.page {
+  padding: var(--proposal-space-5) clamp(1rem, 4vw, 3.75rem) var(--proposal-space-6);
+}
+
+.title {
+  margin: 0 0 var(--proposal-space-2);
+  font: 800 var(--proposal-text-xl) / 1.08 var(--font-print-stack);
+  letter-spacing: -0.025em;
+}
+
+.lede {
+  margin: 0 0 var(--proposal-space-5);
+  max-width: 62ch;
+  color: var(--proposal-pencil);
+}
+
+.section {
+  padding: var(--proposal-space-4) 0 var(--proposal-space-5);
+  border-top: 1px solid var(--proposal-rule-strong);
+}
+
+.heading {
+  margin: 0 0 var(--proposal-space-4);
+  font: 700 var(--proposal-text-lg) / 1.3 var(--font-print-stack);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--proposal-space-3) var(--proposal-space-4);
+  margin-bottom: var(--proposal-space-3);
+}
+
+/* The variant each row stands for, in the instrument's voice. */
+.label {
+  min-width: 6rem;
+  font: 400 var(--proposal-text-sm) / 1.5 var(--font-log-stack);
+  color: var(--proposal-pencil);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--proposal-space-4);
+}
+
+.note {
+  margin: var(--proposal-space-2) 0 0;
+  max-width: 62ch;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.panel {
+  margin: var(--proposal-space-3) 0;
+  padding-top: var(--proposal-space-3);
+  border-top: 1px solid var(--proposal-rule-strong);
+  max-width: 58ch;
+}
+
+.panel p {
+  margin: 0;
+}
+
+.status {
+  min-height: 1.5em;
+  margin: 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
