@@ -8,6 +8,15 @@
   max-width: 13ch;
 }
 
+/* The closing peak: the page opens and closes on a display line. */
+.displaySm {
+  margin: 0 0 var(--proposal-space-3);
+  font: 800 var(--proposal-text-display-sm) / 1 var(--font-print-stack);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 14ch;
+}
+
 .title {
   margin: 0 0 var(--proposal-space-4);
   font: 800 var(--proposal-text-xl) / 1.08 var(--font-print-stack);

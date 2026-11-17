@@ -1,4 +1,4 @@
-import type { CheckInAnswer, LogRow, Outcome, Profile, Reading, Rule } from "./types";
+import type { CheckInAnswer, LogRow, Outcome, Profile, Reading } from "./types";
 
 /**
  * One real participant-day from the SSAQS dataset (etl/data/raw/SSAQS dataset/1, 2025-02-24).
@@ -12,7 +12,7 @@ export const DEMO_DAY = {
     { label: "Sleep score", value: "85 / 100" },
     { label: "Deep sleep", value: "78 min" },
     { label: "Steps", value: "4,875" },
-    { label: "Mean HRV (RMSSD)", value: "71.4 ms" },
+    { label: "Heart-rate variability (RMSSD)", value: "71.4 ms" },
     { label: "Fitbit stress score", value: "71", handNote: "higher is calmer!", highlight: true },
   ] satisfies LogRow[],
 };
@@ -55,53 +55,11 @@ export const OUTCOMES: Record<CheckInAnswer, Outcome> = {
 };
 
 export const LOOP_STEPS: { title: string; body: string }[] = [
-  {
-    title: "Replay a day",
-    body: "A recorded SSAQS participant-day stands in for the wearable. Nothing is sensed live.",
-  },
-  {
-    title: "Estimate, tentatively",
-    body: "A model suggests one of four daily profiles. It may be wrong, and the app says so.",
-  },
-  {
-    title: "Ask, if it helps",
-    body: "At a natural pause, a short optional check-in. Skipping costs nothing.",
-  },
-  {
-    title: "Respond, or don’t",
-    body: "Rules pick from fixed templates: offer help, ask a clarifying question, suggest a break, or stay silent.",
-  },
-  {
-    title: "Let the student have the last word",
-    body: "Accept, dismiss, or correct. That feedback can inform what it chooses next time.",
-  },
-];
-
-export const RULES: Rule[] = [
-  {
-    when: "The estimate looks elevated and you say you’re overwhelmed",
-    then: "Offers optional support: smaller steps, or a short break.",
-  },
-  {
-    when: "The estimate looks elevated but you say you’re focused",
-    then: "Says nothing. Your flow wins.",
-  },
-  {
-    when: "The evidence is missing, uncertain, or contradictory",
-    then: "Asks, waits, or holds back. The least intrusive option.",
-  },
-  {
-    when: "You ask for help",
-    then: "Helps, whatever the estimate says, and even when there is none.",
-  },
-  {
-    when: "You dismiss a suggestion",
-    then: "The session carries on. The same prompt doesn’t come back.",
-  },
-  {
-    when: "You’ve asked for fewer interruptions",
-    then: "Stays quiet.",
-  },
+  { title: "Replay a day", body: "One recorded SSAQS day stands in for the watch." },
+  { title: "Estimate, tentatively", body: "A model suggests one of four daily profiles." },
+  { title: "Ask, if it helps", body: "At a natural pause, one optional question." },
+  { title: "Respond, or don’t", body: "Rules choose a response, or none." },
+  { title: "Let the student have the last word", body: "Accept, dismiss, or correct it." },
 ];
 
 export const PROFILES: Profile[] = [
@@ -124,9 +82,7 @@ export const DATA_FACTS: LogRow[] = [
 
 export const BOUNDARIES: string[] = [
   "Diagnose you, or call a profile a feeling",
-  "Pretend a watch is connected",
   "Interrupt because one number moved",
-  "Make you answer before you can keep studying",
   "Write its replies with a language model",
   "Claim it has learned from you",
 ];

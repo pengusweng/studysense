@@ -23,6 +23,5 @@ export type LogRow = {
   highlight?: boolean;
 };
 
-export type Rule = { when: string; then: string };
 
 export type Profile = { code: string; name: string; stress: "lower" | "higher"; anxiety: "lower" | "higher" };

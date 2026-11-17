@@ -1,43 +1,175 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-17T00:00:00Z",
+  "generatedAt": "2026-11-17T12:00:00Z",
   "title": "Design System: StudySense",
   "extensions": {
     "colorMeta": {
-      "deep-iris": { "role": "primary", "displayName": "Deep Iris", "tonalRamp": ["#22183a", "#33245a", "#4a357c", "#60449d", "#7d66b3", "#a08fcb", "#c6bbe2", "#ebe6f6"] },
-      "iris": { "role": "primary", "displayName": "Iris", "tonalRamp": ["#261c3d", "#3b2c61", "#563f8c", "#7759ba", "#9580cb", "#b3a5da", "#d3cae9", "#f0ecf8"] },
-      "sage": { "role": "secondary", "displayName": "Sage", "tonalRamp": ["#1c2f2b", "#2e4a44", "#4a6f68", "#6f978f", "#a8cfc7", "#c3ddd8", "#dbebe8", "#f1f8f6"] },
-      "ink": { "role": "neutral", "displayName": "Ink", "tonalRamp": ["#14111d", "#29243b", "#3f3954", "#57506d", "#736d88", "#9893a8", "#c1bdcb", "#e8e6ed"] },
-      "pencil": { "role": "neutral", "displayName": "Pencil" },
-      "cloud-white": { "role": "neutral", "displayName": "Cloud White" },
-      "pale-lavender": { "role": "neutral", "displayName": "Pale Lavender" },
-      "rule": { "role": "neutral", "displayName": "Rule" },
-      "rule-strong": { "role": "neutral", "displayName": "Rule Strong" },
-      "desk": { "role": "neutral", "displayName": "Desk" }
+      "deep-iris": {
+        "role": "primary",
+        "displayName": "Deep Iris",
+        "tonalRamp": [
+          "#22183a",
+          "#33245a",
+          "#4a357c",
+          "#60449d",
+          "#7d66b3",
+          "#a08fcb",
+          "#c6bbe2",
+          "#ebe6f6"
+        ]
+      },
+      "iris": {
+        "role": "primary",
+        "displayName": "Iris",
+        "tonalRamp": [
+          "#261c3d",
+          "#3b2c61",
+          "#563f8c",
+          "#7759ba",
+          "#9580cb",
+          "#b3a5da",
+          "#d3cae9",
+          "#f0ecf8"
+        ]
+      },
+      "sage": {
+        "role": "secondary",
+        "displayName": "Sage",
+        "tonalRamp": [
+          "#1c2f2b",
+          "#2e4a44",
+          "#4a6f68",
+          "#6f978f",
+          "#a8cfc7",
+          "#c3ddd8",
+          "#dbebe8",
+          "#f1f8f6"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "#14111d",
+          "#29243b",
+          "#3f3954",
+          "#57506d",
+          "#736d88",
+          "#9893a8",
+          "#c1bdcb",
+          "#e8e6ed"
+        ]
+      },
+      "pencil": {
+        "role": "neutral",
+        "displayName": "Pencil"
+      },
+      "cloud-white": {
+        "role": "neutral",
+        "displayName": "Cloud White"
+      },
+      "pale-lavender": {
+        "role": "neutral",
+        "displayName": "Pale Lavender"
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule"
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Rule Strong"
+      },
+      "desk": {
+        "role": "neutral",
+        "displayName": "Desk"
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "The hero thesis only; one per page." },
-      "headline": { "displayName": "Headline", "purpose": "Spread titles." },
-      "title": { "displayName": "Title", "purpose": "Sub-sections and the log title." },
-      "body": { "displayName": "Body", "purpose": "Prose, max 58ch." },
-      "label": { "displayName": "Label", "purpose": "Hints, folios, table headers; Pencil colour." },
-      "log": { "displayName": "Sensor log", "purpose": "Only what a device recorded: log rows, provenance, values, axes, profile codes." },
-      "hand": { "displayName": "Student's hand", "purpose": "Only what the student writes: margin notes, written answers." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hero thesis only; one per page."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Spread titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Sub-sections and the log title."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose, max 58ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Hints, folios, table headers; Pencil colour."
+      },
+      "log": {
+        "displayName": "Sensor log",
+        "purpose": "Only what a device recorded: log rows, provenance, values, axes, profile codes."
+      },
+      "hand": {
+        "displayName": "Student's hand",
+        "purpose": "Only what the student writes: margin notes, written answers."
+      },
+      "display-sm": {
+        "displayName": "Display small",
+        "purpose": "The closing call to action only; the page opens and closes on a display line."
+      },
+      "readings": {
+        "displayName": "Readings",
+        "purpose": "The hero's struck-out list of possible meanings."
+      }
     },
     "shadows": [
-      { "name": "notebook-on-desk", "value": "0 1px 2px rgb(41 36 59 / 0.08), 0 28px 56px -28px rgb(41 36 59 / 0.32)", "purpose": "Every spread resting on the desk." },
-      { "name": "binding-fall-off", "value": "linear-gradient(to left, rgb(41 36 59 / 0.07), transparent 28px)", "purpose": "Page curving into the gutter (mirrored at 0.06 / 22px on the right page)." },
-      { "name": "header-resting-edge", "value": "0 1px 0 rgb(41 36 59 / 0.18), 0 10px 18px -16px rgb(41 36 59 / 0.35)", "purpose": "Sticky header once the page has scrolled." }
+      {
+        "name": "notebook-on-desk",
+        "value": "0 1px 2px rgb(41 36 59 / 0.08), 0 28px 56px -28px rgb(41 36 59 / 0.32)",
+        "purpose": "Every spread resting on the desk."
+      },
+      {
+        "name": "binding-fall-off",
+        "value": "linear-gradient(to left, rgb(41 36 59 / 0.07), transparent 28px)",
+        "purpose": "Page curving into the gutter (mirrored at 0.06 / 22px on the right page)."
+      },
+      {
+        "name": "header-resting-edge",
+        "value": "0 1px 0 rgb(41 36 59 / 0.18), 0 10px 18px -16px rgb(41 36 59 / 0.35)",
+        "purpose": "Sticky header once the page has scrolled."
+      }
     ],
     "motion": [
-      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "All entrances and state transitions." },
-      { "name": "gate", "value": "html[data-motion=\"on\"]", "purpose": "Set before paint when no reduced-motion preference; hidden pre-reveal states exist only under it." },
-      { "name": "reveal", "value": "IntersectionObserver threshold 0.12, rootMargin 0px 0px -6% 0px", "purpose": "Adds data-in to each later spread." }
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All entrances and state transitions."
+      },
+      {
+        "name": "gate",
+        "value": "html[data-motion=\"on\"]",
+        "purpose": "Set before paint when no reduced-motion preference; hidden pre-reveal states exist only under it."
+      },
+      {
+        "name": "reveal",
+        "value": "IntersectionObserver threshold 0.12, rootMargin 0px 0px -6% 0px",
+        "purpose": "Adds data-in to each later spread."
+      }
     ],
     "breakpoints": [
-      { "name": "spread-collapse", "value": "860px" },
-      { "name": "header-two-row", "value": "920px" },
-      { "name": "header-subject-hidden", "value": "1100px" }
+      {
+        "name": "spread-collapse",
+        "value": "860px"
+      },
+      {
+        "name": "header-two-row",
+        "value": "920px"
+      },
+      {
+        "name": "header-subject-hidden",
+        "value": "1100px"
+      }
     ]
   },
   "components": [
@@ -99,10 +231,31 @@
       "Motion is pen-and-paper: pages swing open, rows are written in, strikes and circles are drawn."
     ],
     "rules": [
-      { "name": "The Sage Is Evidence Rule", "body": "Sage marks only something a sensor recorded. Never use it for success states, buttons or decoration.", "section": "colors" },
-      { "name": "The Iris Is The Student Rule", "body": "Iris marks only what the student says or decides: a hand note, a circle, a strike. Actions take Deep Iris, never Iris.", "section": "colors" },
-      { "name": "The Three Voices Rule", "body": "Mono is the sensor and hand is the student. Everything else is print. If a line is neither recorded by a device nor written by the student, it is set in print.", "section": "typography" },
-      { "name": "The Only The Notebook Lifts Rule", "body": "Buttons, tabs, tables and plots stay flat on the page. A shadow means paper resting on the desk.", "section": "elevation" }
+      {
+        "name": "The Sage Is Evidence Rule",
+        "body": "Sage marks only something a sensor recorded. Never use it for success states, buttons or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Iris Is The Student Rule",
+        "body": "Iris marks only what the student says or decides: a hand note, a circle, a strike. Actions take Deep Iris, never Iris.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Voices Rule",
+        "body": "Mono is the sensor and hand is the student. Everything else is print. If a line is neither recorded by a device nor written by the student, it is set in print.",
+        "section": "typography"
+      },
+      {
+        "name": "The Only The Notebook Lifts Rule",
+        "body": "Buttons, tabs, tables and plots stay flat on the page. A shadow means paper resting on the desk.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Say It Once Rule",
+        "body": "Each claim the product makes has one home on the page: \"replayed, not live\" in the hero provenance line and the Data intro, \"tentative\" in the plot caption, \"optional\" shown by the check-in itself, silence in its own spread, and the refusals in the limits list. Don't restate a claim in a second section.",
+        "section": "typography"
+      }
     ],
     "dos": [
       "Do put every new section on a notebook spread, with a folio.",

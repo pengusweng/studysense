@@ -1,9 +1,10 @@
-import { LOOP_STEPS, RULES } from "../../content";
+import { LOOP_STEPS, PROFILES } from "../../content";
 import t from "../../type.module.css";
-import { RuleTable } from "../molecules/RuleTable";
+import { ProfileGrid } from "../molecules/ProfileGrid";
 import { Spread } from "../molecules/Spread";
 import s from "./Sections.module.css";
 
+/** The loop on the left; the four profiles its estimate can land on, on the right. */
 export function HowItDecidesSpread() {
   return (
     <Spread
@@ -24,11 +25,16 @@ export function HowItDecidesSpread() {
             ))}
           </ol>
           <p className={`${s.loopBack} ${t.pencil}`} data-enter style={{ "--i": LOOP_STEPS.length } as React.CSSProperties}>
-            …then back to the first step, with your feedback in hand.
+            …then back to step 1, with your feedback.
           </p>
         </>
       }
-      right={<RuleTable caption="The rules it follows" rules={RULES} />}
+      right={
+        <ProfileGrid
+          profiles={PROFILES}
+          caption="The estimate is one of four whole-day profiles, split at 50 on the 0–100 self-report scales (a course choice, not a clinical line). It may be wrong; the app says what it’s based on, and you can correct it."
+        />
+      }
     />
   );
 }

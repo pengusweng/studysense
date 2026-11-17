@@ -19,6 +19,17 @@ typography:
     fontWeight: 800
     lineHeight: 0.97
     letterSpacing: "-0.035em"
+  display-sm:
+    fontFamily: "Schibsted Grotesk, Segoe UI, system-ui, sans-serif"
+    fontSize: "clamp(2rem, 1.3rem + 2.2vw, 3.25rem)"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+  readings:
+    fontFamily: "Schibsted Grotesk, Segoe UI, system-ui, sans-serif"
+    fontSize: "clamp(2rem, 1.6rem + 1.2vw, 2.75rem)"
+    fontWeight: 600
+    lineHeight: 1
   headline:
     fontFamily: "Schibsted Grotesk, Segoe UI, system-ui, sans-serif"
     fontSize: "clamp(1.5rem, 1.2rem + 1vw, 2rem)"
@@ -48,7 +59,7 @@ typography:
     fontFeature: "tnum"
   hand:
     fontFamily: "Nanum Pen Script, Segoe Print, cursive"
-    fontSize: "1.3rem"
+    fontSize: "1.7rem"
     fontWeight: 400
     lineHeight: 1
 rounded:
@@ -151,13 +162,24 @@ The palette is restrained lavender paper with one accent per meaning. No colour 
 **Character:** A dense, newspaper-weight grotesk for anything printed, with a quiet mono for the instrument's voice and a felt-tip hand for the person's. The contrast between the three voices is the whole story.
 
 ### Hierarchy
-- **Display** (800, fluid 38–66px, 0.97 line height, −0.035em): one per page, the hero thesis only, at most 13ch wide.
+- **Display** (800, fluid 38–66px, 0.97 line height, −0.035em): the hero thesis only, at most 13ch wide.
+- **Display small** (800, fluid 32–52px, line height 1, −0.03em): the closing call to action only, at most 14ch. The page opens and closes on a display line; nothing in between uses one.
+- **Readings** (600, fluid 32–44px, line height 1): the hero's struck-out list of possible meanings.
 - **Headline** (800, fluid 24–32px, 1.08): spread titles, at most 22ch.
 - **Title** (700, 20px, 1.2): sub-sections, the log title and the closing heading.
 - **Body** (400, 17px, 1.55): prose up to 58ch, lede at 20px and 44ch.
 - **Label** (400, 14px): hints, folios, "Your reading", table headers. Uses the Pencil colour.
 - **Log** (Red Hat Mono, 14px, tabular numbers): the sensor log, provenance lines, data values, plot axes and profile codes.
-- **Hand** (Nanum Pen Script, about 21px, rotated −2 to −3°): margin notes, written answers and the header's subject line.
+- **Hand** (Nanum Pen Script, rotated −2 to −3°): about 27px (1.7rem) for margin notes and written answers, and about 21px (1.3rem) for the header's subject line.
+
+### Named Rules
+**The Say It Once Rule.** Each claim the product makes has one home on the page:
+- "Replayed, not live" goes in the hero provenance line and the Data intro.
+- "Tentative" goes in the plot caption.
+- "Optional" is shown by the check-in itself.
+- Silence gets its own spread.
+- The refusals go in the limits list.
+Don't restate a claim in a second section.
 
 ### Named Rules
 **The Three Voices Rule.** Mono is the sensor and hand is the student. Everything else is print. If a line is neither recorded by a device nor written by the student, it is set in print.
@@ -190,7 +212,7 @@ Depth is physical, not interface chrome. The notebook lifts off the desk and not
 
 ## Shapes
 
-Paper corners are nearly square (3px). Controls are gently rounded (6px). Index tabs round only at the top (8px 8px 0 0) and have no bottom border, so they read as part of the page below. Radios are true circles. Rules are hairlines (1px) for ruling and 1.5–2px for emphasis: the provenance underline, the reading line and the plot split.
+Focus outlines round slightly (2px). Paper corners are nearly square (3px). Controls are gently rounded (6px). Index tabs round only at the top (8px 8px 0 0) and have no bottom border, so they read as part of the page below. Radios are true circles. Rules are hairlines (1px) for ruling and 1.5–2px for emphasis: the provenance underline, the reading line and the plot split.
 
 ## Components
 
@@ -202,7 +224,7 @@ Paper corners are nearly square (3px). Controls are gently rounded (6px). Index 
 - **Disabled:** Pale Lavender fill with Pencil text and a Rule Strong border.
 
 ### Navigation (index tabs)
-- **Layout:** one line along the notebook's top edge. From left to right: the wordmark on the desk with a hand-written subject line, then the five section tabs, then "Open the demo" as the last tab.
+- **Layout:** one line along the notebook's top edge. From left to right: the wordmark on the desk with a hand-written subject line, then the four section tabs (How it decides, Silence, The data, What it won't do), then "Open the demo" as the last tab.
 - **Resting:** Pale Lavender with a Rule Strong border and weight 500, sitting 3px low.
 - **Hover:** turns to paper and rises.
 - **Current section** (`aria-current="location"`): Cloud White, a 3px Ink top edge and weight 700, pulled fully up.
@@ -226,6 +248,7 @@ A single-column list of answers, one per ruled line, with a 40px minimum row hei
 A wavy Iris line drawn across text. It wraps across lines, can be muted to Pencil, and adds a screen-reader suffix " (ruled out)".
 
 ### Profile plot
+It sits on the right page of "How it decides", opposite the 5 loop steps. Its body-size caption is the page's only statement that the estimate is tentative.
 A stress × anxiety plane split at 50 by dashed Ink lines, with four quadrants labelled with mono codes. It shows geometry only, never data points.
 
 ### Motion

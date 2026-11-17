@@ -126,9 +126,8 @@
   max-width: 16ch;
 }
 
+/* The caption carries the page's only statement that the estimate is tentative, so it reads as body text. */
 .caption {
-  margin-top: var(--proposal-space-3);
-  font-size: var(--proposal-text-sm);
-  color: var(--proposal-pencil);
-  max-width: 50ch;
+  margin-top: var(--proposal-space-4);
+  max-width: 46ch;
 }

@@ -10,7 +10,7 @@ export function LimitsSpread() {
     <Spread
       id="limits"
       labelledBy="limits-title"
-      folio={12}
+      folio={10}
       left={
         <>
           <h2 id="limits-title" className={t.title}>
@@ -31,11 +31,8 @@ export function LimitsSpread() {
       right={
         <div className={s.close}>
           <div>
-            <h2 className={t.title}>See the whole loop on a real participant-day</h2>
-            <p className={t.prose}>
-              The demo replays SSAQS records and walks through the full loop: estimate, optional check-in, response or
-              silence, and your feedback.
-            </p>
+            <h2 className={t.displaySm}>See the whole loop on a real participant-day</h2>
+            <p className={t.prose}>Walk through one recorded day, from estimate to feedback.</p>
             <div className={s.closeActions}>
               <ButtonLink href="/dashboard">Open the demo</ButtonLink>
             </div>

@@ -42,8 +42,8 @@ export function HeroSpread({ answer, outcome, onAnswer, onReset }: Props) {
         The data is a lead. You write the conclusion.
       </h1>
       <p className={t.lede}>
-        StudySense is a study companion for university students. It treats wearable data as evidence, not as how
-        you feel. It asks before it assumes, and it’s allowed to say nothing at all.
+        A study companion that reads wearable data as evidence, not feelings. It asks before it assumes, and it’s
+        allowed to say nothing.
       </p>
 
       <CheckIn

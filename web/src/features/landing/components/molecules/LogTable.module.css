@@ -44,7 +44,7 @@
   margin-top: 0.15rem;
   font-weight: 400;
   color: var(--proposal-pencil);
-  font-size: 0.8125rem;
+  font-size: var(--proposal-text-sm);
 }
 
 /* The student's own margin note, slightly askew like real handwriting. */

@@ -34,6 +34,7 @@
   --proposal-text-lg: 1.25rem;
   --proposal-text-xl: clamp(1.5rem, 1.2rem + 1vw, 2rem);
   --proposal-text-display: clamp(2.375rem, 1.4rem + 3vw, 4.125rem);
+  --proposal-text-display-sm: clamp(2rem, 1.3rem + 2.2vw, 3.25rem);
 
   --proposal-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
