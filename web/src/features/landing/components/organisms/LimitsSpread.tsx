@@ -1,8 +1,8 @@
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { BOUNDARIES } from "../../content";
 import t from "../../type.module.css";
-import { Strike } from "../atoms/Strike";
-import { Spread } from "../molecules/Spread";
+import { Strike } from "@/components/atoms/Strike";
+import { Spread } from "@/components/molecules/Spread";
 import s from "./Sections.module.css";
 
 export function LimitsSpread() {

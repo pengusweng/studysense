@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/atoms/Button";
 import { TextButton } from "@/components/atoms/TextButton";
-import { HelpCorner } from "../molecules/HelpCorner";
+import { HelpCorner } from "@/components/molecules/HelpCorner";
 import styles from "./FocusView.module.css";
 
 type Props = {

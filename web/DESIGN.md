@@ -252,6 +252,11 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 - **Demo tab:** same tab geometry, filled Deep Iris.
 - **Below 920px:** the tabs form a sideways-scrolling row, and the demo becomes a normal rounded button.
 
+### Setup spread (consent, issue #3)
+- **Form:** one notebook spread. The left page is the instrument's voice: "What StudySense uses" and a mono log (source, record, device, "replayed, not live"), then two printed lines. The right page is the student's: "One choice", a neutral answer list with nothing preselected, and the chosen answer circled in Iris.
+- **Actions:** the primary action is disabled until a pick, with the reason in words beside it ("Pick one to continue"). "Back" saves nothing. "No, keep quiet" is a full answer, with no warning.
+- **Shared parts:** Spread, LogTable, AnswerList, Hand, Highlight, Strike and HelpCorner live in `src/components`, shared by the landing page, the session and setup.
+
 ### Theme switch
 - **Place:** on the desk, just right of the wordmark, sharing its line, in both the landing header and the app header. It is not a tab.
 - **Form:** a small Deep Iris switch (a 1.5px pill track and a round knob) with the label "Dark mode". Below 480px only the switch shows; its accessible name stays "Dark mode" (`role="switch"`).

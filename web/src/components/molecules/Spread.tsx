@@ -12,10 +12,11 @@ type Props = {
   intro?: boolean;
   /** Page number of the left page. The right page is folio + 1. */
   folio: number;
+  className?: string;
 };
 
 /** One open notebook spread: two graph-ruled pages on a single inked gutter. Stacks on narrow screens. */
-export function Spread({ id, labelledBy, left, right, rightFirst = false, intro = false, folio }: Props) {
+export function Spread({ id, labelledBy, left, right, rightFirst = false, intro = false, folio, className }: Props) {
   const leftPage = (
     <div key="l" className={`${styles.page} ${styles.left}`}>
       {left}
@@ -37,7 +38,7 @@ export function Spread({ id, labelledBy, left, right, rightFirst = false, intro 
     <section
       id={id}
       aria-labelledby={labelledBy}
-      className={`${styles.section} ${intro ? styles.intro : ""}`}
+      className={[styles.section, intro && styles.intro, className].filter(Boolean).join(" ")}
       data-reveal={intro ? undefined : ""}
     >
       <div className={styles.spread}>{rightFirst ? [rightPage, leftPage] : [leftPage, rightPage]}</div>

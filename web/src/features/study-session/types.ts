@@ -1,8 +1,4 @@
-/** Replayable days per SSAQS participant, as ISO dates. */
-export type DemoDays = Record<number, readonly string[]>;
-
-/** Whether the selected demo record can be replayed. */
-export type RecordCheck = "checking" | "available" | "unavailable";
+export type { DemoDays, RecordCheck } from "@/lib/demoRecord";
 
 /** The panel unfolded from the demo source note, if any. */
 export type NotePanel = "about" | "change" | null;

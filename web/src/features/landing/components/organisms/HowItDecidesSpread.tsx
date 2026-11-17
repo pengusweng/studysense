@@ -1,7 +1,7 @@
 import { LOOP_STEPS, PROFILES } from "../../content";
 import t from "../../type.module.css";
 import { ProfileGrid } from "../molecules/ProfileGrid";
-import { Spread } from "../molecules/Spread";
+import { Spread } from "@/components/molecules/Spread";
 import s from "./Sections.module.css";
 
 /** The loop on the left; the four profiles its estimate can land on, on the right. */

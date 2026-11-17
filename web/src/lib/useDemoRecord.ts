@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDemoRecordValue, type DemoRecord } from "@/lib/demoRecord";
-import { demoRecordService } from "../services/demoRecordService";
-import type { DemoDays, RecordCheck } from "../types";
+import { useDemoRecordValue, type DemoDays, type DemoRecord, type RecordCheck } from "./demoRecord";
+import { demoRecordService } from "./demoRecordService";
 
 /** The selected demo record, the list of replayable days, and whether the selection can be replayed. */
 export function useDemoRecord() {

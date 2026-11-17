@@ -1,5 +1,5 @@
 import type { Reading } from "../../types";
-import { Strike } from "../atoms/Strike";
+import { Strike } from "@/components/atoms/Strike";
 import styles from "./Readings.module.css";
 
 type Props = {

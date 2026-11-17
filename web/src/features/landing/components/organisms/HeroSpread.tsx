@@ -2,11 +2,11 @@ import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { CHECK_IN_OPTIONS, DEMO_DAY, READINGS } from "../../content";
 import type { CheckInAnswer, Outcome } from "../../types";
 import t from "../../type.module.css";
-import { Hand } from "../atoms/Hand";
-import { CheckIn } from "../molecules/CheckIn";
-import { LogTable } from "../molecules/LogTable";
+import { Hand } from "@/components/atoms/Hand";
+import { AnswerList } from "@/components/molecules/AnswerList";
+import { LogTable } from "@/components/molecules/LogTable";
 import { Readings } from "../molecules/Readings";
-import { Spread } from "../molecules/Spread";
+import { Spread } from "@/components/molecules/Spread";
 import styles from "./HeroSpread.module.css";
 
 type Props = {
@@ -46,7 +46,7 @@ export function HeroSpread({ answer, outcome, onAnswer, onReset }: Props) {
         allowed to say nothing.
       </p>
 
-      <CheckIn
+      <AnswerList
         question="Try it: how is studying going?"
         hint="Just a preview. Pick one to see what the app would do. Nothing is saved."
         options={CHECK_IN_OPTIONS}

@@ -1,7 +1,17 @@
-import type { LogRow } from "../../types";
 import { Hand } from "../atoms/Hand";
 import { Highlight } from "../atoms/Highlight";
 import styles from "./LogTable.module.css";
+
+export type LogRow = {
+  label: string;
+  value: string;
+  /** Printed note under the value. */
+  note?: string;
+  /** The student's hand-written margin note (Iris ink). */
+  handNote?: string;
+  /** Sage highlight: only for a value a sensor recorded. */
+  highlight?: boolean;
+};
 
 type Props = {
   rows: LogRow[];

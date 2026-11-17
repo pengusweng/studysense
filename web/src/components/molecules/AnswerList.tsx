@@ -1,21 +1,20 @@
 import { useId } from "react";
-import type { CheckInAnswer } from "../../types";
-import styles from "./CheckIn.module.css";
+import styles from "./AnswerList.module.css";
 
-type Props = {
+type Props<T extends string> = {
   question: string;
   /** Short context shown under the question and announced with it. */
   hint?: string;
-  options: { id: CheckInAnswer; label: string }[];
-  value: CheckInAnswer | null;
-  onChange: (answer: CheckInAnswer) => void;
+  options: { id: T; label: string }[];
+  value: T | null;
+  onChange: (answer: T) => void;
 };
 
 /**
- * A neutral, skippable check-in: one question, a few plain answers, nothing preselected.
- * Set as a notebook answer list; the chosen answer gets circled in the student's ink.
+ * One neutral question with a few plain answers and nothing preselected, set as a notebook answer list.
+ * The chosen answer is circled in the student's ink (Iris). Used by the landing check-in and setup.
  */
-export function CheckIn({ question, hint, options, value, onChange }: Props) {
+export function AnswerList<T extends string>({ question, hint, options, value, onChange }: Props<T>) {
   const name = useId();
   const hintId = `${name}-hint`;
 

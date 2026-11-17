@@ -1,5 +1,17 @@
 import { useSyncExternalStore } from "react";
 
+/** Whether this browser lets the app keep anything for the visit (it can be blocked by settings). */
+export function sessionStorageAvailable(): boolean {
+  try {
+    const probe = "studysense.probe";
+    window.sessionStorage.setItem(probe, "1");
+    window.sessionStorage.removeItem(probe);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * A small value kept in sessionStorage for this visit only and shared by every feature that reads it.
  * Persistence is undecided (docs/AGENTS.md §14.7), so nothing outlives the tab, and when storage is blocked the

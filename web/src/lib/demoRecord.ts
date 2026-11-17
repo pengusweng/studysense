@@ -3,6 +3,12 @@ import { createSessionValue } from "./sessionValue";
 /** Which recorded SSAQS participant-day the demo replays. Chosen with a demo control, never by a device. */
 export type DemoRecord = { participant: number; date: string };
 
+/** Replayable days per SSAQS participant, as ISO dates. */
+export type DemoDays = Record<number, readonly string[]>;
+
+/** Whether the selected demo record can be replayed. */
+export type RecordCheck = "checking" | "available" | "unavailable";
+
 export const DEFAULT_DEMO_RECORD: DemoRecord = { participant: 1, date: "2025-02-24" };
 
 function parse(raw: unknown): DemoRecord | null {

@@ -20,6 +20,12 @@
   font-size: var(--proposal-text-lg);
 }
 
+/* Holds the primary action's place while setup's state is read from the browser. */
+.slot {
+  display: block;
+  height: 56px;
+}
+
 .status {
   margin: var(--proposal-space-3) 0 0;
   color: var(--proposal-pencil);

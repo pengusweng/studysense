@@ -13,15 +13,7 @@ export type Outcome = {
   ruledOut: Reading[];
 };
 
-export type LogRow = {
-  label: string;
-  value: string;
-  /** Printed note under the value. */
-  note?: string;
-  /** The student's hand-written margin note (Iris ink). */
-  handNote?: string;
-  highlight?: boolean;
-};
+export type { LogRow } from "@/components/molecules/LogTable";
 
 
 export type Profile = { code: string; name: string; stress: "lower" | "higher"; anxiety: "lower" | "higher" };

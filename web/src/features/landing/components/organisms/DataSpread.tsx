@@ -1,7 +1,7 @@
 import { DATA_FACTS } from "../../content";
 import t from "../../type.module.css";
-import { LogTable } from "../molecules/LogTable";
-import { Spread } from "../molecules/Spread";
+import { LogTable } from "@/components/molecules/LogTable";
+import { Spread } from "@/components/molecules/Spread";
 import s from "./Sections.module.css";
 
 export function DataSpread() {

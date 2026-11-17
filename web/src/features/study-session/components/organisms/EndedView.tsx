@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import type { DemoRecord } from "@/lib/demoRecord";
-import { HelpCorner } from "../molecules/HelpCorner";
+import { HelpCorner } from "@/components/molecules/HelpCorner";
 import { DemoSourceNote } from "./DemoSourceNote";
 import type { DemoDays, RecordCheck } from "../../types";
 import styles from "./PhaseView.module.css";

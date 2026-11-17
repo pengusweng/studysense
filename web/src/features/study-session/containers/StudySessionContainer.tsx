@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Sheet } from "@/components/molecules/Sheet";
 import { VisuallyHidden } from "@/components/atoms/VisuallyHidden";
 import { setSessionStatus, useKnownSessionStatus, type SessionStatus } from "@/lib/sessionStatus";
-import { useDemoRecord } from "../hooks/useDemoRecord";
+import { useDemoRecord } from "@/lib/useDemoRecord";
 import { TideField } from "../components/atoms/TideField";
 import { ReadyView } from "../components/organisms/ReadyView";
 import { FocusView } from "../components/organisms/FocusView";

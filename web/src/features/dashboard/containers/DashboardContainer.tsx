@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Sheet } from "@/components/molecules/Sheet";
+import { useKnownConsent } from "@/lib/consent";
 import { useSessionStatusValue } from "@/lib/sessionStatus";
 import { useHowItWorks } from "../hooks/useHowItWorks";
 import { StudyStart } from "../components/organisms/StudyStart";
@@ -13,6 +14,7 @@ import { HowItWorks } from "../components/organisms/HowItWorks";
  */
 export function DashboardContainer() {
   const [status] = useSessionStatusValue();
+  const consent = useKnownConsent();
   const how = useHowItWorks();
 
   // Hiding or reopening "How a session goes" unmounts the control that was clicked, so focus moves to its counterpart.
@@ -34,6 +36,7 @@ export function DashboardContainer() {
     <Sheet>
       <StudyStart
         status={status}
+        setupDone={consent === null ? null : consent !== "undecided"}
         onShowHowItWorks={how.hidden ? () => setHowHidden(false) : undefined}
         reopenRef={reopenRef}
       />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
+import Link from "next/link";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { TextButton } from "@/components/atoms/TextButton";
 import { SupportPanel } from "@/components/organisms/SupportPanel";
@@ -16,13 +17,15 @@ const STATUS_LINE: Record<SessionStatus, string | null> = {
 
 type Props = {
   status: SessionStatus;
+  /** Whether consent and setup is finished; null until the browser's value is known. */
+  setupDone: boolean | null;
   /** Present only while "How a session goes" is hidden; reopens it. */
   onShowHowItWorks?: () => void;
   reopenRef?: RefObject<HTMLButtonElement | null>;
 };
 
 /** The page's one job: start or resume a study session. Help sits one quiet line below it. */
-export function StudyStart({ status, onShowHowItWorks, reopenRef }: Props) {
+export function StudyStart({ status, setupDone, onShowHowItWorks, reopenRef }: Props) {
   const [helpOpen, setHelpOpen] = useState(false);
   const helpBtn = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLElement>(null);
@@ -39,11 +42,21 @@ export function StudyStart({ status, onShowHowItWorks, reopenRef }: Props) {
       <h1 id="dashboard-title" className={styles.title}>
         Ready when you are.
       </h1>
+      {/* First visit: setup comes before the first session (issue #3). Until the choice is known the slot
+          holds its height, so neither label flashes. */}
+      {setupDone === null && <span className={styles.slot} aria-hidden="true" />}
+      {setupDone === false && (
+        <ButtonLink href="/setup" className={styles.primary}>
+          Get started
+        </ButtonLink>
+      )}
       {/* Pressing start begins the session itself; the Study Session opens already running. */}
-      <ButtonLink href="/study-session" className={styles.primary} onClick={() => setSessionStatus("active")}>
-        {resuming ? "Resume session" : "Start a study session"}
-      </ButtonLink>
-      {line && <p className={styles.status}>{line}</p>}
+      {setupDone && (
+        <ButtonLink href="/study-session" className={styles.primary} onClick={() => setSessionStatus("active")}>
+          {resuming ? "Resume session" : "Start a study session"}
+        </ButtonLink>
+      )}
+      {setupDone && line && <p className={styles.status}>{line}</p>}
       <p className={styles.help}>
         Need help now?{" "}
         <TextButton
@@ -70,6 +83,11 @@ export function StudyStart({ status, onShowHowItWorks, reopenRef }: Props) {
           <TextButton ref={reopenRef} onClick={onShowHowItWorks}>
             How a session goes
           </TextButton>
+        </p>
+      )}
+      {setupDone && (
+        <p className={styles.reopen}>
+          <Link href="/setup">What StudySense uses</Link>
         </p>
       )}
     </section>

@@ -32,8 +32,9 @@ The Dashboard is the calm home screen. It has **one job: get the student into a 
 
 | State | What changes |
 |---|---|
-| First visit, consent not given | The primary action becomes **"Get started"** and opens the consent and setup flow (issue #3). The demo band and "How it works" are visible. Help is still reachable. |
-| Consent declined (optional check-ins) | Same as Ready. The core study experience still works (issue #3 AC 1). No warning. |
+| First visit, consent not given | The primary action becomes **"Get started"** and opens the consent and setup flow at `/setup` (issue #3). "How it works" is visible. Help is still reachable. *(Built: `features/setup`.)* |
+| Consent declined (optional check-ins) | Same as Ready. The core study experience still works (issue #3 AC 1). No warning. *(Built.)* |
+| After setup | A quiet "What StudySense uses" link under the actions reopens `/setup`, showing the current choice with "Done". *(Built.)* |
 | Ready, no session | "Start a study session". No status line. |
 | Session paused or interrupted | "Resume session" + the status line. A secondary "Start fresh" text action is included only if the team wants it. |
 | Session ended / returned | "Start a study session" + "Last session ended…" line. No summary metrics. |

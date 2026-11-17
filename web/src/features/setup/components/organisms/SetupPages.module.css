@@ -1,0 +1,60 @@
+/* In the app the shell already sets the gutters, so the spread drops its own. */
+section.spread {
+  padding: 0;
+}
+
+.title {
+  margin: 0 0 var(--proposal-space-3);
+  font: 800 var(--proposal-text-xl) / 1.08 var(--font-print-stack);
+  letter-spacing: -0.025em;
+  max-width: 22ch;
+}
+
+.lede {
+  margin: 0 0 var(--proposal-space-3);
+  color: var(--proposal-pencil);
+}
+
+.prose {
+  margin: var(--proposal-space-4) 0 0;
+  max-width: 58ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--proposal-space-3) var(--proposal-space-4);
+  margin-top: var(--proposal-space-5);
+}
+
+/* Why the action is disabled, said in words beside it rather than left to a greyed button. */
+.reason {
+  margin: var(--proposal-space-2) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.note {
+  margin: var(--proposal-space-4) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.help {
+  margin-top: var(--proposal-space-5);
+  padding-top: var(--proposal-space-3);
+  border-top: 1px solid var(--proposal-rule-strong);
+  font-size: var(--proposal-text-sm);
+}
+
+@media (max-width: 640px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions > :first-child {
+    width: 100%;
+  }
+}

@@ -5,8 +5,11 @@ import { TextButton } from "@/components/atoms/TextButton";
 import { SupportPanel } from "@/components/organisms/SupportPanel";
 import styles from "./HelpCorner.module.css";
 
-/** Help, reachable from every session state. The support options open on a slip of paper over the sheet. */
-export function HelpCorner() {
+/**
+ * "Need help? Ask for support", reachable everywhere (docs/AGENTS.md §2 rule 8). The support options open on a
+ * slip of paper over the page. `align` sets which edge the line and its slip hang from.
+ */
+export function HelpCorner({ align = "end" }: { align?: "start" | "end" }) {
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLElement>(null);
@@ -16,7 +19,7 @@ export function HelpCorner() {
   }, [open]);
 
   return (
-    <div className={styles.corner}>
+    <div className={styles.corner} data-align={align}>
       <p className={styles.line}>
         Need help?{" "}
         <TextButton

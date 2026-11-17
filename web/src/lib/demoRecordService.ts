@@ -1,4 +1,4 @@
-import type { DemoDays } from "../types";
+import type { DemoDays } from "./demoRecord";
 
 /**
  * Replayable SSAQS days. Loaded lazily so the list never weighs on first paint.
@@ -6,7 +6,7 @@ import type { DemoDays } from "../types";
  */
 export const demoRecordService = {
   async getDays(): Promise<DemoDays> {
-    const { SSAQS_DAYS } = await import("../data/ssaqsDays");
+    const { SSAQS_DAYS } = await import("./ssaqsDays");
     return SSAQS_DAYS;
   },
 };

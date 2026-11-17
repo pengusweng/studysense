@@ -46,3 +46,13 @@
 .corner .slip :global(p) {
   text-align: left;
 }
+
+/* Hung from the start edge, e.g. on a left-aligned page. */
+.corner[data-align="start"] .line {
+  text-align: left;
+}
+
+.corner[data-align="start"] .slip {
+  right: auto;
+  left: 0;
+}

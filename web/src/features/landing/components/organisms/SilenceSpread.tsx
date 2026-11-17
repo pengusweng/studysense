@@ -1,5 +1,5 @@
 import t from "../../type.module.css";
-import { Spread } from "../molecules/Spread";
+import { Spread } from "@/components/molecules/Spread";
 import s from "./Sections.module.css";
 
 /** The quiet passage: a page left blank on purpose, because not interrupting is a designed outcome. */

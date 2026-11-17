@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { Wordmark } from "@/components/atoms/Wordmark";
 import { ThemeToggle } from "@/components/molecules/ThemeToggle";
-import { Hand } from "../atoms/Hand";
+import { Hand } from "@/components/atoms/Hand";
 import styles from "./LandingNav.module.css";
 
 export type NavSection = { id: string; label: string };
