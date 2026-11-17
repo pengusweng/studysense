@@ -66,19 +66,9 @@
   background: var(--iris);
 }
 
-.view[data-phase="active"] .dot {
-  animation: settle 3.6s ease-in-out infinite;
-}
-
 .view[data-phase="paused"] .dot {
   background: transparent;
   box-shadow: inset 0 0 0 1.5px var(--iris);
-}
-
-@keyframes settle {
-  50% {
-    opacity: 0.3;
-  }
 }
 
 /* Entering a phase: the word surfaces out of soft focus, then the note is written in left to right. */
@@ -112,12 +102,6 @@
   from {
     opacity: 0;
     transform: translateY(6px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .view[data-phase="active"] .dot {
-    animation: none !important;
   }
 }
 

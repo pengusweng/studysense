@@ -67,7 +67,7 @@
   align-items: center;
   gap: 0.6rem;
   margin: 0 0 var(--proposal-space-3);
-  font: 600 var(--proposal-text-sm) / 1.3 var(--font-log-stack);
+  font: 600 var(--proposal-text-sm) / 1.3 var(--font-print-stack);
   color: var(--proposal-pencil);
 }
 

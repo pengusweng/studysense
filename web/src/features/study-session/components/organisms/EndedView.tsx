@@ -3,11 +3,26 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
+import type { DemoRecord } from "@/lib/demoRecord";
 import { HelpCorner } from "../molecules/HelpCorner";
+import { DemoSourceStrip } from "./DemoSourceStrip";
+import type { DemoDays, RecordCheck } from "../../types";
 import styles from "./PhaseView.module.css";
 
-/** After a session: a plain close, no celebration (docs/AGENTS.md §2 rule 7). */
-export function EndedView({ takeFocus, onStartAnother }: { takeFocus: boolean; onStartAnother: () => void }) {
+type Props = {
+  record: DemoRecord;
+  check: RecordCheck;
+  days: DemoDays | null;
+  onChoose: (record: DemoRecord) => void;
+  takeFocus: boolean;
+  onStartAnother: () => void;
+};
+
+/**
+ * After a session: a plain close, no celebration (docs/AGENTS.md §2 rule 7). The demo strip returns here,
+ * so the record can be explained or changed before the next session starts.
+ */
+export function EndedView({ record, check, days, onChoose, takeFocus, onStartAnother }: Props) {
   const main = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -16,6 +31,7 @@ export function EndedView({ takeFocus, onStartAnother }: { takeFocus: boolean; o
 
   return (
     <div className={styles.phase}>
+      <DemoSourceStrip record={record} check={check} days={days} onChoose={onChoose} />
       <div className={styles.body}>
         <h1 className={styles.title}>Session ended.</h1>
         <p className={styles.lede}>Start another when you like.</p>

@@ -16,6 +16,8 @@ downloads/
 eggs/
 .eggs/
 lib/
+# The web app's shared source lives in web/src/lib; only Python build output should match lib/ above.
+!web/src/lib/
 lib64/
 parts/
 sdist/

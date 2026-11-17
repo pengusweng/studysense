@@ -51,7 +51,7 @@
 
 .loading {
   margin: 0;
-  font: 400 var(--proposal-text-sm) / 1.4 var(--font-log-stack);
+  font: 400 var(--proposal-text-sm) / 1.4 var(--font-print-stack);
   color: var(--proposal-pencil);
 }
 

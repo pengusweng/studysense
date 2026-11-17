@@ -79,7 +79,16 @@ export function StudySessionContainer() {
           onEnd={() => go("ended")}
         />
       )}
-      {phase === "ended" && <EndedView takeFocus={moved} onStartAnother={() => go("active")} />}
+      {phase === "ended" && (
+        <EndedView
+          record={record}
+          check={check}
+          days={days}
+          onChoose={choose}
+          takeFocus={moved}
+          onStartAnother={() => go("active")}
+        />
+      )}
     </Sheet>
   );
 }

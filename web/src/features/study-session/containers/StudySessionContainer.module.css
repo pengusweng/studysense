@@ -1,6 +1,18 @@
-/* The session's sheet trades the graph ruling for the drifting tide, which TideField draws. */
+/*
+ * The session's sheet trades the graph ruling for the drifting tide (TideField), and runs to the bottom of
+ * the window: it cancels the app shell's bottom padding and squares its lower corners.
+ */
 div.sheet {
   position: relative;
   overflow: hidden;
+  min-height: calc(100dvh - 4rem);
+  margin-bottom: calc(-1 * var(--proposal-space-6));
+  border-radius: 0;
   background-image: none;
+}
+
+@media (max-width: 640px) {
+  div.sheet {
+    min-height: calc(100dvh - 5.7rem);
+  }
 }

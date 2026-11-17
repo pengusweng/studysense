@@ -25,6 +25,7 @@
 
 .lede {
   max-width: 44ch;
+  text-wrap: balance;
   margin: 0;
   color: var(--proposal-pencil);
 }
