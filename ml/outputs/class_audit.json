@@ -1,0 +1,53 @@
+{
+  "threshold": "<50 low; >=50 high; daily means rounded to 2 decimals",
+  "overall": [
+    {
+      "profile": "LSLA",
+      "count": 1396,
+      "percent": 61.41663000439947
+    },
+    {
+      "profile": "LSHA",
+      "count": 260,
+      "percent": 11.438627364716233
+    },
+    {
+      "profile": "HSLA",
+      "count": 175,
+      "percent": 7.699076110866695
+    },
+    {
+      "profile": "HSHA",
+      "count": 442,
+      "percent": 19.4456665200176
+    }
+  ],
+  "participants_per_class": {
+    "LSLA": 31,
+    "LSHA": 26,
+    "HSLA": 23,
+    "HSHA": 29
+  },
+  "exactly_50_either_score": 81,
+  "within_5_either_score_inclusive": 414,
+  "within_10_either_score_inclusive": 664,
+  "feature_missing_percent": {
+    "total_steps": 1.3638363396392434,
+    "mean_steps_per_min": 1.3638363396392434,
+    "max_steps_per_min": 1.3638363396392434,
+    "active_minutes": 1.3638363396392434,
+    "sedentary_minutes": 0.2639683238011439,
+    "lightly_active_minutes": 0.2639683238011439,
+    "moderately_active_minutes": 0.2639683238011439,
+    "very_active_minutes": 0.2639683238011439,
+    "mean_rmssd": 27.584689837219535,
+    "min_rmssd": 27.584689837219535,
+    "max_rmssd": 27.584689837219535,
+    "mean_coverage": 27.584689837219535,
+    "mean_low_frequency": 27.584689837219535,
+    "mean_high_frequency": 27.584689837219535,
+    "hrv_reading_count": 27.584689837219535,
+    "sleep_overall_score": 33.26000879894412,
+    "deep_sleep_minutes": 33.26000879894412
+  }
+}

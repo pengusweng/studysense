@@ -1,0 +1,8 @@
+{
+  "python": "3.12.16",
+  "numpy": "2.5.5",
+  "pandas": "2.3.3",
+  "scikit_learn": "1.7.2",
+  "joblib": "1.6.0",
+  "matplotlib": "3.11.2"
+}
