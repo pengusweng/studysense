@@ -4,27 +4,29 @@ import { Button } from "@/components/atoms/Button";
 import type { DemoRecord } from "@/lib/demoRecord";
 import { HelpCorner } from "@/components/molecules/HelpCorner";
 import { DemoSourceNote } from "./DemoSourceNote";
-import type { DemoDays, RecordCheck } from "../../types";
+import { EstimateNote } from "./EstimateNote";
+import type { DemoDays, EstimateView, RecordCheck } from "../../types";
 import styles from "./PhaseView.module.css";
 
 type Props = {
   record: DemoRecord;
   check: RecordCheck;
   days: DemoDays | null;
+  estimate: EstimateView;
   onChoose: (record: DemoRecord) => void;
   onStart: () => void;
 };
 
 /** Before a session: one action, with what will be replayed footnoted beneath it. */
-export function ReadyView({ record, check, days, onChoose, onStart }: Props) {
+export function ReadyView({ record, check, days, estimate, onChoose, onStart }: Props) {
   return (
     <div className={styles.phase}>
       <div className={styles.body}>
         <h1 className={styles.title}>Ready to study.</h1>
         <p className={styles.lede}>Nothing runs until you start. You can pause or end at any time.</p>
-        {check === "unavailable" && (
-          <p className={styles.lede}>This demo record can&rsquo;t be replayed. You can still study; no estimate will be shown.</p>
-        )}
+        <div className={styles.estimate}>
+          <EstimateNote view={estimate} record={record} />
+        </div>
         <Button className={styles.primary} onClick={onStart}>
           Start studying
         </Button>

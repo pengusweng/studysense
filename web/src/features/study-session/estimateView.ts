@@ -5,7 +5,7 @@ import type { EstimateView, Prediction } from "./types";
  * shown as uncertain, and StudySense will not act on it (fallback_recommendation "clarify_or_defer").
  */
 export function toEstimateView(prediction: Prediction | null | undefined): EstimateView {
-  if (!prediction) return { kind: "unavailable" };
+  if (!prediction) return { kind: "unavailable", reason: "none" };
   if (prediction.evidence_status === "missing_evidence" || prediction.predicted_profile === null) {
     return { kind: "missing" };
   }

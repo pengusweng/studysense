@@ -27,6 +27,7 @@ export const useConsentValue = consent.useValue;
 /** null until the browser's value is known, so the Dashboard never flashes "Get started". */
 export const useKnownConsent = consent.useKnownValue;
 export const setConsent = consent.write;
+export const readConsent = consent.read;
 
 export const useSetupDraft = draft.useValue;
 export const clearSetupDraft = () => draft.write("none");

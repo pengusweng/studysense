@@ -133,7 +133,7 @@ html {
 
 /* While the chrome steps in or out of a study session the page is exactly one window tall; no scrollbar
    flickers in while the header and sheet trade height. */
-html[data-session] {
+html[data-chrome="moving"] {
   overflow: hidden;
 }
 

@@ -73,3 +73,20 @@
     width: 100%;
   }
 }
+
+/* The day's estimate, between the invitation and Start: a left-set note centred as a block. */
+.estimate {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: var(--proposal-space-3) 0 var(--proposal-space-1);
+}
+
+.estimate > section {
+  width: fit-content;
+  max-width: min(36rem, 100%);
+}
+
+.body .estimate :global(p) {
+  text-align: left;
+}

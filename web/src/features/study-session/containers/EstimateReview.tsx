@@ -40,9 +40,11 @@ const CASES: { label: string; note?: string; view: EstimateView }[] = [
     view: toEstimateView(sample(null, "missing_evidence")),
   },
   {
-    label: "no prediction (record can't be replayed, or the service failed)",
+    label: "no prediction for this record",
+    note: "What the session shows today: no trained model is in the repo, so no predictions exist yet.",
     view: toEstimateView(null),
   },
+  { label: "record can't be replayed", view: { kind: "unavailable", reason: "record" } },
   { label: "loading", view: { kind: "loading" } },
 ];
 

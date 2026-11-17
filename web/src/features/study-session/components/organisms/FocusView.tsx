@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { Button } from "@/components/atoms/Button";
 import { TextButton } from "@/components/atoms/TextButton";
 import { HelpCorner } from "@/components/molecules/HelpCorner";
+import { useCheckInDue } from "@/lib/checkIn";
+import { CheckIn, type CheckInHandle } from "./CheckIn";
 import styles from "./FocusView.module.css";
 
 type Props = {
@@ -26,10 +28,20 @@ const COPY = {
  */
 export function FocusView({ phase, takeFocus, onPause, onResume, onEnd }: Props) {
   const main = useRef<HTMLButtonElement>(null);
+  const checkIn = useRef<CheckInHandle>(null);
   const copy = COPY[phase];
+  const due = useCheckInDue();
+  // Read when the phase changes, not tracked: answering must not pull focus back to the controls by itself.
+  const dueNow = useRef(due);
+  useEffect(() => {
+    dueNow.current = due;
+  });
 
   useEffect(() => {
-    if (takeFocus) main.current?.focus();
+    if (!takeFocus) return;
+    // On the first pause the optional question takes focus, so a screen reader hears it; Resume is a Tab away.
+    if (phase === "paused" && dueNow.current) checkIn.current?.focus();
+    else main.current?.focus();
   }, [phase, takeFocus]);
 
   return (
@@ -49,6 +61,7 @@ export function FocusView({ phase, takeFocus, onPause, onResume, onEnd }: Props)
           )}
         </h1>
         <p className={styles.note}>{copy.note}</p>
+        {phase === "paused" && <CheckIn ref={checkIn} due={due} onSettled={() => main.current?.focus()} />}
       </div>
 
       <div className={styles.controls}>

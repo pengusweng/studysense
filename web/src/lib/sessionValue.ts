@@ -66,5 +66,5 @@ export function createSessionValue<T>(key: string, fallback: T, parse: (raw: unk
     return useSyncExternalStore<T | null>(subscribe, read, () => null);
   }
 
-  return { useValue, useKnownValue, write };
+  return { useValue, useKnownValue, read, write };
 }

@@ -3,8 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Sheet } from "@/components/molecules/Sheet";
 import { VisuallyHidden } from "@/components/atoms/VisuallyHidden";
-import { setSessionStatus, useKnownSessionStatus, type SessionStatus } from "@/lib/sessionStatus";
+import { closeUnanswered } from "@/lib/checkIn";
+import {
+  resumeSession,
+  setSessionStatus,
+  startSession,
+  useKnownSessionStatus,
+  type SessionStatus,
+} from "@/lib/sessionStatus";
 import { useDemoRecord } from "@/lib/useDemoRecord";
+import { useEstimate } from "../hooks/useEstimate";
 import { TideField } from "../components/atoms/TideField";
 import { ReadyView } from "../components/organisms/ReadyView";
 import { FocusView } from "../components/organisms/FocusView";
@@ -15,6 +23,14 @@ import styles from "./StudySessionContainer.module.css";
 /** Matches --proposal-dur-chrome: how long the chrome takes to return once a session ends. */
 const CHROME_MS = 760;
 let chromeTimer: number | undefined;
+let lockTimer: number | undefined;
+
+/** Lock page scroll while the header and sheet trade height, so no scrollbar flickers in. */
+function lockScrollWhileChromeMoves(root: HTMLElement) {
+  window.clearTimeout(lockTimer);
+  root.dataset.chrome = "moving";
+  lockTimer = window.setTimeout(() => delete root.dataset.chrome, CHROME_MS);
+}
 
 const PHASE: Record<SessionStatus, SessionPhase> = { none: "ready", active: "active", paused: "paused", ended: "ended" };
 
@@ -39,6 +55,7 @@ const TAB_TITLE: Record<SessionPhase, string> = {
 export function StudySessionContainer() {
   const status = useKnownSessionStatus();
   const { record, days, check, choose } = useDemoRecord();
+  const estimate = useEstimate(record, check);
   const [moved, setMoved] = useState(false);
   const announce = useRef<string>("");
 
@@ -65,8 +82,10 @@ export function StudySessionContainer() {
     if (!focused) return;
     const root = document.documentElement;
     window.clearTimeout(chromeTimer);
+    lockScrollWhileChromeMoves(root);
     root.dataset.session = "focus";
     return () => {
+      lockScrollWhileChromeMoves(root);
       root.dataset.session = "leaving";
       chromeTimer = window.setTimeout(() => {
         if (root.dataset.session === "leaving") delete root.dataset.session;
@@ -79,6 +98,8 @@ export function StudySessionContainer() {
     if (next === "active" && window.scrollY > 0) window.scrollTo({ top: 0 });
     setMoved(true);
     announce.current = ANNOUNCE[PHASE[next]];
+    if (next === "active") return status === "paused" ? resumeSession() : startSession();
+    if (status === "paused") closeUnanswered();
     setSessionStatus(next);
   }
 
@@ -89,7 +110,11 @@ export function StudySessionContainer() {
         <span role="status">{announce.current}</span>
       </VisuallyHidden>
       {phase === "ready" && (
-        <ReadyView record={record} check={check} days={days} onChoose={choose} onStart={() => go("active")} />
+        <ReadyView
+          record={record}
+          check={check}
+          days={days}
+          estimate={estimate} onChoose={choose} onStart={() => go("active")} />
       )}
       {focused && (
         <FocusView

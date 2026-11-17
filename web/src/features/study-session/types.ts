@@ -27,8 +27,11 @@ export type Prediction = {
 /** What the session shows for the day's estimate. */
 export type EstimateView =
   | { kind: "loading" }
-  /** The demo record can't be replayed, or no prediction could be made: journey path 4. */
-  | { kind: "unavailable" }
+  /**
+   * Journey path 4: no estimate. "record" when the demo record can't be replayed, "none" when the record is
+   * fine but there is no prediction for it.
+   */
+  | { kind: "unavailable"; reason: "record" | "none" }
   /** Too much of the day is missing for the model to place it. */
   | { kind: "missing" }
   | { kind: "estimate"; profile: ProfileCode; certainty: "confident" | "uncertain" };

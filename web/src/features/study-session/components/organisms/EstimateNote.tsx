@@ -19,7 +19,10 @@ function copyFor(view: EstimateView): Copy {
     case "unavailable":
       return {
         statement: "No estimate for this session.",
-        hedge: "This demo record can’t be replayed. You can still study, and help is still here.",
+        hedge:
+          view.reason === "record"
+            ? "This demo record can’t be replayed. You can still study, and help is still here."
+            : "None is available for this demo day yet. You can still study, and help is still here.",
       };
     case "missing":
       return {

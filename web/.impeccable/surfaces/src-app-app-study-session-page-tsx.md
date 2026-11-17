@@ -56,7 +56,14 @@ FORM: Calm field, position 5 of 7 on the ordered list. seed:1ab117708a1f38cd
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Unresolved
-- The estimate note (issue #6) is built as states only (`EstimateNote`, reviewed at `/review/estimate`) and is not yet placed in the session. Predictions need a source: the trained model is not in the repo, and the evaluated policy currently returns every day as uncertain or missing evidence.
+- Predictions need a source: the trained model is not in the repo, so the ready screen's estimate note always shows "No estimate for this session". The evaluated policy would return every day as uncertain or missing evidence.
+- Next: rule-based responses that use the estimate and check-in outcome, then Accept/Dismiss/Correct feedback (issue #7).
+
+## Decisions (2026-11-17)
+- The estimate note sits on the ready screen, between the invitation and Start. The full-screen view keeps its single word.
+- The optional check-in is an inline panel under "Paused." on the first pause of a session, only when the student opted in during setup. It is asked at most once per session; a new session (Start, Start another, or the Dashboard's Start) asks again.
+- Outcomes: focused → a quiet "Noted" line; swamped → support options in place; skipped and dismissed → closes silently; untouched until Resume or End → no_response; Ask for help → support, then back to the question.
+- Page scroll is locked only while the chrome moves (`html[data-chrome="moving"]`, 760ms), so a long check-in or support panel can scroll on a phone.
 - The estimate, check-in, response and feedback flows are not built (issues #5–#7).
 - The consent flow (issue #3) is not built.
 - Whether a timer ever ships is the team's decision; none is built.
