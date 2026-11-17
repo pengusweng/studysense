@@ -32,3 +32,18 @@ python -m pytest
 ```
 
 See [`etl/README.md`](file:///C:/dev/studysense-empathic-system/etl/README.md) for complete details.
+
+## Machine Learning Experiments
+
+The [`ml/`](ml/README.md) module runs participant-held-out four-profile
+classification experiments directly from local SSAQS CSVs. It includes target
+and boundary audits, frozen grouped splits, train-only preprocessing, majority,
+Logistic Regression and Random Forest comparisons, uncertainty fallback, and
+offline replay inference. See [ML_EVALUATION_REPORT.md](ML_EVALUATION_REPORT.md)
+for measured results and limitations.
+
+```powershell
+# From the repository root, with ML dependencies installed
+python -m ml.experiment all
+python -m pytest ml/tests -q
+```

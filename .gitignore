@@ -220,3 +220,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-local ML runtime and participant-level generated data
+.tools/
+ml/data/
+ml/outputs/predictions/
+ml/outputs/splits/
+models/*.joblib

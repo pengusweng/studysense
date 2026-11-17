@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "predicted_profile": [
+    "LSLA",
+    "LSHA",
+    "HSLA",
+    "HSHA",
+    null
+  ],
+  "probabilities": {
+    "LSLA": "number [0,1], or null when missing_evidence",
+    "LSHA": "number [0,1], or null when missing_evidence",
+    "HSLA": "number [0,1], or null when missing_evidence",
+    "HSHA": "number [0,1], or null when missing_evidence"
+  },
+  "confidence_score": "maximum uncalibrated class probability; 0 when missing_evidence",
+  "is_uncertain": "boolean",
+  "evidence_status": [
+    "confident",
+    "uncertain",
+    "missing_evidence"
+  ],
+  "fallback_recommendation": [
+    "proceed",
+    "clarify_or_defer"
+  ],
+  "additional": [
+    "model_version",
+    "contract_version",
+    "missing_features"
+  ],
+  "invalid_input": "ValueError; caller must clarify/defer rather than intervene"
+}
