@@ -6,6 +6,11 @@ import { TextButton } from "@/components/atoms/TextButton";
 import { AnswerList } from "@/components/molecules/AnswerList";
 import { SupportPanel } from "@/components/organisms/SupportPanel";
 import { recordCheckIn, type CheckInOutcome } from "@/lib/checkIn";
+import { recordFeedback, useFeedbackHistory, type Correction } from "@/lib/feedback";
+import type { SupportId } from "@/lib/supportOptions";
+import { chooseResponse, type ResponseDecision } from "../../services/responseRules";
+import type { EstimateView } from "../../types";
+import { ResponseNote } from "./ResponseNote";
 import styles from "./CheckIn.module.css";
 
 type Answer = "focused" | "swamped";
@@ -19,11 +24,16 @@ const ANSWERS: { id: Answer; label: string }[] = [
 /** Matches the fold transition in CheckIn.module.css. */
 const FOLD_MS = 420;
 
-type Step = "question" | "noted" | "support" | "help" | "closed";
+const QUIET = "StudySense will stay quiet for the rest of this session.";
+
+type Step = "question" | "response" | "said" | "support" | "help" | "closed";
+type Offer = Extract<ResponseDecision, { kind: "offer" }>;
 
 type Props = {
   /** The question is still due this session (opted in, not yet asked). */
   due: boolean;
+  /** The day's estimate, one input to the response rules. */
+  estimate: EstimateView;
   /** Called when the check-in is finished and focus should return to the session's controls. */
   onSettled: () => void;
 };
@@ -35,15 +45,24 @@ function motionOn() {
 }
 
 /**
- * The session's one optional question (issue #5), unfolded in place under "Paused." on the first pause.
+ * The session's one optional question (issue #5), unfolded in place under "Paused." on the first pause, and what
+ * follows it: a rule-picked suggestion with Accept, Dismiss and Correct (issue #7), or silence.
  * Every way out is a defined state: an answer, skip, not now, or simply resuming (no response).
  */
-export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, onSettled }, ref) {
+export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, estimate, onSettled }, ref) {
   const id = useId();
+  const history = useFeedbackHistory();
   const [step, setStep] = useState<Step>("question");
   const [folding, setFolding] = useState(false);
   const [pick, setPick] = useState<Answer | null>(null);
+  /** Frozen when shown, so recording feedback can't swap the suggestion mid-fold. */
+  const [offer, setOffer] = useState<Offer | null>(null);
+  const [corrected, setCorrected] = useState(false);
+  /** The one line left behind once the check-in is done. */
+  const [said, setSaid] = useState("");
+  const [supportIntro, setSupportIntro] = useState<string | null>(null);
   const question = useRef<HTMLElement>(null);
+  const response = useRef<HTMLElement>(null);
   const support = useRef<HTMLElement>(null);
   const returning = useRef(false);
   const foldTimer = useRef<number | undefined>(undefined);
@@ -54,35 +73,94 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, 
 
   useEffect(() => {
     if (step === "support" || step === "help") support.current?.focus();
+    if (step === "response") response.current?.focus();
     if (step === "question" && returning.current) {
       returning.current = false;
       question.current?.focus();
     }
-  }, [step]);
+  }, [step, offer]);
 
   /** Fold the current panel shut, so "Paused." eases back down instead of jumping, then show what follows. */
-  function foldTo(next: Step) {
+  function foldTo(next: Step, line = "") {
     onSettled();
-    if (!motionOn()) return setStep(next);
+    const land = () => {
+      setSaid(line);
+      setStep(next);
+    };
+    if (!motionOn()) return land();
     setFolding(true);
     foldTimer.current = window.setTimeout(() => {
       setFolding(false);
-      setStep(next);
+      land();
     }, FOLD_MS);
+  }
+
+  /** Show what the rules decided. A silent decision leaves one line and folds away. */
+  function show(decision: ResponseDecision, quietLine: string, supportLine: string | null) {
+    if (decision.kind === "offer") {
+      setOffer(decision);
+      setStep("response");
+    } else if (decision.kind === "support") {
+      setSupportIntro(supportLine);
+      setStep("support");
+    } else {
+      foldTo("said", quietLine);
+    }
   }
 
   function settle(outcome: Exclude<CheckInOutcome, "no_response">) {
     // Recorded at once, so resuming mid-fold can't count as no response.
     recordCheckIn(outcome);
-    if (outcome === "swamped") setStep("support");
-    else foldTo(outcome === "focused" ? "noted" : "closed");
+    if (outcome === "skipped" || outcome === "dismissed") return foldTo("closed");
+    show(chooseResponse({ estimate, checkIn: outcome, history }), `Noted. ${QUIET}`, null);
   }
 
-  if (step === "noted") {
+  function accept(suggestion: SupportId) {
+    recordFeedback({ suggestion, action: "accept" });
+    foldTo("said", "Noted. More support is in the corner whenever you want it.");
+  }
+
+  function dismiss(suggestion: SupportId) {
+    recordFeedback({ suggestion, action: "dismiss" });
+    foldTo("closed");
+  }
+
+  function correct(suggestion: SupportId, correction: Correction) {
+    recordFeedback({ suggestion, action: "correct", correction });
+    setCorrected(true);
+    show(
+      chooseResponse({ estimate, checkIn: "swamped", correction, history }),
+      `Thanks, that’s noted. ${QUIET}`,
+      "Thanks, that’s noted. Here is everything on offer.",
+    );
+  }
+
+  if (step === "said") {
     return (
       <p className={styles.noted} role="status">
-        Noted. StudySense will stay quiet for the rest of this session.
+        {said}
       </p>
+    );
+  }
+
+  if (step === "response" && offer) {
+    return (
+      <div className={styles.fold} data-folding={folding || undefined}>
+        <ResponseNote
+          key={`${offer.suggestion}-${offer.basis}`}
+          ref={response}
+          offer={offer}
+          canCorrect={!corrected}
+          disabled={folding}
+          onAccept={accept}
+          onDismiss={dismiss}
+          onCorrect={correct}
+          onOtherOptions={() => {
+            setSupportIntro(null);
+            setStep("support");
+          }}
+        />
+      </div>
     );
   }
 
@@ -90,12 +168,12 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn({ due, 
     return (
       <div className={styles.fold} data-folding={folding || undefined}>
         <div className={styles.support}>
-          {step === "support" && <p className={styles.intro}>Here are a few things that might help.</p>}
+          {supportIntro && step === "support" && <p className={styles.intro}>{supportIntro}</p>}
           <SupportPanel
             ref={support}
             id={`${id}-support`}
             onClose={() => {
-              // Help asked before answering leaves the question open; after "Swamped" the check-in is done.
+              // Help asked before answering leaves the question open; otherwise the check-in is done.
               if (step === "help") {
                 returning.current = true;
                 setStep("question");

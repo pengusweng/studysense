@@ -263,7 +263,21 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 - **Form:** unfolds in place under the hand note, ruled off above, on the same paper. It is not a dialog or a slip. It reuses `AnswerList` with "Focused. Leave me be." and "Swamped. A hand would help.", circled in Iris because the answer is the student's mark.
 - **Actions, by role:** the question is a step under the word (text-lg, print). A secondary "Answer" button sits with its one alternative, "Skip this question"; the disabled reason ("Pick an answer, or skip it.") keeps its line once answered, so picking never shifts the page. "Rather have support now? Ask for help" sits below in Pencil, apart from the answers. "Not now" sits small in the top corner, level with the question, but comes last in reading order. Escape counts as Not now.
 - **Leaving:** focused, skipped, dismissed and post-support close fold the panel shut (grid rows 1fr → 0fr, 420ms, in-out) so "Paused." eases back to centre instead of jumping. The outcome is recorded before the fold, and focus moves to Resume at once.
-- **Outcomes:** Focused shows one Pencil line ("Noted. StudySense will stay quiet for the rest of this session."). Swamped opens the support options in place. Skip and Not now close silently. Resuming or ending without touching it records no response. Help before answering returns to the question. Stored in `lib/checkIn.ts` for this visit, apart from SSAQS data.
+- **Outcomes:** Focused shows one Pencil line ("Noted. StudySense will stay quiet for the rest of this session."). Swamped leads to the response note below. Skip and Not now close silently. Resuming or ending without touching it records no response. Help before answering returns to the question. Stored in `lib/checkIn.ts` for this visit, apart from SSAQS data.
+
+### Response note and feedback (issue #7)
+- **Rules:** `chooseResponse` in `features/study-session/services/responseRules.ts`, a pure client-side function tested by `npm test`. An estimate alone never prompts. Focused, skip, dismiss and no response stay silent. Swamped offers one suggestion whatever the profile; only a confident HSHA estimate adds "and the replayed day may point the same way". LSLA, LSHA and HSLA take the generic path until AGENTS.md §14.4 is settled.
+- **Form:** on the same ruled paper as the check-in it answers. A Pencil lead line says why ("You said a hand would help."), the suggestion is an h2 at text-lg in print, then its template response from `lib/supportOptions.ts`, the same text the support list uses.
+- **Feedback:** a secondary "Accept", then "Dismiss" and "That's not it" (Correct) as text actions, then "Something else? See all options" in Pencil. Escape dismisses.
+
+| Action | Next state |
+|---|---|
+| Accept | "Noted. More support is in the corner whenever you want it." The note folds; focus moves to Resume |
+| Dismiss / Escape | Folds silently; that suggestion is skipped next time this visit |
+| That's not it | "What fits better?" unfolds in place of the feedback row: "I'm fine, just busy." (silence, with a thanks line), "It's more than this." (a lighter suggestion, with "Thanks, that's noted. This may suit better."), "Something else is going on." (the full support list). Only one correction per suggestion, so it can't loop |
+| See all options | The full support list in place |
+
+- **Next time:** feedback is kept for the visit in `lib/feedback.ts`. A dismissed suggestion is skipped and an accepted one is offered first. Copy says only that StudySense "uses this to choose what it offers next"; it never says it learned.
 
 ### Setup spread (consent, issue #3)
 - **Form:** one notebook spread. The left page is the instrument's voice: "What StudySense uses" and a mono log (source, record, device, "replayed, not live"), then two printed lines. The right page is the student's: "One choice", a neutral answer list with nothing preselected, and the chosen answer circled in Iris.

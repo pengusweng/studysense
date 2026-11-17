@@ -5,11 +5,14 @@ import { Button } from "@/components/atoms/Button";
 import { TextButton } from "@/components/atoms/TextButton";
 import { HelpCorner } from "@/components/molecules/HelpCorner";
 import { useCheckInDue } from "@/lib/checkIn";
+import type { EstimateView } from "../../types";
 import { CheckIn, type CheckInHandle } from "./CheckIn";
 import styles from "./FocusView.module.css";
 
 type Props = {
   phase: "active" | "paused";
+  /** The day's estimate, passed on to the check-in's response rules. */
+  estimate: EstimateView;
   /** Move focus to the main control when this view was reached by the student's own action. */
   takeFocus: boolean;
   onPause: () => void;
@@ -26,7 +29,7 @@ const COPY = {
  * The session itself, full screen: one word, a hand note, and the controls over the drifting ruling.
  * The demo source was footnoted before Start, so nothing here competes with the word.
  */
-export function FocusView({ phase, takeFocus, onPause, onResume, onEnd }: Props) {
+export function FocusView({ phase, estimate, takeFocus, onPause, onResume, onEnd }: Props) {
   const main = useRef<HTMLButtonElement>(null);
   const checkIn = useRef<CheckInHandle>(null);
   const copy = COPY[phase];
@@ -61,7 +64,7 @@ export function FocusView({ phase, takeFocus, onPause, onResume, onEnd }: Props)
           )}
         </h1>
         <p className={styles.note}>{copy.note}</p>
-        {phase === "paused" && <CheckIn ref={checkIn} due={due} onSettled={() => main.current?.focus()} />}
+        {phase === "paused" && <CheckIn ref={checkIn} due={due} estimate={estimate} onSettled={() => main.current?.focus()} />}
       </div>
 
       <div className={styles.controls}>

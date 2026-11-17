@@ -57,12 +57,14 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 ## Unresolved
 - Predictions need a source: the trained model is not in the repo, so the ready screen's estimate note always shows "No estimate for this session". The evaluated policy would return every day as uncertain or missing evidence.
-- Next: rule-based responses that use the estimate and check-in outcome, then Accept/Dismiss/Correct feedback (issue #7).
+- LSLA, LSHA and HSLA have no specific response rules (AGENTS.md §14.4); they take the generic path. "Ask a clarifying question" is not reachable, because uncertain evidence defaults to abstaining.
+- Next: Preferences (opt-in, interruption level, explanation and privacy controls, reset).
 
 ## Decisions (2026-11-17)
 - The estimate note sits on the ready screen, between the invitation and Start. The full-screen view keeps its single word.
 - The optional check-in is an inline panel under "Paused." on the first pause of a session, only when the student opted in during setup. It is asked at most once per session; a new session (Start, Start another, or the Dashboard's Start) asks again.
 - Outcomes: focused → a quiet "Noted" line; swamped → support options in place; skipped and dismissed → closes silently; untouched until Resume or End → no_response; Ask for help → support, then back to the question.
+- Swamped leads to one rule-picked suggestion (`ResponseNote`) with Accept, Dismiss and "That's not it" (Correct). Correct asks what fits better in the student's words, never a profile. Rules run client-side in one pure function (`chooseResponse`), tested by `npm test`. Feedback is kept for the visit and shapes the next suggestion.
 - Page scroll is locked only while the chrome moves (`html[data-chrome="moving"]`, 760ms), so a long check-in or support panel can scroll on a phone.
 - The estimate, check-in, response and feedback flows are not built (issues #5–#7).
 - The consent flow (issue #3) is not built.

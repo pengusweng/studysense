@@ -114,11 +114,15 @@ export function StudySessionContainer() {
           record={record}
           check={check}
           days={days}
-          estimate={estimate} onChoose={choose} onStart={() => go("active")} />
+          estimate={estimate}
+          onChoose={choose}
+          onStart={() => go("active")}
+        />
       )}
       {focused && (
         <FocusView
           phase={phase}
+          estimate={estimate}
           takeFocus={moved}
           onPause={() => go("paused")}
           onResume={() => go("active")}
