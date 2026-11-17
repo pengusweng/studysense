@@ -252,6 +252,11 @@ Focus outlines round slightly (2px). Paper corners are nearly square (3px). Cont
 - **Demo tab:** same tab geometry, filled Deep Iris.
 - **Below 920px:** the tabs form a sideways-scrolling row, and the demo becomes a normal rounded button.
 
+### Estimate note (issue #6)
+- **Voice:** the model's lead, never a reading of the student. It is set in print and Pencil only: no Iris (the student's hand), no Sage (recorded values), no numbers.
+- **Form:** a 44px quadrant mark that echoes the landing page's profile plot (anxiety up, stress right, split at 50), then the sentence as the heading ("The replayed day suggests …"), a mono source line, a Pencil hedge, and "Why is this tentative?" opening an explanation in place.
+- **States:** confident (filled cell), uncertain (dashed cell, "may suggest", "won't act on this estimate"), missing evidence (empty grid, "won't guess"), unavailable (no mark), loading. The states are mapped from `ml/outputs/prediction_contract.json` by `toEstimateView`. Review them at `/review/estimate`.
+
 ### Setup spread (consent, issue #3)
 - **Form:** one notebook spread. The left page is the instrument's voice: "What StudySense uses" and a mono log (source, record, device, "replayed, not live"), then two printed lines. The right page is the student's: "One choice", a neutral answer list with nothing preselected, and the chosen answer circled in Iris.
 - **Actions:** the primary action is disabled until a pick, with the reason in words beside it ("Pick one to continue"). "Back" saves nothing. "No, keep quiet" is a full answer, with no warning.

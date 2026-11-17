@@ -1,0 +1,102 @@
+/* A ruled note on the page, not a card: the mark, then the sentence and what it rests on. */
+.estimate {
+  width: min(46rem, 100%);
+  text-align: left;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--proposal-space-3);
+}
+
+.text {
+  min-width: 0;
+}
+
+.statement {
+  margin: 0.15rem 0 0;
+  font: 500 var(--proposal-text-lg) / 1.3 var(--font-print-stack);
+  letter-spacing: -0.01em;
+}
+
+.statement strong {
+  font-weight: 700;
+}
+
+.estimate[data-kind="loading"] .statement,
+.estimate[data-kind="unavailable"] .statement {
+  font-weight: 600;
+}
+
+.estimate[data-kind="loading"] .statement {
+  color: var(--proposal-pencil);
+}
+
+/* What the estimate rests on, in the instrument's voice. */
+.source {
+  margin: 0.35rem 0 0;
+  font: 400 var(--proposal-text-sm) / 1.5 var(--font-log-stack);
+  font-variant-numeric: tabular-nums;
+  color: var(--proposal-pencil);
+}
+
+.hedge {
+  margin: var(--proposal-space-2) 0 0;
+  color: var(--proposal-pencil);
+  max-width: 52ch;
+}
+
+.why {
+  margin-top: var(--proposal-space-2);
+  font-size: var(--proposal-text-sm);
+}
+
+/* The explanation unfolds under the note on the same paper, ruled off above. */
+.panel {
+  margin: var(--proposal-space-3) 0 0 calc(2.75rem + var(--proposal-space-3));
+  padding-top: var(--proposal-space-3);
+  border-top: 1px solid var(--proposal-rule-strong);
+  max-width: 58ch;
+}
+
+.panel:focus {
+  outline: none;
+}
+
+.panel p {
+  margin: 0 0 var(--proposal-space-2);
+}
+
+.panel p:last-child {
+  margin-bottom: 0;
+}
+
+/* The estimate arrives quietly: the sentence settles once it is known. */
+:global(html[data-motion="on"]) .estimate:not([data-kind="loading"]) .text {
+  animation: arrive 600ms var(--proposal-ease-out) both;
+}
+
+:global(html[data-motion="on"]) .panel {
+  animation: unfold 260ms var(--proposal-ease-out);
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 640px) {
+  .panel {
+    margin-left: 0;
+  }
+}

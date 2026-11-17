@@ -16,4 +16,4 @@ export type Outcome = {
 export type { LogRow } from "@/components/molecules/LogTable";
 
 
-export type Profile = { code: string; name: string; stress: "lower" | "higher"; anxiety: "lower" | "higher" };
+export type { Profile } from "@/lib/profiles";

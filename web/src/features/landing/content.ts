@@ -1,4 +1,5 @@
-import type { CheckInAnswer, LogRow, Outcome, Profile, Reading } from "./types";
+import type { CheckInAnswer, LogRow, Outcome, Reading } from "./types";
+export { PROFILES } from "@/lib/profiles";
 
 /**
  * One real participant-day from the SSAQS dataset (etl/data/raw/SSAQS dataset/1, 2025-02-24).
@@ -60,13 +61,6 @@ export const LOOP_STEPS: { title: string; body: string }[] = [
   { title: "Ask, if it helps", body: "At a natural pause, one optional question." },
   { title: "Respond, or don’t", body: "Rules choose a response, or none." },
   { title: "Let the student have the last word", body: "Accept, dismiss, or correct it." },
-];
-
-export const PROFILES: Profile[] = [
-  { code: "LSHA", name: "Lower stress, higher anxiety", stress: "lower", anxiety: "higher" },
-  { code: "HSHA", name: "Higher stress, higher anxiety", stress: "higher", anxiety: "higher" },
-  { code: "LSLA", name: "Lower stress, lower anxiety", stress: "lower", anxiety: "lower" },
-  { code: "HSLA", name: "Higher stress, lower anxiety", stress: "higher", anxiety: "lower" },
 ];
 
 export const DATA_FACTS: LogRow[] = [

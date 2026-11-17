@@ -56,6 +56,7 @@ FORM: Calm field, position 5 of 7 on the ordered list. seed:1ab117708a1f38cd
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Unresolved
+- The estimate note (issue #6) is built as states only (`EstimateNote`, reviewed at `/review/estimate`) and is not yet placed in the session. Predictions need a source: the trained model is not in the repo, and the evaluated policy currently returns every day as uncertain or missing evidence.
 - The estimate, check-in, response and feedback flows are not built (issues #5–#7).
 - The consent flow (issue #3) is not built.
 - Whether a timer ever ships is the team's decision; none is built.
