@@ -1,0 +1,108 @@
+/* Left page: the observation log. */
+.provenance {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.25rem var(--proposal-space-3);
+  padding-bottom: var(--proposal-space-2);
+  margin-bottom: var(--proposal-space-1);
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.provenanceNote {
+  margin: 0 0 var(--proposal-space-5);
+}
+
+.logTitle {
+  margin: 0 0 var(--proposal-space-3);
+  font: 700 var(--proposal-text-lg) / 1.2 var(--font-print-stack);
+  letter-spacing: -0.015em;
+  max-width: 24ch;
+}
+
+.readingsWide {
+  margin-top: var(--proposal-space-5);
+  margin-bottom: var(--proposal-space-3);
+}
+
+.readingsNarrow {
+  display: none;
+}
+
+.because {
+  margin-top: var(--proposal-space-3);
+}
+
+@media (max-width: 860px) {
+  .readingsWide {
+    display: none;
+  }
+  .readingsNarrow {
+    display: block;
+  }
+}
+
+/* Right page: interpretation. */
+.interp {
+  margin: 0 0 var(--proposal-space-3);
+}
+
+.line {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--proposal-space-3);
+  margin: 0 0 var(--proposal-space-2);
+  height: 3.25rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid var(--iris);
+}
+
+.lineLabel {
+  flex: none;
+  padding-bottom: 0.35rem;
+  font-size: var(--proposal-text-sm);
+}
+
+.lineHand {
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.75rem);
+  line-height: 1;
+}
+
+.lineEmpty {
+  padding-bottom: 0.35rem;
+  font-size: var(--proposal-text-sm);
+}
+
+.response {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  max-width: 46ch;
+  min-height: 3.1em;
+}
+
+/* Always rendered so the actions below never jump when a note appears. */
+.note {
+  margin: 0;
+  min-height: 1.5em;
+  font-size: var(--proposal-text-sm);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--proposal-space-3) var(--proposal-space-4);
+}
+
+.erase {
+  background: none;
+  border: 0;
+  padding: 0.5rem 0;
+  min-height: 44px;
+  font: inherit;
+  font-size: var(--proposal-text-sm);
+  color: var(--deep-iris);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}

@@ -1,0 +1,243 @@
+.section {
+  padding: var(--proposal-space-6) clamp(0.75rem, 3vw, 2.5rem) 0;
+  scroll-margin-top: 5.5rem;
+}
+
+/* The first spread hangs directly under the header's index tabs. */
+.intro {
+  padding-top: 0;
+}
+
+.spread {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  max-width: 1280px;
+  margin: 0 auto;
+  border-radius: var(--proposal-radius-page);
+  box-shadow:
+    0 1px 2px rgb(var(--shadow-rgb) / 0.08),
+    0 28px 56px -28px rgb(var(--shadow-rgb) / 0.32);
+}
+
+.intro .spread {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* The inked binding line. */
+.spread::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--ink);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Graph-ruled paper: the notebook is a measuring surface, so the grid is the world, not decoration. */
+.page {
+  position: relative;
+  min-width: 0;
+  padding: clamp(1.25rem, 3.6vw, 3.75rem);
+  padding-bottom: calc(clamp(1.25rem, 3.6vw, 3.75rem) + 1.25rem);
+  background-color: var(--cloud-white);
+  background-image:
+    linear-gradient(var(--proposal-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--proposal-rule) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+}
+
+.intro .page {
+  padding-top: clamp(1.25rem, 2.6vw, 2.75rem);
+}
+
+.left {
+  grid-column: 1;
+  grid-row: 1;
+  border-radius: var(--proposal-radius-page) 0 0 var(--proposal-radius-page);
+  background-image:
+    linear-gradient(to left, rgb(var(--shadow-rgb) / 0.07), transparent 28px),
+    linear-gradient(var(--proposal-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--proposal-rule) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+}
+
+.right {
+  grid-column: 2;
+  grid-row: 1;
+  border-radius: 0 var(--proposal-radius-page) var(--proposal-radius-page) 0;
+  background-image:
+    linear-gradient(to right, rgb(var(--shadow-rgb) / 0.06), transparent 22px),
+    linear-gradient(var(--proposal-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--proposal-rule) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+}
+
+/* Page numbers: the spreads are one bound book, not separate slabs. */
+.folio {
+  position: absolute;
+  bottom: clamp(0.75rem, 1.6vw, 1.25rem);
+  font-size: var(--proposal-text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--proposal-pencil);
+}
+
+.folioLeft {
+  left: clamp(1.25rem, 3.6vw, 3.75rem);
+}
+
+.folioRight {
+  right: clamp(1.25rem, 3.6vw, 3.75rem);
+}
+
+@media (max-width: 860px) {
+  .spread {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .spread::after {
+    display: none;
+  }
+
+  .left,
+  .right {
+    grid-column: 1;
+    grid-row: auto;
+    border-radius: 0;
+    background-image:
+      linear-gradient(var(--proposal-rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--proposal-rule) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* The binding runs horizontally once the pages stack. */
+  .page + .page {
+    border-top: 1px solid rgb(var(--shadow-rgb) / 0.3);
+    box-shadow: inset 0 14px 18px -16px rgb(var(--shadow-rgb) / 0.22);
+  }
+}
+
+/* ---------- Motion: the notebook opens ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .spread {
+    perspective: 2600px;
+  }
+
+  .left {
+    transform-origin: right center;
+    backface-visibility: hidden;
+  }
+
+  /* Page load: the first spread settles onto the desk and its left page swings open from the spine. */
+  .intro .spread {
+    animation: settle 900ms var(--proposal-ease-out) both;
+  }
+
+  .intro .left {
+    animation: open-page 1100ms 80ms var(--proposal-ease-out) both;
+  }
+
+  .intro [data-enter] {
+    animation: enter-rise 600ms var(--proposal-ease-out) both;
+    animation-delay: calc(520ms + var(--i, 0) * 70ms);
+  }
+
+  .intro [data-enter="write"] {
+    animation-name: enter-write;
+    animation-duration: 700ms;
+  }
+
+  /* Scroll: each later spread lifts off the desk and opens. Hidden only once motion is confirmed (see layout.tsx). */
+  .section[data-reveal] .spread {
+    transition:
+      opacity 500ms var(--proposal-ease-out),
+      transform 950ms var(--proposal-ease-out),
+      box-shadow 950ms var(--proposal-ease-out);
+  }
+
+  .section[data-reveal] .left {
+    transition: transform 1100ms 90ms var(--proposal-ease-out);
+  }
+
+  .section[data-reveal] [data-enter] {
+    transition:
+      opacity 500ms var(--proposal-ease-out),
+      transform 600ms var(--proposal-ease-out),
+      clip-path 750ms var(--proposal-ease-out);
+    transition-delay: calc(480ms + var(--i, 0) * 75ms);
+  }
+
+  :global(html[data-motion="on"]) .section[data-reveal]:not([data-in]) .spread {
+    opacity: 0;
+    transform: translateY(56px) scale(0.985);
+    box-shadow:
+      0 1px 2px rgb(var(--shadow-rgb) / 0.04),
+      0 8px 16px -12px rgb(var(--shadow-rgb) / 0.2);
+  }
+
+  :global(html[data-motion="on"]) .section[data-reveal]:not([data-in]) .left {
+    transform: rotateY(-62deg);
+  }
+
+  :global(html[data-motion="on"]) .section[data-reveal]:not([data-in]) [data-enter] {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  /* Rows are "written" left to right. The open state keeps generous negative insets so nothing is clipped. */
+  .section[data-reveal] [data-enter="write"] {
+    clip-path: inset(-1em -50% -1em -1em);
+  }
+
+  :global(html[data-motion="on"]) .section[data-reveal]:not([data-in]) [data-enter="write"] {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(-1em 100% -1em -1em);
+  }
+}
+
+/* Stacked pages don't swing from a side spine; they only settle. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 860px) {
+  .intro .left {
+    animation: none;
+  }
+
+  :global(html[data-motion="on"]) .section[data-reveal]:not([data-in]) .left {
+    transform: none;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.985);
+  }
+}
+
+@keyframes open-page {
+  from {
+    transform: rotateY(-70deg);
+  }
+}
+
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes enter-write {
+  from {
+    clip-path: inset(-1em 100% -1em -1em);
+  }
+  to {
+    clip-path: inset(-1em -50% -1em -1em);
+  }
+}

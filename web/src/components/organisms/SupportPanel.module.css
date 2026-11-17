@@ -1,0 +1,78 @@
+.panel {
+  width: min(100%, 36rem);
+  margin-top: var(--proposal-space-4);
+  padding: var(--proposal-space-4) 0 0;
+  border-top: 1.5px solid var(--ink);
+  text-align: left;
+  animation: unfold 260ms var(--proposal-ease-out);
+}
+
+.panel:focus {
+  outline: none;
+}
+
+.title {
+  margin: 0 0 var(--proposal-space-3);
+  font: 600 var(--proposal-text-sm) / 1.3 var(--font-print-stack);
+  color: var(--proposal-pencil);
+}
+
+.options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--proposal-rule-strong);
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.options li:first-child .option {
+  border-top: 1px solid var(--proposal-rule-strong);
+}
+
+.option:hover {
+  color: var(--deep-iris);
+}
+
+/* The chosen answer gets the student's mark: an Iris underline drawn under it, plus weight, never colour alone. */
+.option[aria-pressed="true"] {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--iris);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.3em;
+}
+
+.response {
+  min-height: 1.55em;
+  margin: var(--proposal-space-3) 0 0;
+}
+
+.response:empty {
+  display: none;
+}
+
+.note {
+  margin: var(--proposal-space-3) 0 var(--proposal-space-3);
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}

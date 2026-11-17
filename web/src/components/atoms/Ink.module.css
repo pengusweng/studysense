@@ -1,0 +1,63 @@
+/* The student's hand: Iris ink, used at three touchpoints only (hero line, ruled-out readings, boundaries). */
+.hand {
+  font-family: var(--font-hand-stack);
+  font-size: 1.15em;
+  line-height: 1;
+  color: var(--iris);
+  letter-spacing: 0.01em;
+}
+
+.writeOn {
+  display: inline-block;
+  animation: write-on 900ms var(--proposal-ease-out) both;
+}
+
+@keyframes write-on {
+  from {
+    clip-path: inset(-0.5em 100% -0.5em -0.5em);
+  }
+  to {
+    clip-path: inset(-0.5em -0.5em -0.5em -0.5em);
+  }
+}
+
+/* A reading the student's answer rules out: struck in ink, still legible. */
+/* Inline + cloned decoration so every wrapped line gets its own stroke. The stroke is Iris, drawn per theme (--iris-strike in globals.css). */
+.strike {
+  display: inline;
+  padding: 0 0.15em;
+  margin: 0 -0.15em;
+  background-image: var(--iris-strike);
+  background-repeat: no-repeat;
+  background-position: 0 58%;
+  background-size: 0% 0.6em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition:
+    background-size 650ms var(--proposal-ease-out),
+    color 300ms var(--proposal-ease-out);
+}
+
+.struck {
+  background-size: 100% 0.6em;
+}
+
+.muted {
+  color: var(--proposal-pencil);
+}
+
+/* Strokes that draw in when their spread opens (see Spread.module.css for the reveal hook). */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-motion="on"]) :global([data-reveal]:not([data-in])) .strike[data-strike] {
+    background-size: 0% 0.6em;
+  }
+}
+
+/* Sage highlighter: only ever on sensor evidence. */
+.highlight {
+  background: linear-gradient(transparent 12%, var(--sage) 12%, var(--sage) 88%, transparent 88%);
+  padding: 0 0.3em;
+  margin: 0 -0.15em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}

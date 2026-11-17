@@ -1,0 +1,97 @@
+.how {
+  margin: auto clamp(1rem, 4vw, 3.75rem) 0;
+  padding-bottom: var(--proposal-space-6);
+}
+
+.how:focus {
+  outline: none;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--proposal-space-2);
+  font-size: var(--proposal-text-sm);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--proposal-text-sm);
+  font-weight: 600;
+  color: var(--proposal-pencil);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--proposal-rule-strong);
+  list-style: none;
+}
+
+.steps li {
+  padding: var(--proposal-space-3) var(--proposal-space-4) 0 0;
+}
+
+.n {
+  font-weight: 700;
+  color: var(--proposal-pencil);
+  font-variant-numeric: tabular-nums;
+}
+
+.steps p {
+  margin: 0.25rem 0 0;
+  max-width: 30ch;
+  font-size: var(--proposal-text-sm);
+  line-height: 1.5;
+}
+
+/* Narrower: two by two, then one ruled line per step. */
+@media (max-width: 960px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps li {
+    display: flex;
+    gap: var(--proposal-space-3);
+    padding: var(--proposal-space-3) 0;
+    border-bottom: 1px solid var(--proposal-rule-strong);
+  }
+
+  .steps p {
+    margin: 0;
+  }
+}
+
+/* The four lines are written in across the sheet after the start action has settled (and again on reopen). */
+:global(html[data-motion="on"]) .head {
+  animation: arrive 600ms var(--proposal-ease-out) 560ms both;
+}
+
+:global(html[data-motion="on"]) .steps {
+  animation: write 1300ms var(--proposal-ease-out) 640ms both;
+}
+
+@keyframes write {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,130 @@
+/* Ruled off under the hand note, on the same paper: a question in the notebook, not a pop-up. */
+.checkIn,
+.support,
+.noted {
+  width: min(32rem, 100%);
+  margin: var(--proposal-space-5) auto 0;
+  text-align: left;
+}
+
+.checkIn {
+  position: relative;
+  padding-top: var(--proposal-space-4);
+  border-top: 1px solid var(--proposal-rule-strong);
+}
+
+.checkIn:focus {
+  outline: none;
+}
+
+/* StudySense's question, one step under the word: print, not the student's hand. */
+.checkIn legend {
+  padding-right: 5.5rem;
+  font-size: var(--proposal-text-lg);
+  letter-spacing: -0.01em;
+}
+
+/* Set aside in the corner, level with the question. */
+.dismiss {
+  position: absolute;
+  top: calc(var(--proposal-space-4) + 0.2rem);
+  right: 0;
+  font-size: var(--proposal-text-sm);
+}
+
+/* The answer and its one alternative, together. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--proposal-space-3) var(--proposal-space-4);
+  margin-top: var(--proposal-space-4);
+}
+
+/* Why Answer is disabled, said in words beside it. */
+.reason {
+  margin: var(--proposal-space-2) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.reason[data-hidden] {
+  visibility: hidden;
+}
+
+/* Help, kept apart from the answers: asking for it is never an answer to the question. */
+.help {
+  margin: var(--proposal-space-3) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.support {
+  width: min(36rem, 100%);
+}
+
+.intro {
+  margin: 0;
+  color: var(--proposal-pencil);
+}
+
+.noted {
+  text-align: center;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+/* Folding shut: the panel's row closes so the word above eases back to centre. */
+.fold {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.fold > * {
+  min-height: 0;
+}
+
+.fold[data-folding] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+:global(html[data-motion="on"]) .fold {
+  transition:
+    grid-template-rows 420ms var(--proposal-ease-in-out),
+    opacity 220ms var(--proposal-ease-out);
+}
+
+/* The fold also takes the panel's top margin with it. */
+:global(html[data-motion="on"]) .fold > * {
+  transition: margin-top 420ms var(--proposal-ease-in-out);
+}
+
+.fold[data-folding] > * {
+  margin-top: 0;
+  overflow: hidden;
+}
+
+:global(html[data-motion="on"]) .checkIn {
+  animation: unfold 260ms var(--proposal-ease-out) 900ms both;
+}
+
+:global(html[data-motion="on"]) .noted,
+:global(html[data-motion="on"]) .intro {
+  animation: fade 400ms var(--proposal-ease-out) both;
+}
+
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}

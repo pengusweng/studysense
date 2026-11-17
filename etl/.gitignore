@@ -1,0 +1,15 @@
+# Virtual environment
+.venv/
+
+.env
+
+# Raw & processed data
+data/
+
+# Python cache & tests
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node dependencies
+node_modules/

@@ -1,0 +1,156 @@
+.view {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--proposal-space-4) clamp(1rem, 4vw, 3rem) var(--proposal-space-6);
+}
+
+/* Only help stays at the edge, top right, where a reader looks last. */
+.top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--proposal-space-6) 0;
+}
+
+/* A fresh page: the notebook's margin line, inked down the left edge when the session opens. */
+.margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: clamp(1.25rem, 5vw, 4.5rem);
+  width: 1.5px;
+  background: var(--proposal-rule-strong);
+  transform-origin: top;
+}
+
+.title {
+  position: relative;
+  margin: 0;
+  font: 800 clamp(3.25rem, 2rem + 4.5vw, 5.5rem) / 1 var(--font-print-stack);
+  letter-spacing: -0.035em;
+}
+
+/* The student's own pen stroke under the word: Iris, because it is their mark, not an action. */
+.underline {
+  position: absolute;
+  left: 1%;
+  bottom: -0.2em;
+  width: 88%;
+  height: 0.2em;
+  overflow: visible;
+  fill: none;
+  stroke: var(--iris);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.underline path {
+  stroke-dasharray: 1;
+}
+
+.note {
+  margin: var(--proposal-space-4) 0 0;
+  font: 400 1.9rem / 1.1 var(--font-hand-stack);
+  color: var(--iris);
+  transform: rotate(-2deg);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--proposal-space-3) var(--proposal-space-5);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--iris);
+}
+
+.view[data-phase="paused"] .dot {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--iris);
+}
+
+/* Entering a phase: the word surfaces out of soft focus, then the note is written in left to right. */
+:global(html[data-motion="on"]) .title {
+  animation: surface 1100ms var(--proposal-ease-out) both;
+}
+
+:global(html[data-motion="on"]) .note {
+  animation: write 900ms var(--proposal-ease-out) 450ms both;
+}
+
+:global(html[data-motion="on"]) .margin {
+  animation: ink-down 1400ms var(--proposal-ease-out) 150ms both;
+}
+
+/* The pen stroke follows once the word has surfaced and the note is written. */
+:global(html[data-motion="on"]) .underline path {
+  animation: draw 1000ms var(--proposal-ease-out) 1000ms both;
+}
+
+:global(html[data-motion="on"]) .controls {
+  animation: arrive 700ms var(--proposal-ease-out) 700ms both;
+}
+
+@keyframes surface {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+@keyframes ink-down {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@keyframes write {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@media (max-width: 640px) {
+  .controls {
+    flex-direction: column;
+  }
+}

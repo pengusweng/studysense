@@ -1,0 +1,129 @@
+/* Styles shared by the spreads below the hero. */
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+}
+
+.step {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0 var(--proposal-space-3);
+  padding: var(--proposal-space-3) 0;
+  border-top: 1px solid var(--proposal-rule-strong);
+}
+
+.step:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* Numbered because the order is the point: it is a loop. */
+.step::before {
+  content: counter(step);
+  grid-row: 1 / 3;
+  font: 700 var(--proposal-text-lg) / 1.3 var(--font-print-stack);
+  font-variant-numeric: tabular-nums;
+  color: var(--proposal-pencil);
+}
+
+.stepTitle {
+  margin: 0;
+  font-size: var(--proposal-text-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.stepBody {
+  margin: 0.2rem 0 0;
+  max-width: 50ch;
+  color: var(--ink);
+}
+
+.loopBack {
+  margin: var(--proposal-space-3) 0 0;
+  padding-left: calc(2.25rem + var(--proposal-space-3));
+  font-size: var(--proposal-text-sm);
+  font-style: italic;
+}
+
+/* The quiet passage. */
+.blank {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  min-height: 24rem;
+}
+
+.blankNote {
+  margin: 0;
+  font-size: var(--proposal-text-sm);
+  font-style: italic;
+}
+
+.silence {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-block: var(--proposal-space-5);
+}
+
+@media (max-width: 860px) {
+  .blank {
+    min-height: 10rem;
+  }
+  .silence {
+    padding-block: 0;
+  }
+}
+
+/* Boundaries: struck in the student's ink, still readable. */
+.limits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.limit {
+  padding: 0.7rem 0;
+  border-top: 1px solid var(--proposal-rule);
+  font-size: var(--proposal-text-lg);
+  line-height: 1.35;
+}
+
+.limit:first-child {
+  border-top: 0;
+}
+
+.close {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--proposal-space-5);
+  height: 100%;
+}
+
+.closeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--proposal-space-3);
+  align-items: center;
+  margin-top: var(--proposal-space-2);
+}
+
+.help {
+  margin: 0;
+  padding-top: var(--proposal-space-3);
+  border-top: 1.5px solid var(--ink);
+  font-size: var(--proposal-text-sm);
+  max-width: 56ch;
+}
+
+.cite {
+  font-style: normal;
+  white-space: nowrap;
+}

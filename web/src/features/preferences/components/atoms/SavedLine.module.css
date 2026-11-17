@@ -1,0 +1,16 @@
+.saved {
+  min-height: 1.5em;
+  margin: var(--proposal-space-2) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+:global(html[data-motion="on"]) .text {
+  animation: fade 400ms var(--proposal-ease-out) both;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}

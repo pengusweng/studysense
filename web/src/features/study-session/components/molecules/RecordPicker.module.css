@@ -1,0 +1,63 @@
+.form {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(12rem, 16rem) auto;
+  align-items: end;
+  gap: var(--proposal-space-3) var(--proposal-space-4);
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field label {
+  font-size: var(--proposal-text-sm);
+  font-weight: 600;
+}
+
+.select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 2.25rem 0 0.75rem;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--proposal-radius-control);
+  background:
+    var(--cloud-white)
+    var(--select-chevron)
+    no-repeat right 0.8rem center;
+  appearance: none;
+  color: var(--ink);
+  font: 400 var(--proposal-text-sm) / 1.2 var(--font-log-stack);
+  font-variant-numeric: tabular-nums;
+}
+
+.select:disabled {
+  border-color: var(--proposal-rule-strong);
+  color: var(--proposal-pencil);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--proposal-space-4);
+  white-space: nowrap;
+}
+
+.hint {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.loading {
+  margin: 0;
+  font: 400 var(--proposal-text-sm) / 1.4 var(--font-print-stack);
+  color: var(--proposal-pencil);
+}
+
+@media (max-width: 760px) {
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

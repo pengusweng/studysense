@@ -1,0 +1,24 @@
+.sheet {
+  display: flex;
+  flex-direction: column;
+  max-width: 1280px;
+  min-height: calc(100vh - 4.25rem - var(--proposal-space-6));
+  margin: 0 auto;
+  border-radius: 0 0 var(--proposal-radius-page) var(--proposal-radius-page);
+  background-color: var(--cloud-white);
+  background-image:
+    linear-gradient(var(--proposal-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--proposal-rule) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: -1px -1px;
+  box-shadow:
+    0 1px 2px rgb(var(--shadow-rgb) / 0.08),
+    0 28px 56px -28px rgb(var(--shadow-rgb) / 0.32);
+}
+
+@media (max-width: 640px) {
+  .sheet {
+    min-height: calc(100vh - 6rem);
+    border-radius: 0;
+  }
+}

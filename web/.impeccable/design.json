@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-17T12:00:00Z",
+  "title": "Design System: StudySense",
+  "extensions": {
+    "colorMeta": {
+      "deep-iris": {
+        "role": "primary",
+        "displayName": "Deep Iris",
+        "tonalRamp": [
+          "#22183a",
+          "#33245a",
+          "#4a357c",
+          "#60449d",
+          "#7d66b3",
+          "#a08fcb",
+          "#c6bbe2",
+          "#ebe6f6"
+        ]
+      },
+      "iris": {
+        "role": "primary",
+        "displayName": "Iris",
+        "tonalRamp": [
+          "#261c3d",
+          "#3b2c61",
+          "#563f8c",
+          "#7759ba",
+          "#9580cb",
+          "#b3a5da",
+          "#d3cae9",
+          "#f0ecf8"
+        ]
+      },
+      "sage": {
+        "role": "secondary",
+        "displayName": "Sage",
+        "tonalRamp": [
+          "#1c2f2b",
+          "#2e4a44",
+          "#4a6f68",
+          "#6f978f",
+          "#a8cfc7",
+          "#c3ddd8",
+          "#dbebe8",
+          "#f1f8f6"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "#14111d",
+          "#29243b",
+          "#3f3954",
+          "#57506d",
+          "#736d88",
+          "#9893a8",
+          "#c1bdcb",
+          "#e8e6ed"
+        ]
+      },
+      "pencil": {
+        "role": "neutral",
+        "displayName": "Pencil"
+      },
+      "cloud-white": {
+        "role": "neutral",
+        "displayName": "Cloud White"
+      },
+      "pale-lavender": {
+        "role": "neutral",
+        "displayName": "Pale Lavender"
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule"
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Rule Strong"
+      },
+      "desk": {
+        "role": "neutral",
+        "displayName": "Desk"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The hero thesis only; one per page."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Spread titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Sub-sections and the log title."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose, max 58ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Hints, folios, table headers; Pencil colour."
+      },
+      "log": {
+        "displayName": "Sensor log",
+        "purpose": "Only what a device recorded: log rows, provenance, values, axes, profile codes."
+      },
+      "hand": {
+        "displayName": "Student's hand",
+        "purpose": "Only what the student writes: margin notes, written answers."
+      },
+      "display-sm": {
+        "displayName": "Display small",
+        "purpose": "The closing call to action only; the page opens and closes on a display line."
+      },
+      "readings": {
+        "displayName": "Readings",
+        "purpose": "The hero's struck-out list of possible meanings."
+      }
+    },
+    "shadows": [
+      {
+        "name": "notebook-on-desk",
+        "value": "0 1px 2px rgb(41 36 59 / 0.08), 0 28px 56px -28px rgb(41 36 59 / 0.32)",
+        "purpose": "Every spread resting on the desk."
+      },
+      {
+        "name": "binding-fall-off",
+        "value": "linear-gradient(to left, rgb(41 36 59 / 0.07), transparent 28px)",
+        "purpose": "Page curving into the gutter (mirrored at 0.06 / 22px on the right page)."
+      },
+      {
+        "name": "header-resting-edge",
+        "value": "0 1px 0 rgb(41 36 59 / 0.18), 0 10px 18px -16px rgb(41 36 59 / 0.35)",
+        "purpose": "Sticky header once the page has scrolled."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All entrances and state transitions."
+      },
+      {
+        "name": "gate",
+        "value": "html[data-motion=\"on\"]",
+        "purpose": "Set before paint when no reduced-motion preference; hidden pre-reveal states exist only under it."
+      },
+      {
+        "name": "reveal",
+        "value": "IntersectionObserver threshold 0.12, rootMargin 0px 0px -6% 0px",
+        "purpose": "Adds data-in to each later spread."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "spread-collapse",
+        "value": "860px"
+      },
+      {
+        "name": "header-two-row",
+        "value": "920px"
+      },
+      {
+        "name": "header-subject-hidden",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one filled action per view, e.g. Open the demo.",
+      "html": "<button class=\"ds-btn-primary\">Open the demo</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; min-height:44px; padding:0.7rem 1.35rem; border:1.5px solid var(--deep-iris, #60449d); border-radius:6px; background:var(--deep-iris, #60449d); color:var(--cloud-white, #faf8fe); font:600 1.0625rem/1.2 'Schibsted Grotesk', system-ui, sans-serif; cursor:pointer; transition:background-color 160ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary:hover { background:var(--ink, #29243b); border-color:var(--ink, #29243b); } .ds-btn-primary:active { transform:translateY(1px); } .ds-btn-primary:focus-visible { outline:2px solid var(--deep-iris, #60449d); outline-offset:3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined companion action.",
+      "html": "<button class=\"ds-btn-secondary\">See how it decides</button>",
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; min-height:44px; padding:0.7rem 1.35rem; border:1.5px solid var(--deep-iris, #60449d); border-radius:6px; background:transparent; color:var(--deep-iris, #60449d); font:600 1.0625rem/1.2 'Schibsted Grotesk', system-ui, sans-serif; cursor:pointer; } .ds-btn-secondary:hover { background:var(--pale-lavender, #f2edfb); } .ds-btn-secondary:focus-visible { outline:2px solid var(--deep-iris, #60449d); outline-offset:3px; }"
+    },
+    {
+      "name": "Index Tabs",
+      "kind": "nav",
+      "refersTo": "index-tab",
+      "description": "Section navigation as divider tabs standing on the notebook's top edge.",
+      "html": "<nav class=\"ds-tabs\"><a href=\"#\" class=\"ds-tab\">How it decides</a><a href=\"#\" class=\"ds-tab\" aria-current=\"location\">Profiles</a><a href=\"#\" class=\"ds-tab\">Silence</a><a href=\"#\" class=\"ds-tab ds-tab-demo\">Open the demo</a></nav><div class=\"ds-tabs-page\"></div>",
+      "css": ".ds-tabs { display:flex; align-items:flex-end; gap:0.3rem; } .ds-tab { display:flex; align-items:center; min-height:2.75rem; padding:0.5rem 1rem 0.45rem; border:1px solid var(--rule-strong, #c9bce4); border-bottom:0; border-radius:8px 8px 0 0; background:var(--pale-lavender, #f2edfb); color:var(--ink, #29243b); font:500 1.0625rem/1.2 'Schibsted Grotesk', system-ui, sans-serif; text-decoration:none; transform:translateY(3px); transition:transform 260ms cubic-bezier(0.16,1,0.3,1); } .ds-tab:hover { background:var(--cloud-white, #faf8fe); transform:none; } .ds-tab[aria-current] { background:var(--cloud-white, #faf8fe); border-color:var(--ink, #29243b); border-top-width:3px; font-weight:700; transform:none; } .ds-tab-demo { margin-left:0.5rem; background:var(--deep-iris, #60449d); border-color:var(--deep-iris, #60449d); color:var(--cloud-white, #faf8fe); font-weight:600; transform:none; } .ds-tab-demo:hover { background:var(--ink, #29243b); } .ds-tab:focus-visible { outline:2px solid var(--deep-iris, #60449d); outline-offset:-4px; } .ds-tabs-page { height:24px; background:var(--cloud-white, #faf8fe); }"
+    },
+    {
+      "name": "Notebook Page",
+      "kind": "card",
+      "refersTo": "notebook-page",
+      "description": "Graph-ruled paper; the container for all content.",
+      "html": "<div class=\"ds-page\"><p class=\"ds-page-text\">The data is a lead. You write the conclusion.</p><span class=\"ds-folio\">3</span></div>",
+      "css": ".ds-page { position:relative; padding:2.5rem 2.5rem 3rem; border-radius:3px; background-color:var(--cloud-white, #faf8fe); background-image:linear-gradient(var(--rule, #e3daf3) 1px, transparent 1px), linear-gradient(90deg, var(--rule, #e3daf3) 1px, transparent 1px); background-size:24px 24px; background-position:-1px -1px; box-shadow:0 1px 2px rgb(41 36 59 / 0.08), 0 28px 56px -28px rgb(41 36 59 / 0.32); } .ds-page-text { margin:0; font:800 2rem/1.05 'Schibsted Grotesk', system-ui, sans-serif; letter-spacing:-0.03em; color:var(--ink, #29243b); max-width:14ch; } .ds-folio { position:absolute; right:2.5rem; bottom:1rem; font-size:0.875rem; color:var(--pencil, #625c75); }"
+    },
+    {
+      "name": "Sensor Log Row",
+      "kind": "custom",
+      "description": "A recorded value in mono with a dotted leader; sage highlight and an iris hand note when it is the evidence in question.",
+      "html": "<div class=\"ds-log\"><span class=\"ds-log-label\">Fitbit stress score</span><span class=\"ds-log-lead\"></span><mark class=\"ds-log-value\">71</mark></div><p class=\"ds-hand\">higher is calmer!</p>",
+      "css": ".ds-log { display:flex; align-items:baseline; gap:0.4rem; font:400 0.875rem/1.4 'Red Hat Mono', ui-monospace, monospace; font-variant-numeric:tabular-nums; color:var(--ink, #29243b); } .ds-log-label { color:var(--pencil, #625c75); } .ds-log-lead { flex:1; border-bottom:1px dotted var(--rule-strong, #c9bce4); } .ds-log-value { background:var(--sage, #a8cfc7); color:var(--ink, #29243b); padding:0 0.25rem; font-weight:600; } .ds-hand { margin:0.4rem 0 0; text-align:right; font:400 1.4rem/1 'Nanum Pen Script', 'Segoe Print', cursive; color:var(--iris, #7759ba); transform:rotate(-3deg); }"
+    },
+    {
+      "name": "Check-in Answer",
+      "kind": "input",
+      "description": "A drawn radio answer; the chosen one is circled in iris ink.",
+      "html": "<label class=\"ds-answer\"><input type=\"radio\" name=\"ds-q\" class=\"ds-radio\" checked><span class=\"ds-answer-label\">Focused. Leave me be.</span></label><label class=\"ds-answer\"><input type=\"radio\" name=\"ds-q\" class=\"ds-radio\"><span class=\"ds-answer-label\">Swamped. A hand would help.</span></label>",
+      "css": ".ds-answer { display:flex; align-items:center; gap:0.6rem; min-height:40px; font:400 1.0625rem/1.25 'Schibsted Grotesk', system-ui, sans-serif; color:var(--ink, #29243b); cursor:pointer; } .ds-radio { appearance:none; width:1.1rem; height:1.1rem; margin:0; border:1.5px solid var(--ink, #29243b); border-radius:50%; background:var(--cloud-white, #faf8fe); display:grid; place-content:center; } .ds-radio::before { content:''; width:0.55rem; height:0.55rem; border-radius:50%; background:var(--iris, #7759ba); transform:scale(0); transition:transform 220ms cubic-bezier(0.16,1,0.3,1); } .ds-radio:checked { border-color:var(--iris, #7759ba); } .ds-radio:checked::before { transform:scale(1); } .ds-answer-label { padding:0.15rem 0.5rem; border-radius:50% / 60%; } .ds-answer:has(.ds-radio:checked) .ds-answer-label { font-weight:600; box-shadow:0 0 0 1.8px var(--iris, #7759ba); } .ds-answer:has(.ds-radio:focus-visible) { outline:2px solid var(--deep-iris, #60449d); outline-offset:2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Notebook",
+    "overview": "StudySense is a bound notebook on a lavender desk. The left page is what the sensor observed. It is written in a mono log voice, with sensor values highlighted in sage. The right page is what the student concludes, in printed type, and their own hand-written marks are in iris. The whole system is built around this split: data is a lead and the student writes the conclusion. Every surface is a spread of graph-ruled pages with folios and an inked binding line. These are not floating cards on a gradient.\n\nDensity is calm and generous: one idea per spread, with lots of ruled space. The grid ruling is the world, a measuring surface, so it is never used as decoration elsewhere. The voice is tentative (\"may\", \"estimated\", \"could mean\") and the visuals match. Struck-through guesses, circled answers and margin notes show reasoning in progress rather than verdicts.",
+    "keyCharacteristics": [
+      "Two-page spreads on graph-ruled Cloud White paper, set on a Desk lavender ground.",
+      "Three type voices, each with one job: print (Schibsted Grotesk), sensor log (Red Hat Mono), student's hand (Nanum Pen Script).",
+      "Colour carries meaning: sage means sensor evidence, iris means the student, deep iris means action.",
+      "Index-divider tabs replace a conventional nav bar.",
+      "Motion is pen-and-paper: pages swing open, rows are written in, strikes and circles are drawn."
+    ],
+    "rules": [
+      {
+        "name": "The Sage Is Evidence Rule",
+        "body": "Sage marks only something a sensor recorded. Never use it for success states, buttons or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Iris Is The Student Rule",
+        "body": "Iris marks only what the student says or decides: a hand note, a circle, a strike. Actions take Deep Iris, never Iris.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Voices Rule",
+        "body": "Mono is the sensor and hand is the student. Everything else is print. If a line is neither recorded by a device nor written by the student, it is set in print.",
+        "section": "typography"
+      },
+      {
+        "name": "The Only The Notebook Lifts Rule",
+        "body": "Buttons, tabs, tables and plots stay flat on the page. A shadow means paper resting on the desk.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Say It Once Rule",
+        "body": "Each claim the product makes has one home on the page: \"replayed, not live\" in the hero provenance line and the Data intro, \"tentative\" in the plot caption, \"optional\" shown by the check-in itself, silence in its own spread, and the refusals in the limits list. Don't restate a claim in a second section.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do put every new section on a notebook spread, with a folio.",
+      "Do set sensor-recorded values in Red Hat Mono, and highlight them in Sage only when they are the evidence in question.",
+      "Do use Nanum Pen Script in Iris for anything the student writes, and keep it short.",
+      "Do use Deep Iris for every clickable action, and nothing else.",
+      "Do gate any hidden-before-reveal state behind html[data-motion=\"on\"], so content is never invisible without motion."
+    ],
+    "donts": [
+      "Don't use Sage for success, confirmation or decoration.",
+      "Don't set prose, headings, labels or UI copy in mono.",
+      "Don't put content in floating cards or add shadows to anything but the notebook.",
+      "Don't reuse the graph-grid ruling outside the notebook page.",
+      "Don't draw charts with invented data points. Plots show geometry or real SSAQS values only.",
+      "Don't show pairing, syncing or \"connected\" visuals. The data is a replay."
+    ]
+  }
+}

@@ -1,0 +1,108 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--proposal-space-2);
+  min-height: 44px;
+  padding: 0.7rem 1.35rem;
+  border: 1.5px solid var(--deep-iris);
+  border-radius: var(--proposal-radius-control);
+  font: 600 var(--proposal-text-base) / 1.2 var(--font-print-stack);
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--proposal-ease-out),
+    color 160ms var(--proposal-ease-out),
+    transform 160ms var(--proposal-ease-out);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.primary {
+  background: var(--deep-iris);
+  color: var(--on-action);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--ink);
+  border-color: var(--ink);
+  text-decoration: none;
+}
+
+.secondary {
+  background: transparent;
+  color: var(--deep-iris);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--pale-lavender);
+  text-decoration: none;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  border-color: var(--proposal-rule-strong);
+  background: var(--pale-lavender);
+  color: var(--proposal-pencil);
+}
+
+/* Working: the button keeps its own colours (it is busy, not unavailable). */
+.button[aria-busy="true"] {
+  cursor: progress;
+}
+
+.primary[aria-busy="true"] {
+  border-color: var(--deep-iris);
+  background: var(--deep-iris);
+  color: var(--on-action);
+}
+
+.secondary[aria-busy="true"] {
+  border-color: var(--deep-iris);
+  background: transparent;
+  color: var(--deep-iris);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 0.18em;
+  margin-left: -0.2em;
+  align-self: flex-end;
+  padding-bottom: 0.3em;
+}
+
+.dots span {
+  width: 0.22em;
+  height: 0.22em;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+:global(html[data-motion="on"]) .dots span {
+  animation: write-dot 1800ms var(--proposal-ease-in-out) infinite;
+}
+
+:global(html[data-motion="on"]) .dots span:nth-child(2) {
+  animation-delay: 300ms;
+}
+
+:global(html[data-motion="on"]) .dots span:nth-child(3) {
+  animation-delay: 600ms;
+}
+
+@keyframes write-dot {
+  0%,
+  15% {
+    opacity: 0;
+  }
+  35%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

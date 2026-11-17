@@ -1,0 +1,133 @@
+.figure {
+  margin: 0;
+}
+
+.plot {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) 2.25rem;
+  aspect-ratio: 1 / 0.92;
+  max-width: 34rem;
+}
+
+.yAxis {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 500 var(--proposal-text-sm) var(--font-log-stack);
+  color: var(--proposal-pencil);
+  padding: 0.5rem 0;
+}
+
+.xAxis {
+  grid-column: 2 / 4;
+  grid-row: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font: 500 var(--proposal-text-sm) var(--font-log-stack);
+  color: var(--proposal-pencil);
+  padding: 0 0.5rem;
+}
+
+.axisName {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.quadrants {
+  grid-column: 2 / 4;
+  grid-row: 1 / 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+}
+
+/* The 50-point split, drawn as dashed construction lines. */
+.quadrants::before,
+.quadrants::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.quadrants::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  border-left: 1.5px dashed var(--ink);
+  transform-origin: bottom center;
+}
+
+.quadrants::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1.5px dashed var(--ink);
+  transform-origin: left center;
+}
+
+/* When the spread opens, the 50-point split is ruled in, one line after the other. */
+@media (prefers-reduced-motion: no-preference) {
+  .quadrants::before,
+  .quadrants::after {
+    transition: transform 800ms var(--proposal-ease-out) 650ms;
+  }
+
+  .quadrants::after {
+    transition-delay: 900ms;
+  }
+
+  .quadrant {
+    transition: opacity 500ms var(--proposal-ease-out);
+    transition-delay: calc(1200ms + var(--i, 0) * 90ms);
+  }
+
+  :global(html[data-motion="on"]) :global([data-reveal]:not([data-in])) .quadrants::before {
+    transform: scaleY(0);
+  }
+
+  :global(html[data-motion="on"]) :global([data-reveal]:not([data-in])) .quadrants::after {
+    transform: scaleX(0);
+  }
+
+  :global(html[data-motion="on"]) :global([data-reveal]:not([data-in])) .quadrant {
+    opacity: 0;
+  }
+}
+
+.quadrant {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+.code {
+  font: 600 clamp(1.25rem, 1rem + 1.2vw, 1.85rem) / 1 var(--font-log-stack);
+  letter-spacing: 0.02em;
+}
+
+.name {
+  font-size: var(--proposal-text-sm);
+  line-height: 1.3;
+  color: var(--proposal-pencil);
+  max-width: 16ch;
+}
+
+/* The caption carries the page's only statement that the estimate is tentative, so it reads as body text. */
+.caption {
+  margin-top: var(--proposal-space-4);
+  max-width: 46ch;
+}

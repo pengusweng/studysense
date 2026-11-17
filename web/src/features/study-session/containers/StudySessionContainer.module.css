@@ -1,0 +1,37 @@
+/*
+ * The session's sheet trades the graph ruling for the drifting tide (TideField), and runs to the bottom of
+ * the window: it cancels the app shell's bottom padding and squares its lower corners.
+ */
+div.sheet {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100dvh - 4rem);
+  margin-bottom: calc(-1 * var(--proposal-space-6));
+  border-radius: 0;
+  background-image: none;
+  transition:
+    max-width var(--proposal-dur-chrome) var(--proposal-ease-in-out),
+    min-height var(--proposal-dur-chrome) var(--proposal-ease-in-out),
+    margin-bottom var(--proposal-dur-chrome) var(--proposal-ease-in-out),
+    box-shadow var(--proposal-dur-chrome) var(--proposal-ease-in-out);
+}
+
+@media (max-width: 640px) {
+  div.sheet {
+    min-height: calc(100dvh - 5.7rem);
+  }
+}
+
+/*
+ * Studying: the sheet leaves the desk and fills the window edge to edge. Every value here eases on the
+ * same curve as the chrome stepping away (AppShell), so the sheet's growth and the header's closing read
+ * as one motion. Margins stay auto (auto does not animate) and simply resolve to zero at full width.
+ */
+:global(html[data-session="focus"]) div.sheet {
+  max-width: 100vw;
+  min-height: 100dvh;
+  margin-bottom: 0;
+  box-shadow:
+    0 1px 2px rgb(var(--shadow-rgb) / 0),
+    0 28px 56px -28px rgb(var(--shadow-rgb) / 0);
+}

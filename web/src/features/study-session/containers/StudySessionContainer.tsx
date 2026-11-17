@@ -1,0 +1,151 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Sheet } from "@/components/molecules/Sheet";
+import { VisuallyHidden } from "@/components/atoms/VisuallyHidden";
+import { closeUnanswered } from "@/lib/checkIn";
+import {
+  resumeSession,
+  setSessionStatus,
+  startSession,
+  useKnownSessionStatus,
+  type SessionStatus,
+} from "@/lib/sessionStatus";
+import { useDemoRecord } from "@/lib/useDemoRecord";
+import { usePreferences } from "@/lib/preferences";
+import { useEstimate } from "../hooks/useEstimate";
+import { TideField } from "../components/atoms/TideField";
+import { ReadyView } from "../components/organisms/ReadyView";
+import { FocusView } from "../components/organisms/FocusView";
+import { EndedView } from "../components/organisms/EndedView";
+import type { EstimateView, SessionPhase } from "../types";
+import styles from "./StudySessionContainer.module.css";
+
+/** Matches --proposal-dur-chrome: how long the chrome takes to return once a session ends. */
+const CHROME_MS = 760;
+let chromeTimer: number | undefined;
+let lockTimer: number | undefined;
+
+/** Lock page scroll while the header and sheet trade height, so no scrollbar flickers in. */
+function lockScrollWhileChromeMoves(root: HTMLElement) {
+  window.clearTimeout(lockTimer);
+  root.dataset.chrome = "moving";
+  lockTimer = window.setTimeout(() => delete root.dataset.chrome, CHROME_MS);
+}
+
+const HIDDEN: EstimateView = { kind: "unavailable", reason: "none" };
+
+const PHASE: Record<SessionStatus, SessionPhase> = { none: "ready", active: "active", paused: "paused", ended: "ended" };
+
+const ANNOUNCE: Record<SessionPhase, string> = {
+  ready: "",
+  active: "Session started.",
+  paused: "Session paused.",
+  ended: "Session ended.",
+};
+
+const TAB_TITLE: Record<SessionPhase, string> = {
+  ready: "Study Session · StudySense",
+  active: "Studying · StudySense",
+  paused: "Paused · StudySense",
+  ended: "Study Session · StudySense",
+};
+
+/**
+ * Study Session, focus mode: ready → active ⇄ paused → ended (docs/AGENTS.md §6).
+ * No timer and no numbers: the drifting ruling and one word say a session is running.
+ */
+export function StudySessionContainer() {
+  const status = useKnownSessionStatus();
+  const { record, days, check, choose } = useDemoRecord();
+  const estimate = useEstimate(record, check);
+  const { showEstimate } = usePreferences();
+  // A hidden estimate isn't shown, and the response rules don't lean on it either.
+  const ruleEstimate: EstimateView = showEstimate ? estimate : HIDDEN;
+  const [moved, setMoved] = useState(false);
+  const announce = useRef<string>("");
+
+  const phase = status === null ? null : PHASE[status];
+
+  // The tab says so too, visible from any other window. Next applies page metadata after hydration,
+  // so the title is re-asserted whenever the head changes while this screen is open.
+  useEffect(() => {
+    if (!phase) return;
+    const want = TAB_TITLE[phase];
+    const apply = () => {
+      if (document.title !== want) document.title = want;
+    };
+    apply();
+    const observer = new MutationObserver(apply);
+    observer.observe(document.head, { subtree: true, childList: true, characterData: true });
+    return () => observer.disconnect();
+  }, [phase]);
+
+  // Studying takes the whole window: the app chrome steps away while a session is active or paused.
+  const focused = phase === "active" || phase === "paused";
+  // Leaving (End, or navigating away) passes through "leaving" while the chrome eases back in.
+  useEffect(() => {
+    if (!focused) return;
+    const root = document.documentElement;
+    window.clearTimeout(chromeTimer);
+    lockScrollWhileChromeMoves(root);
+    root.dataset.session = "focus";
+    return () => {
+      lockScrollWhileChromeMoves(root);
+      root.dataset.session = "leaving";
+      chromeTimer = window.setTimeout(() => {
+        if (root.dataset.session === "leaving") delete root.dataset.session;
+      }, CHROME_MS);
+    };
+  }, [focused]);
+
+  function go(next: SessionStatus) {
+    // Starting from further down the page (a demo panel open): rise to the top as the sheet grows.
+    if (next === "active" && window.scrollY > 0) window.scrollTo({ top: 0 });
+    setMoved(true);
+    announce.current = ANNOUNCE[PHASE[next]];
+    if (next === "active") return status === "paused" ? resumeSession() : startSession();
+    if (status === "paused") closeUnanswered();
+    setSessionStatus(next);
+  }
+
+  return (
+    <Sheet className={styles.sheet}>
+      <TideField phase={phase ?? "ready"} />
+      <VisuallyHidden>
+        <span role="status">{announce.current}</span>
+      </VisuallyHidden>
+      {phase === "ready" && (
+        <ReadyView
+          record={record}
+          check={check}
+          days={days}
+          estimate={showEstimate ? estimate : null}
+          onChoose={choose}
+          onStart={() => go("active")}
+        />
+      )}
+      {focused && (
+        <FocusView
+          phase={phase}
+          estimate={ruleEstimate}
+          takeFocus={moved}
+          onPause={() => go("paused")}
+          onResume={() => go("active")}
+          onEnd={() => go("ended")}
+        />
+      )}
+      {phase === "ended" && (
+        <EndedView
+          record={record}
+          check={check}
+          days={days}
+          estimate={ruleEstimate}
+          onChoose={choose}
+          takeFocus={moved}
+          onStartAnother={() => go("active")}
+        />
+      )}
+    </Sheet>
+  );
+}

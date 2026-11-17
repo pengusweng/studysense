@@ -1,0 +1,137 @@
+/*
+ * Design tokens.
+ * Brand tokens come from design issue #2 (see docs/AGENTS.md §9).
+ * Anything prefixed --proposal- is NOT confirmed by the design team yet.
+ */
+:root {
+  /* The notebook after dark, the only theme: violet-black desk, slate paper under a lamp, chalk-pale ink.
+     The token names are design issue #2's roles; the values are their dark counterparts (the light theme
+     was retired on 2026-11-17). Every hue keeps its job (Iris the student's hand, Deep Iris every action,
+     Sage sensor evidence); actions are pale so they lead. Contrast on the paper: ink 14:1, pencil 6.9:1,
+     iris 6.8:1, deep iris 8.9:1. */
+  --cloud-white: #1d1928;   /* the paper */
+  --pale-lavender: #2a2439; /* resting tabs, secondary hover */
+  --iris: #b095ec;
+  --deep-iris: #c4b0f7;
+  --ink: #ece7f7;
+  --sage: #355e55;
+
+  /* Proposals: pending design-team approval */
+  --proposal-rule: #2b2539;        /* notebook ruling, hairlines */
+  --proposal-rule-strong: #4a4063; /* margin rule, table rules */
+  --proposal-pencil: #a7a0bd;      /* tentative / secondary text, 6.9:1 on the paper */
+  --proposal-desk: #131019;        /* ground behind the notebook */
+
+  --on-action: #1d1928;            /* text on a filled Deep Iris or Ink control */
+  --paper-raised: #29233a;         /* paper resting on the sheet; shadows barely read, so it is lighter */
+  --shadow-rgb: 0 0 0;             /* shadows: rgb(var(--shadow-rgb) / a) */
+  --iris-rgb: 176 149 236;         /* Iris washes: rgb(var(--iris-rgb) / a) */
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23ece7f7' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --iris-strike: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C 20 3.5, 45 7.5, 70 4.5 S 95 5.5, 99 3.5' fill='none' stroke='%23b095ec' stroke-width='2.4' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+
+  --proposal-space-1: 0.25rem;
+  --proposal-space-2: 0.5rem;
+  --proposal-space-3: 1rem;
+  --proposal-space-4: 1.5rem;
+  --proposal-space-5: 2.5rem;
+  --proposal-space-6: 4rem;
+  --proposal-space-7: 6rem;
+
+  --proposal-radius-control: 6px;
+  --proposal-radius-page: 3px;
+
+  --proposal-text-sm: 0.875rem;
+  --proposal-text-base: 1.0625rem;
+  --proposal-text-lg: 1.25rem;
+  --proposal-text-xl: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  --proposal-text-display: clamp(2.375rem, 1.4rem + 3vw, 4.125rem);
+  --proposal-text-display-sm: clamp(2rem, 1.3rem + 2.2vw, 3.25rem);
+
+  --proposal-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --proposal-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* How long the app chrome takes to step away from (or return to) a study session. Mirrored in
+     StudySessionContainer's CHROME_MS. */
+  --proposal-dur-chrome: 760ms;
+
+  --font-print-stack: var(--font-print), "Segoe UI", system-ui, sans-serif;
+  --font-log-stack: var(--font-log), ui-monospace, monospace;
+  --font-hand-stack: var(--font-hand), "Segoe Print", cursive;
+
+  color-scheme: dark;
+  accent-color: var(--deep-iris);
+  scrollbar-color: var(--proposal-rule-strong) var(--proposal-desk);
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/* While the chrome steps in or out of a study session the page is exactly one window tall; no scrollbar
+   flickers in while the header and sheet trade height. */
+html[data-chrome="moving"] {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-print-stack);
+  font-size: var(--proposal-text-base);
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--proposal-desk);
+  caret-color: var(--iris);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--sage);
+  color: var(--ink);
+}
+
+a {
+  color: var(--deep-iris);
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--deep-iris);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

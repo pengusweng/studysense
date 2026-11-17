@@ -1,0 +1,117 @@
+.tide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 1.4s var(--proposal-ease-out);
+}
+
+/*
+ * Lamplight: two faint Iris pools wander across the sheet while studying, like light moving over a desk.
+ * Their paths run 53s and 71s, so they never fall into a beat; nothing here can read as a pulse or a
+ * reading. Pausing freezes them where they are, together with the ruling.
+ */
+.tide::before,
+.tide::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  opacity: 0;
+  transition: opacity 1.6s var(--proposal-ease-out);
+  animation: lamp-a 53s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.tide::after {
+  background: radial-gradient(ellipse 36% 30% at 50% 47%, rgb(var(--iris-rgb) / 0.1), transparent 70%);
+}
+
+.tide::before {
+  background: radial-gradient(ellipse 26% 22% at 50% 50%, rgb(var(--iris-rgb) / 0.06), transparent 70%);
+  animation-name: lamp-b;
+  animation-duration: 71s;
+}
+
+.tide[data-phase="active"]::before,
+.tide[data-phase="active"]::after {
+  opacity: 1;
+  animation-play-state: running;
+  will-change: transform;
+}
+
+.tide[data-phase="paused"]::before,
+.tide[data-phase="paused"]::after {
+  opacity: 0.4;
+}
+
+@keyframes lamp-a {
+  30% {
+    transform: translate(7%, -4%);
+  }
+  65% {
+    transform: translate(-6%, 3%);
+  }
+  to {
+    transform: translate(4%, 5%);
+  }
+}
+
+@keyframes lamp-b {
+  40% {
+    transform: translate(-8%, 5%);
+  }
+  75% {
+    transform: translate(5%, -3%);
+  }
+  to {
+    transform: translate(-3%, -6%);
+  }
+}
+
+.tide[data-phase="ended"] {
+  opacity: 0.45;
+}
+
+.lines {
+  position: absolute;
+  inset: -96px 0;
+  animation: drift 18s ease-in-out infinite alternate;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+.fine {
+  background: repeating-linear-gradient(to bottom, var(--proposal-rule) 0 1px, transparent 1px 24px);
+}
+
+.wide {
+  background: repeating-linear-gradient(to bottom, rgb(var(--iris-rgb) / 0.2) 0 1.5px, transparent 1.5px 96px);
+  /* No head start: at rest every Iris line lies on a fine rule, so the still sheet reads as one ruling.
+     The two speeds pull the layers apart once the tide runs. */
+  animation-duration: 26s;
+  transition: opacity 1.4s var(--proposal-ease-out);
+}
+
+/* Settled: the Iris ruling fades out, so lines frozen mid-drift never sit doubled on the still sheet. */
+.tide[data-phase="ended"] .wide {
+  opacity: 0;
+}
+
+.tide[data-phase="active"] .lines {
+  animation-play-state: running;
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(96px);
+  }
+}
+
+/* Still ruling, no drift: the global reduced-motion rule would otherwise flicker an infinite loop. */
+@media (prefers-reduced-motion: reduce) {
+  .lines,
+  .tide::before,
+  .tide::after {
+    animation: none !important;
+  }
+}

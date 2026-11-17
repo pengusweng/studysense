@@ -1,0 +1,206 @@
+{
+  "selected": "forest_balanced",
+  "candidates": {
+    "majority": {
+      "mean_cv_macro_f1": 0.18936871676541744,
+      "best_params": {},
+      "std_cv_macro_f1": 0.01270666017176774,
+      "oof_per_class_recall": {
+        "LSLA": 1.0,
+        "LSHA": 0.0,
+        "HSLA": 0.0,
+        "HSHA": 0.0
+      }
+    },
+    "logistic_standard": {
+      "mean_cv_macro_f1": 0.2096053476465453,
+      "best_params": {
+        "model__C": 10
+      },
+      "std_cv_macro_f1": 0.01776505670271528,
+      "oof_per_class_recall": {
+        "LSLA": 0.8877259752616555,
+        "LSHA": 0.035175879396984924,
+        "HSLA": 0.041666666666666664,
+        "HSHA": 0.020172910662824207
+      }
+    },
+    "logistic_balanced": {
+      "mean_cv_macro_f1": 0.20863444690106472,
+      "best_params": {
+        "model__C": 0.1
+      },
+      "std_cv_macro_f1": 0.04816338851409978,
+      "oof_per_class_recall": {
+        "LSLA": 0.20076117982873454,
+        "LSHA": 0.2814070351758794,
+        "HSLA": 0.48333333333333334,
+        "HSHA": 0.22478386167146974
+      }
+    },
+    "forest_standard": {
+      "mean_cv_macro_f1": 0.21303808579641684,
+      "best_params": {
+        "model__max_depth": null,
+        "model__min_samples_leaf": 2
+      },
+      "std_cv_macro_f1": 0.011106413689939006,
+      "oof_per_class_recall": {
+        "LSLA": 0.9000951474785919,
+        "LSHA": 0.035175879396984924,
+        "HSLA": 0.0,
+        "HSHA": 0.04899135446685879
+      }
+    },
+    "forest_balanced": {
+      "mean_cv_macro_f1": 0.2499176712762944,
+      "best_params": {
+        "model__max_depth": null,
+        "model__min_samples_leaf": 5
+      },
+      "std_cv_macro_f1": 0.024076142090122543,
+      "oof_per_class_recall": {
+        "LSLA": 0.5870599429115129,
+        "LSHA": 0.11557788944723618,
+        "HSLA": 0.13333333333333333,
+        "HSHA": 0.16138328530259366
+      }
+    }
+  },
+  "policy": {
+    "confidence_threshold": 1.01,
+    "margin_threshold": 1.0,
+    "max_missing_fraction": 0.5,
+    "selection": "Development OOF target accuracy>=0.70 and coverage>=10% (minimum 30); else abstain all",
+    "probabilities_calibrated": false,
+    "development_estimate_optimistic": "Hyperparameters and thresholds share development CV; final test is independent."
+  },
+  "policy_search": [
+    {
+      "threshold": 0.5,
+      "margin": 0.1,
+      "n": 123,
+      "coverage": 0.0716365754222481,
+      "accuracy": 0.45528455284552843
+    },
+    {
+      "threshold": 0.5,
+      "margin": 0.2,
+      "n": 120,
+      "coverage": 0.06988934187536401,
+      "accuracy": 0.4583333333333333
+    },
+    {
+      "threshold": 0.5,
+      "margin": 0.3,
+      "n": 101,
+      "coverage": 0.058823529411764705,
+      "accuracy": 0.44554455445544555
+    },
+    {
+      "threshold": 0.6,
+      "margin": 0.1,
+      "n": 36,
+      "coverage": 0.020966802562609202,
+      "accuracy": 0.5
+    },
+    {
+      "threshold": 0.6,
+      "margin": 0.2,
+      "n": 36,
+      "coverage": 0.020966802562609202,
+      "accuracy": 0.5
+    },
+    {
+      "threshold": 0.6,
+      "margin": 0.3,
+      "n": 36,
+      "coverage": 0.020966802562609202,
+      "accuracy": 0.5
+    },
+    {
+      "threshold": 0.7,
+      "margin": 0.1,
+      "n": 12,
+      "coverage": 0.006988934187536401,
+      "accuracy": 0.5833333333333334
+    },
+    {
+      "threshold": 0.7,
+      "margin": 0.2,
+      "n": 12,
+      "coverage": 0.006988934187536401,
+      "accuracy": 0.5833333333333334
+    },
+    {
+      "threshold": 0.7,
+      "margin": 0.3,
+      "n": 12,
+      "coverage": 0.006988934187536401,
+      "accuracy": 0.5833333333333334
+    },
+    {
+      "threshold": 0.8,
+      "margin": 0.1,
+      "n": 1,
+      "coverage": 0.0005824111822947001,
+      "accuracy": 0.0
+    },
+    {
+      "threshold": 0.8,
+      "margin": 0.2,
+      "n": 1,
+      "coverage": 0.0005824111822947001,
+      "accuracy": 0.0
+    },
+    {
+      "threshold": 0.8,
+      "margin": 0.3,
+      "n": 1,
+      "coverage": 0.0005824111822947001,
+      "accuracy": 0.0
+    },
+    {
+      "threshold": 0.9,
+      "margin": 0.1,
+      "n": 0,
+      "coverage": 0.0,
+      "accuracy": null
+    },
+    {
+      "threshold": 0.9,
+      "margin": 0.2,
+      "n": 0,
+      "coverage": 0.0,
+      "accuracy": null
+    },
+    {
+      "threshold": 0.9,
+      "margin": 0.3,
+      "n": 0,
+      "coverage": 0.0,
+      "accuracy": null
+    },
+    {
+      "threshold": 0.95,
+      "margin": 0.1,
+      "n": 0,
+      "coverage": 0.0,
+      "accuracy": null
+    },
+    {
+      "threshold": 0.95,
+      "margin": 0.2,
+      "n": 0,
+      "coverage": 0.0,
+      "accuracy": null
+    },
+    {
+      "threshold": 0.95,
+      "margin": 0.3,
+      "n": 0,
+      "coverage": 0.0,
+      "accuracy": null
+    }
+  ]
+}

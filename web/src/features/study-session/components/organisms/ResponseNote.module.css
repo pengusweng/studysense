@@ -1,0 +1,75 @@
+/* Ruled off under the hand note like the check-in it answers: a written reply, not a card. */
+.response {
+  width: min(32rem, 100%);
+  margin: var(--proposal-space-5) auto 0;
+  padding-top: var(--proposal-space-4);
+  border-top: 1px solid var(--proposal-rule-strong);
+  text-align: left;
+}
+
+.response:focus {
+  outline: none;
+}
+
+/* Why this is offered, in StudySense's quiet voice. */
+.lead {
+  margin: 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.suggestion {
+  margin: var(--proposal-space-2) 0 0;
+  font: 700 var(--proposal-text-lg) / 1.3 var(--font-print-stack);
+  letter-spacing: -0.01em;
+}
+
+.detail {
+  margin: var(--proposal-space-2) 0 0;
+  max-width: 52ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--proposal-space-3) var(--proposal-space-4);
+  margin-top: var(--proposal-space-4);
+}
+
+/* The correction unfolds in place of the feedback row. */
+.correct {
+  margin-top: var(--proposal-space-4);
+}
+
+.correct:focus {
+  outline: none;
+}
+
+.reason {
+  margin: var(--proposal-space-2) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+.reason[data-hidden] {
+  visibility: hidden;
+}
+
+.more {
+  margin: var(--proposal-space-4) 0 0;
+  font-size: var(--proposal-text-sm);
+  color: var(--proposal-pencil);
+}
+
+:global(html[data-motion="on"]) .response,
+:global(html[data-motion="on"]) .correct {
+  animation: unfold 260ms var(--proposal-ease-out) both;
+}
+
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}

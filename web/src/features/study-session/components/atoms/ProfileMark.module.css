@@ -1,0 +1,39 @@
+.mark {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  overflow: visible;
+}
+
+.frame,
+.split {
+  fill: none;
+  stroke: var(--proposal-rule-strong);
+  stroke-width: 1.5;
+}
+
+.cell {
+  fill: var(--ink);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Uncertain: pencilled round, never filled in. */
+.mark[data-certainty="uncertain"] .cell {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.75;
+  stroke-dasharray: 3.2 2.4;
+}
+
+/* The cell settles into place once the estimate arrives. */
+:global(html[data-motion="on"]) .cell {
+  animation: place 520ms var(--proposal-ease-out) 120ms both;
+}
+
+@keyframes place {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}

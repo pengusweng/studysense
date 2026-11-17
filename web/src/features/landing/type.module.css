@@ -1,0 +1,55 @@
+/* Shared printed-type roles for the landing notebook. */
+
+.display {
+  margin: 0 0 var(--proposal-space-4);
+  font: 800 var(--proposal-text-display) / 0.97 var(--font-print-stack);
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  max-width: 13ch;
+}
+
+/* The closing peak: the page opens and closes on a display line. */
+.displaySm {
+  margin: 0 0 var(--proposal-space-3);
+  font: 800 var(--proposal-text-display-sm) / 1 var(--font-print-stack);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  max-width: 14ch;
+}
+
+.title {
+  margin: 0 0 var(--proposal-space-4);
+  font: 800 var(--proposal-text-xl) / 1.08 var(--font-print-stack);
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  max-width: 22ch;
+}
+
+.subtitle {
+  margin: var(--proposal-space-5) 0 var(--proposal-space-2);
+  font: 700 var(--proposal-text-lg) / 1.2 var(--font-print-stack);
+  letter-spacing: -0.015em;
+}
+
+.lede {
+  margin: 0 0 var(--proposal-space-4);
+  font-size: var(--proposal-text-lg);
+  line-height: 1.5;
+  max-width: 44ch;
+}
+
+.prose {
+  margin: 0 0 var(--proposal-space-3);
+  max-width: 58ch;
+}
+
+.pencil {
+  color: var(--proposal-pencil);
+}
+
+.log {
+  font-family: var(--font-log-stack);
+  font-size: var(--proposal-text-sm);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}

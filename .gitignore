@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+node_modules/
 build/
 develop-eggs/
 dist/
@@ -15,6 +16,8 @@ downloads/
 eggs/
 .eggs/
 lib/
+# The web app's shared source lives in web/src/lib; only Python build output should match lib/ above.
+!web/src/lib/
 lib64/
 parts/
 sdist/
@@ -219,3 +222,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-local ML runtime and participant-level generated data
+.tools/
+ml/data/
+ml/outputs/predictions/
+ml/outputs/splits/
+models/*.joblib
