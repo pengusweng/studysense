@@ -48,7 +48,7 @@ def trim_and_standardize_strings(series: pd.Series, uppercase: bool = False) -> 
     Trims leading/trailing whitespace from string series.
     Optionally converts categorical codes to uppercase.
     """
-    s = series.astype(str).str.strip()
+    s = series.astype(str).str.strip().mask(series.isna())
     # Convert 'nan' strings or empty strings back to real np.nan if needed
     s = s.replace({'nan': np.nan, '': np.nan})
     if uppercase:
