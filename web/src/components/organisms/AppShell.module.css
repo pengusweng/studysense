@@ -1,0 +1,68 @@
+.header {
+  background: var(--proposal-desk);
+  padding: 0 clamp(0.75rem, 3vw, 2.5rem);
+}
+
+/* One line, everything standing on the sheet's top edge. */
+.inner {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--proposal-space-3);
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-top: 1.25rem;
+}
+
+.brand {
+  margin-right: auto;
+  padding-bottom: 0.7rem;
+  text-decoration: none;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.nav {
+  min-width: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  padding: 0 clamp(0.75rem, 3vw, 2.5rem) var(--proposal-space-6);
+}
+
+/* Narrow: the wordmark on its own row, the tabs on a second row that scrolls sideways if it must. */
+@media (max-width: 640px) {
+  .inner {
+    flex-wrap: wrap;
+    row-gap: var(--proposal-space-2);
+    padding-top: var(--proposal-space-3);
+  }
+
+  .brand {
+    flex: 1 0 100%;
+    padding-bottom: 0;
+  }
+
+  .nav {
+    flex: 1 0 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .main {
+    padding-inline: 0;
+  }
+}

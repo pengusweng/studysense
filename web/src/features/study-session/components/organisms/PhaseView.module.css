@@ -1,0 +1,74 @@
+.phase {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--proposal-space-3);
+  padding: var(--proposal-space-6) clamp(1rem, 4vw, 3.75rem);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font: 800 var(--proposal-text-display-sm) / 1 var(--font-print-stack);
+  letter-spacing: -0.03em;
+}
+
+.lede {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--proposal-pencil);
+}
+
+.body .primary {
+  min-height: 56px;
+  margin: var(--proposal-space-3) 0 var(--proposal-space-2);
+  padding: 0.9rem 2rem;
+  font-size: var(--proposal-text-lg);
+}
+
+.links {
+  margin: 0;
+}
+
+.body :global(p) {
+  text-align: center;
+}
+
+:global(html[data-motion="on"]) .body > * {
+  animation: arrive 800ms var(--proposal-ease-out) both;
+}
+
+:global(html[data-motion="on"]) .body > *:nth-child(2) {
+  animation-delay: 90ms;
+}
+
+:global(html[data-motion="on"]) .body > *:nth-child(n + 3) {
+  animation-delay: 180ms;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (max-width: 640px) {
+  .body {
+    align-items: stretch;
+  }
+
+  .body .primary {
+    width: 100%;
+  }
+}

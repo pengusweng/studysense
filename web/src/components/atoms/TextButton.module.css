@@ -1,0 +1,21 @@
+.text {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--deep-iris);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.text:hover {
+  text-decoration-thickness: 2px;
+}
+
+.text:disabled {
+  color: var(--proposal-pencil);
+  cursor: not-allowed;
+}

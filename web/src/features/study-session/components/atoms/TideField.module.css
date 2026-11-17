@@ -1,0 +1,64 @@
+.tide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 1.4s var(--proposal-ease-out);
+}
+
+/* A faint Iris wash gathers in the middle of the sheet while studying. */
+.tide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 45% at 50% 46%, rgb(119 89 186 / 0.09), transparent 70%);
+  opacity: 0;
+  transition: opacity 1.6s var(--proposal-ease-out);
+}
+
+.tide[data-phase="active"]::after {
+  opacity: 1;
+}
+
+.tide[data-phase="paused"]::after {
+  opacity: 0.4;
+}
+
+.tide[data-phase="ended"] {
+  opacity: 0.45;
+}
+
+.lines {
+  position: absolute;
+  inset: -96px 0;
+  animation: drift 18s ease-in-out infinite alternate;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+.fine {
+  background: repeating-linear-gradient(to bottom, var(--proposal-rule) 0 1px, transparent 1px 24px);
+}
+
+.wide {
+  background: repeating-linear-gradient(to bottom, rgb(119 89 186 / 0.2) 0 1.5px, transparent 1.5px 96px);
+  animation-duration: 26s;
+  animation-delay: -7s;
+}
+
+.tide[data-phase="active"] .lines {
+  animation-play-state: running;
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(96px);
+  }
+}
+
+/* Still ruling, no drift: the global reduced-motion rule would otherwise flicker an infinite loop. */
+@media (prefers-reduced-motion: reduce) {
+  .lines {
+    animation: none !important;
+  }
+}

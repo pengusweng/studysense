@@ -1,9 +1,9 @@
-import type { ButtonHTMLAttributes } from "react";
+import type { ComponentPropsWithRef } from "react";
 import styles from "./Button.module.css";
 
 export type ButtonVariant = "primary" | "secondary";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+type Props = ComponentPropsWithRef<"button"> & {
   variant?: ButtonVariant;
   loading?: boolean;
 };

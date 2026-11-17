@@ -1,0 +1,6 @@
+/* The session's sheet trades the graph ruling for the drifting tide, which TideField draws. */
+div.sheet {
+  position: relative;
+  overflow: hidden;
+  background-image: none;
+}
