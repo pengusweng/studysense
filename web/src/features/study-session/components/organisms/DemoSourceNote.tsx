@@ -5,8 +5,8 @@ import { TextButton } from "@/components/atoms/TextButton";
 import { formatParticipant, formatRecordDate, type DemoRecord } from "@/lib/demoRecord";
 import { DemoTag } from "../atoms/DemoTag";
 import { RecordPicker } from "../molecules/RecordPicker";
-import type { DemoDays, RecordCheck, StripPanel } from "../../types";
-import styles from "./DemoSourceStrip.module.css";
+import type { DemoDays, NotePanel, RecordCheck } from "../../types";
+import styles from "./DemoSourceNote.module.css";
 
 type Props = {
   record: DemoRecord;
@@ -16,11 +16,11 @@ type Props = {
 };
 
 /**
- * The sheet's first line: where the data comes from, said before anything else. Its two controls unfold
- * their panels in place under the strip rather than opening a modal.
+ * Where the data comes from, set as a footnote under the session's one action so it is disclosed before
+ * anything starts without competing with it. Its two controls unfold their panels in place, never a modal.
  */
-export function DemoSourceStrip({ record, check, days, onChoose }: Props) {
-  const [panel, setPanel] = useState<StripPanel>(null);
+export function DemoSourceNote({ record, check, days, onChoose }: Props) {
+  const [panel, setPanel] = useState<NotePanel>(null);
   const aboutRef = useRef<HTMLButtonElement>(null);
   const changeRef = useRef<HTMLButtonElement>(null);
   const aboutPanel = useRef<HTMLDivElement>(null);
@@ -29,50 +29,47 @@ export function DemoSourceStrip({ record, check, days, onChoose }: Props) {
     if (panel === "about") aboutPanel.current?.focus();
   }, [panel]);
 
-  function close(from: StripPanel) {
+  function close(from: NotePanel) {
     setPanel(null);
     (from === "change" ? changeRef : aboutRef).current?.focus();
   }
 
-  const source = `SSAQS ${formatParticipant(record.participant)} · ${formatRecordDate(record.date)}`;
-
   return (
-    <div className={styles.wrap}>
-      <div className={styles.strip}>
-        <p className={styles.source} role="status">
-          <span>Demo mode</span>
-          {check === "checking" ? (
-            <span className={styles.pencil}>Loading demo record…</span>
-          ) : (
-            <span>{source}</span>
-          )}
-          {check === "available" && <span className={styles.pencil}>replayed, not live</span>}
-          {check === "unavailable" && (
-            <span className={styles.warn}>unavailable</span>
-          )}
-        </p>
-        <div className={styles.controls}>
+    <aside className={styles.note} aria-label="Demo data source">
+      <p className={styles.source} role="status">
+        <span>Demo mode</span>
+        {check === "checking" ? (
+          <span>Loading demo record…</span>
+        ) : (
+          <>
+            <span>SSAQS {formatParticipant(record.participant)}</span>
+            <span>{formatRecordDate(record.date)}</span>
+          </>
+        )}
+        {check === "available" && <span>replayed, not live</span>}
+        {check === "unavailable" && <span className={styles.warn}>unavailable</span>}
+      </p>
+      <p className={styles.controls}>
+        <TextButton
+          ref={aboutRef}
+          aria-expanded={panel === "about"}
+          aria-controls="demo-about"
+          onClick={() => setPanel(panel === "about" ? null : "about")}
+        >
+          What does this mean?
+        </TextButton>
+        <span className={styles.change}>
           <TextButton
-            ref={aboutRef}
-            aria-expanded={panel === "about"}
-            aria-controls="demo-about"
-            onClick={() => setPanel(panel === "about" ? null : "about")}
+            ref={changeRef}
+            aria-expanded={panel === "change"}
+            aria-controls="demo-change"
+            onClick={() => setPanel(panel === "change" ? null : "change")}
           >
-            What does this mean?
+            Change demo record
           </TextButton>
-          <span className={styles.change}>
-            <TextButton
-              ref={changeRef}
-              aria-expanded={panel === "change"}
-              aria-controls="demo-change"
-              onClick={() => setPanel(panel === "change" ? null : "change")}
-            >
-              Change demo record
-            </TextButton>
-            <DemoTag />
-          </span>
-        </div>
-      </div>
+          <DemoTag />
+        </span>
+      </p>
 
       {panel === "about" && (
         <div
@@ -125,6 +122,6 @@ export function DemoSourceStrip({ record, check, days, onChoose }: Props) {
           />
         </div>
       )}
-    </div>
+    </aside>
   );
 }

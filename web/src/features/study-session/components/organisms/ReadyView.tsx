@@ -3,7 +3,7 @@
 import { Button } from "@/components/atoms/Button";
 import type { DemoRecord } from "@/lib/demoRecord";
 import { HelpCorner } from "../molecules/HelpCorner";
-import { DemoSourceStrip } from "./DemoSourceStrip";
+import { DemoSourceNote } from "./DemoSourceNote";
 import type { DemoDays, RecordCheck } from "../../types";
 import styles from "./PhaseView.module.css";
 
@@ -15,11 +15,10 @@ type Props = {
   onStart: () => void;
 };
 
-/** Before a session: say what will be replayed, then one action. */
+/** Before a session: one action, with what will be replayed footnoted beneath it. */
 export function ReadyView({ record, check, days, onChoose, onStart }: Props) {
   return (
     <div className={styles.phase}>
-      <DemoSourceStrip record={record} check={check} days={days} onChoose={onChoose} />
       <div className={styles.body}>
         <h1 className={styles.title}>Ready to study.</h1>
         <p className={styles.lede}>Nothing runs until you start. You can pause or end at any time.</p>
@@ -30,6 +29,7 @@ export function ReadyView({ record, check, days, onChoose, onStart }: Props) {
           Start studying
         </Button>
         <HelpCorner />
+        <DemoSourceNote record={record} check={check} days={days} onChoose={onChoose} />
       </div>
     </div>
   );

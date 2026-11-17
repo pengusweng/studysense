@@ -1,6 +1,11 @@
 .header {
+  display: grid;
+  grid-template-rows: 1fr;
   background: var(--proposal-desk);
   padding: 0 clamp(0.75rem, 3vw, 2.5rem);
+  transition:
+    grid-template-rows var(--proposal-dur-chrome) var(--proposal-ease-in-out),
+    visibility 0s linear 0s;
 }
 
 /* One line, everything standing on the sheet's top edge. */
@@ -8,9 +13,16 @@
   display: flex;
   align-items: flex-end;
   gap: var(--proposal-space-3);
+  width: 100%;
+  min-height: 0;
   max-width: 1280px;
   margin: 0 auto;
   padding-top: 1.25rem;
+  /* Returning: the tabs settle back down onto the sheet as their row reopens. */
+  transition:
+    opacity 520ms var(--proposal-ease-out) 200ms,
+    transform var(--proposal-dur-chrome) var(--proposal-ease-out),
+    padding-top var(--proposal-dur-chrome) var(--proposal-ease-in-out);
 }
 
 .brand {
@@ -37,6 +49,7 @@
 
 .main {
   padding: 0 clamp(0.75rem, 3vw, 2.5rem) var(--proposal-space-6);
+  transition: padding var(--proposal-dur-chrome) var(--proposal-ease-in-out);
 }
 
 /* Narrow: the wordmark on its own row, the tabs on a second row that scrolls sideways if it must. */
@@ -65,4 +78,35 @@
   .main {
     padding-inline: 0;
   }
+}
+
+/*
+ * Focus mode (a running study session): the wordmark and tabs lift away and their row closes up, while
+ * the gutters ease to nothing, so the sheet grows to the window's edges in one continuous move.
+ * "leaving" holds the clip while the row reopens, so the chrome never spills over the sheet.
+ */
+:global(html[data-session]) .header {
+  overflow: hidden;
+}
+
+:global(html[data-session="focus"]) .header {
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--proposal-dur-chrome) var(--proposal-ease-in-out),
+    visibility 0s linear var(--proposal-dur-chrome);
+}
+
+:global(html[data-session="focus"]) .inner {
+  padding-top: 0;
+  opacity: 0;
+  transform: translateY(-14px);
+  transition:
+    opacity 300ms var(--proposal-ease-out),
+    transform var(--proposal-dur-chrome) var(--proposal-ease-out),
+    padding-top var(--proposal-dur-chrome) var(--proposal-ease-in-out);
+}
+
+:global(html[data-session="focus"]) .main {
+  padding: 0;
 }

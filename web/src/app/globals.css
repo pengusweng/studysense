@@ -37,6 +37,10 @@
   --proposal-text-display-sm: clamp(2rem, 1.3rem + 2.2vw, 3.25rem);
 
   --proposal-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --proposal-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* How long the app chrome takes to step away from (or return to) a study session. Mirrored in
+     StudySessionContainer's CHROME_MS. */
+  --proposal-dur-chrome: 760ms;
 
   --font-print-stack: var(--font-print), "Segoe UI", system-ui, sans-serif;
   --font-log-stack: var(--font-log), ui-monospace, monospace;
@@ -56,6 +60,12 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+}
+
+/* While the chrome steps in or out of a study session the page is exactly one window tall; no scrollbar
+   flickers in while the header and sheet trade height. */
+html[data-session] {
+  overflow: hidden;
 }
 
 body {

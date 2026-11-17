@@ -22,6 +22,11 @@ Scope: `/study-session` (route group `(app)`), focus mode only: ready, active, p
   - No timer.
   - Focus mode + states.
   - Locked structure: Calm field.
+- **User answers (2026-11-17, polish):**
+  - Active and paused go full screen: the wordmark and tabs step away (`html[data-session="focus"]`) and the sheet fills the window edge to edge. They return on End.
+  - The full-width demo strip is gone. The source, "What does this mean?" and "Change demo record" (still tagged "demo control") sit as a footnote under the main action in Ready and Ended.
+  - The full-screen view carries no demo source line; it was disclosed before Start.
+  - The Studying view felt plain. Added motion that stays calm: on entry a fresh page (the margin line inks down, then an Iris pen stroke underlines "Studying."), and ambient lamplight (two faint Iris pools wandering on 53s and 71s paths, never a beat). Pause removes the underline and freezes the light; Resume redraws it.
 
 ## Direction contract
 
@@ -34,15 +39,14 @@ OWN-WORLD: The StudySense notebook from DESIGN.md:
 - Deep Iris for actions. No cards and no icons.
 
 STORY:
-1. Ready: the sheet is still. The demo source sits in mono, with "What does this mean?" and "Change demo record", above "Start studying".
+1. Ready: the sheet is still. "Start studying" is the one action; under it, a footnote gives the demo source in mono, with "What does this mean?" and "Change demo record".
 2. Active: the rules begin to drift. "Studying." rises in at display size, a soft Iris dot breathes beside "Session in progress", and the hand note says "nothing needs you right now". The tab title becomes "Studying · StudySense".
 3. Paused: the drift halts in place. The word becomes "Paused." and the note says "your place is kept".
 4. Ended: the lines settle and fade to stillness, then "Session ended." with "Start another" and "Back to the Dashboard". No celebration.
 
 FIRST VIEWPORT (active):
-- Tabs on the sheet's edge.
-- The sheet fills the window to the bottom.
-- In the top corners, the mono demo source line on the left and "Need help? Ask for support" on the right.
+- Full screen: no wordmark or tabs, and the sheet fills the window edge to edge.
+- Top right: "Need help? Ask for support". Nothing else sits at the edges.
 - In the centre: the dot with "Session in progress", "Studying." at about 84px / weight 800, and the hand note.
 - Low and centred: "Pause" (outlined) and "End session" (text).
 - Signature move: the tide. Starting a session sets the ruling in motion; pausing freezes it mid-drift; ending lets it settle.

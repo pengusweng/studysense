@@ -12,6 +12,10 @@ import { EndedView } from "../components/organisms/EndedView";
 import type { SessionPhase } from "../types";
 import styles from "./StudySessionContainer.module.css";
 
+/** Matches --proposal-dur-chrome: how long the chrome takes to return once a session ends. */
+const CHROME_MS = 760;
+let chromeTimer: number | undefined;
+
 const PHASE: Record<SessionStatus, SessionPhase> = { none: "ready", active: "active", paused: "paused", ended: "ended" };
 
 const ANNOUNCE: Record<SessionPhase, string> = {
@@ -54,7 +58,25 @@ export function StudySessionContainer() {
     return () => observer.disconnect();
   }, [phase]);
 
+  // Studying takes the whole window: the app chrome steps away while a session is active or paused.
+  const focused = phase === "active" || phase === "paused";
+  // Leaving (End, or navigating away) passes through "leaving" while the chrome eases back in.
+  useEffect(() => {
+    if (!focused) return;
+    const root = document.documentElement;
+    window.clearTimeout(chromeTimer);
+    root.dataset.session = "focus";
+    return () => {
+      root.dataset.session = "leaving";
+      chromeTimer = window.setTimeout(() => {
+        if (root.dataset.session === "leaving") delete root.dataset.session;
+      }, CHROME_MS);
+    };
+  }, [focused]);
+
   function go(next: SessionStatus) {
+    // Starting from further down the page (a demo panel open): rise to the top as the sheet grows.
+    if (next === "active" && window.scrollY > 0) window.scrollTo({ top: 0 });
     setMoved(true);
     announce.current = ANNOUNCE[PHASE[next]];
     setSessionStatus(next);
@@ -69,10 +91,9 @@ export function StudySessionContainer() {
       {phase === "ready" && (
         <ReadyView record={record} check={check} days={days} onChoose={choose} onStart={() => go("active")} />
       )}
-      {(phase === "active" || phase === "paused") && (
+      {focused && (
         <FocusView
           phase={phase}
-          record={record}
           takeFocus={moved}
           onPause={() => go("paused")}
           onResume={() => go("active")}

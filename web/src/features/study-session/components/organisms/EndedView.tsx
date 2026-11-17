@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import type { DemoRecord } from "@/lib/demoRecord";
 import { HelpCorner } from "../molecules/HelpCorner";
-import { DemoSourceStrip } from "./DemoSourceStrip";
+import { DemoSourceNote } from "./DemoSourceNote";
 import type { DemoDays, RecordCheck } from "../../types";
 import styles from "./PhaseView.module.css";
 
@@ -19,7 +19,7 @@ type Props = {
 };
 
 /**
- * After a session: a plain close, no celebration (docs/AGENTS.md §2 rule 7). The demo strip returns here,
+ * After a session: a plain close, no celebration (docs/AGENTS.md §2 rule 7). The demo note returns here,
  * so the record can be explained or changed before the next session starts.
  */
 export function EndedView({ record, check, days, onChoose, takeFocus, onStartAnother }: Props) {
@@ -31,7 +31,6 @@ export function EndedView({ record, check, days, onChoose, takeFocus, onStartAno
 
   return (
     <div className={styles.phase}>
-      <DemoSourceStrip record={record} check={check} days={days} onChoose={onChoose} />
       <div className={styles.body}>
         <h1 className={styles.title}>Session ended.</h1>
         <p className={styles.lede}>Start another when you like.</p>
@@ -42,6 +41,7 @@ export function EndedView({ record, check, days, onChoose, takeFocus, onStartAno
           <Link href="/dashboard">Back to the Dashboard</Link>
         </p>
         <HelpCorner />
+        <DemoSourceNote record={record} check={check} days={days} onChoose={onChoose} />
       </div>
     </div>
   );
