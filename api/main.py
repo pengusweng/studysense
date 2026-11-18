@@ -10,7 +10,7 @@ from functools import lru_cache
 from fastapi import FastAPI, HTTPException, Path, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.events import EventLog
+from api.events import open_event_log
 from api.features import FeatureStore
 from api.rules import choose_response
 from api.schemas import ISO_DATE, Event, Health, Prediction, ResponseDecision, ResponseRequest
@@ -41,7 +41,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.model_version = artifact["model_version"]
         app.state.store = store
         app.state.predict = predict
-        app.state.events = EventLog(settings.events_db)
+        app.state.events = open_event_log(settings.database_url, settings.events_db)
         yield
 
     app = FastAPI(title="StudySense API", version="1.0.0", lifespan=lifespan)

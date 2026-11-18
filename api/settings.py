@@ -16,6 +16,7 @@ class Settings:
     model_path: Path
     features_csv: Path
     events_db: Path
+    database_url: str | None
     cors_origins: tuple[str, ...]
 
     @classmethod
@@ -25,5 +26,7 @@ class Settings:
             model_path=Path(os.environ.get("MODEL_PATH", DEFAULT_MODEL)),
             features_csv=Path(os.environ.get("FEATURES_CSV", DATA / "daily_features.csv")),
             events_db=Path(os.environ.get("EVENTS_DB", ROOT / "api/data/events.sqlite3")),
+            # Set on a deployed host: events go to Postgres instead of the SQLite file (api/events.py).
+            database_url=os.environ.get("DATABASE_URL") or None,
             cors_origins=tuple(o.strip() for o in origins.split(",") if o.strip()),
         )

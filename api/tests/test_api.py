@@ -43,7 +43,7 @@ def settings(tmp_path):
     ]
     csv = tmp_path / "daily_features.csv"
     pd.DataFrame(rows).to_csv(csv, index=False)
-    return Settings(model_path=model, features_csv=csv, events_db=tmp_path / "events.sqlite3",
+    return Settings(model_path=model, features_csv=csv, events_db=tmp_path / "events.sqlite3", database_url=None,
                     cors_origins=("http://localhost:3000",))
 
 
@@ -139,7 +139,7 @@ def test_inconsistent_events_are_rejected(client, event):
 
 def test_startup_fails_clearly_without_the_model(settings, tmp_path):
     missing = Settings(model_path=tmp_path / "nope.joblib", features_csv=settings.features_csv,
-                       events_db=settings.events_db, cors_origins=())
+                       events_db=settings.events_db, database_url=None, cors_origins=())
     with pytest.raises(RuntimeError, match="ml.experiment all"):
         with TestClient(create_app(missing)):
             pass
@@ -150,3 +150,12 @@ def test_event_log_closes_its_connections(tmp_path):
     log.append(Event(visit_id=VISIT, kind="check_in", participant=1, date="2025-02-24", check_in="focused"))
     assert len(log.all()) == 1
     (tmp_path / "events.sqlite3").unlink()  # fails on Windows while a connection is still open
+
+
+def test_event_log_uses_postgres_only_when_a_database_url_is_set(tmp_path, monkeypatch):
+    from api import events
+
+    assert isinstance(events.open_event_log(None, tmp_path / "e.sqlite3"), events.EventLog)
+    # An unreachable database must not stop the API from starting; writes fail on their own until it is back.
+    log = events.open_event_log("postgresql://nobody@127.0.0.1:1/none", tmp_path / "e.sqlite3")
+    assert isinstance(log, events.PostgresEventLog) and log._ready is False
