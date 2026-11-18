@@ -266,7 +266,7 @@ From `web/package.json` and `web/README.md` on `development`:
 - Path alias `@/*` → `web/src/*`
 - No styling library, component library, state library, or test runner installed. The scaffold uses inline `style` props. Ask before adding dependencies.
 - Scripts: `npm run dev`, `npm run build`, `npm run start`, `npm run lint`
-- Environment: `NEXT_PUBLIC_API_URL` (example value `http://localhost:8000`), copied from `.env.example` to `.env.local`
+- Environment: `API_URL` (default `http://127.0.0.1:8000`), where `next.config.ts` forwards the browser's `/api/...` calls. Optional `NEXT_PUBLIC_API_URL` makes the browser call an API directly instead (it then needs CORS)
 
 **Folder layout**
 
@@ -313,7 +313,7 @@ Things that affect the UI:
 - `reported_stress_*` and `reported_anxiety_*` are the ground-truth labels. They are model targets. Do not show them as if the student just entered them, and do not feed them to inference.
 - The data is per day. There is no minute-level or live signal for the UI to show.
 
-**The backend is `api/` (FastAPI, see `api/README.md`).** The web app calls it at `NEXT_PUBLIC_API_URL` through `src/lib/http.ts`:
+**The backend is `api/` (FastAPI, see `api/README.md`).** The web app calls it as `/api/...` on its own origin through `src/lib/http.ts`, and `next.config.ts` forwards those calls to `API_URL`, so CORS and the browser's address never get in the way:
 
 - `GET /demo/days`: replayable days, meaning those with at least one of the model's 17 inputs (`lib/demoRecordService.ts`).
 - `GET /predictions/{participant}/{date}`: `predict_profile` output in the `prediction_contract.json` shape. A 404 means no prediction (`services/estimateService.ts`).

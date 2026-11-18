@@ -1,5 +1,8 @@
-/** The StudySense API client (api/README.md). */
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+/**
+ * The StudySense API client (api/README.md). Calls go to /api on the page's own origin, which next.config.ts
+ * forwards to the API, so the browser never needs CORS. NEXT_PUBLIC_API_URL overrides it to call an API directly.
+ */
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "/api";
 
 /** A response the API answered with an error status, so callers can tell "not found" apart from "unreachable". */
 export class HttpError extends Error {

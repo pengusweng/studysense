@@ -59,7 +59,7 @@ Set these as environment variables. Defaults are relative to the repo.
 | `MODEL_PATH` | `models/studysense_profile_classifier.joblib` |
 | `FEATURES_CSV` | `ml/data/daily_features.csv` |
 | `EVENTS_DB` | `api/data/events.sqlite3` |
-| `CORS_ORIGINS` | `http://localhost:3000` (comma-separated) |
+| `CORS_ORIGINS` | `http://localhost:3000` (comma-separated). Only needed when a browser calls the API directly: the web app normally goes through the Next proxy at `/api` |
 
 ## Notes
 
