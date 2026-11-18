@@ -1,7 +1,6 @@
 # Render Blueprint for the StudySense API (api/README.md, "Deploy on Render").
 # The build runs the ML pipeline from the committed SSAQS CSVs, so the model it serves is rebuilt from the repo
-# on every deploy instead of being committed. The ETL is not hosted: it is a one-off load into Supabase that the
-# API does not read.
+# on every deploy instead of being committed. The ETL is not hosted: the API does not read its tables.
 services:
   - type: web
     name: studysense-api
@@ -14,7 +13,7 @@ services:
       # The version the committed evaluation outputs were produced with (ml/outputs/environment.json).
       - key: PYTHON_VERSION
         value: 3.12.16
-      # Supabase's pooler connection string (Render has no IPv6, so not the direct db.*.supabase.co host).
-      # Events go to the app.events table. Left unset, events land in a SQLite file the free plan wipes.
+      # A hosted Postgres connection string (IPv4; Render has no IPv6). Events go to the app.events table.
+      # Left unset, events land in a SQLite file the free plan wipes on restart.
       - key: DATABASE_URL
         sync: false

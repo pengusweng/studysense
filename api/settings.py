@@ -5,10 +5,15 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 from ml.data import DATA
 from ml.inference import DEFAULT_MODEL
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# Local settings (api/.env.example). Variables already set, such as on a host, are never overridden.
+load_dotenv(ROOT / "api/.env", override=False)
 
 
 @dataclass(frozen=True)

@@ -38,6 +38,20 @@ uvicorn api.main:app --reload        # http://localhost:8000, interactive docs a
 python -m pytest api/tests -q
 ```
 
+### Local database (optional)
+
+To keep logged events in Postgres instead of the SQLite file, run Postgres in Docker. It listens on host port **6000**, so it won't clash with a Postgres you already have on 5432.
+
+```powershell
+docker compose up -d db                 # Postgres 17; data kept in the studysense-db volume
+copy api\.env.example api\.env          # DATABASE_URL=postgresql://studysense:studysense@127.0.0.1:6000/studysense
+uvicorn api.main:app --reload           # events now go to app.events
+
+docker compose exec db psql -U studysense -c "select * from app.events"
+```
+
+Without `api/.env`, the API uses `api/data/events.sqlite3`. If the database is stopped, the API still starts and serves predictions; only event writes fail until it's back.
+
 ## Endpoints
 
 | Method | Path | Returns |
@@ -80,7 +94,7 @@ python -c "from api.events import EventLog; from pathlib import Path; print(*Eve
 `render.yaml` at the repo root is a Render Blueprint for this API. The build installs `api/requirements.txt` and runs `python -m ml.experiment all`, which retrains the model from the committed SSAQS CSVs. That way the deployed model always matches the committed code and data, and no model file is committed. The build takes a few minutes longer as a result.
 
 1. Push the branch, then in Render go to **New → Blueprint** and pick the repo and branch.
-2. When it asks for `DATABASE_URL`, paste Supabase's **pooler** connection string from Supabase → Connect. Render has no IPv6, so the direct `db.<ref>.supabase.co` host won't connect. The API creates `app.events` on its first write.
+2. When it asks for `DATABASE_URL`, paste a hosted Postgres connection string that's reachable over IPv4 (Render has no IPv6). The Docker database below only runs on your machine, so it can't be used here. The API creates `app.events` on its first write. Leave it empty to run without keeping events.
 3. Once it's live, check `https://<service>.onrender.com/health`.
 4. Point the web app at it: set `API_URL=https://<service>.onrender.com` on the web host before its build.
 
@@ -90,4 +104,4 @@ Free-plan behaviour to plan around:
 - **No persistent disk:** anything written to disk is lost on restart. That's why events go to Postgres there.
 - **750 free hours a month per workspace:** that covers one service running all month.
 
-The ETL (`etl/`) is not hosted. It's a one-off load into Supabase (`python -m etl.run` with `etl/.env`), and the API doesn't read those tables.
+The ETL (`etl/`) is not hosted. It's a separate one-off load (`python -m etl.run` with `etl/.env`), and the API doesn't read its tables.

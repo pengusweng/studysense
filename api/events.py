@@ -1,7 +1,7 @@
 """Append-only log of check-in and feedback events, for later analysis. Nothing reads it back into the model.
 
-Locally the log is a SQLite file. When DATABASE_URL is set (a deployed host, whose disk is wiped on restart), it is
-the app.events table in Postgres, in its own schema so Supabase's public API never exposes it.
+Without DATABASE_URL the log is a SQLite file. With it (the Docker Postgres from docker-compose.yml, or a hosted
+one when deployed, since a free host's disk is wiped on restart) it is the app.events table in Postgres.
 """
 from __future__ import annotations
 
@@ -11,7 +11,6 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from api.schemas import Event
 
@@ -88,7 +87,7 @@ class PostgresEventLog:
     created on the first write that can reach it, and until then each write fails on its own."""
 
     def __init__(self, url: str):
-        self.url = libpq_url(url)
+        self.url = url
         self._ready = False
         try:
             self._ensure_table()
@@ -98,7 +97,7 @@ class PostgresEventLog:
     def _connect(self):
         import psycopg
 
-        # No server-side prepared statements, so Supabase's transaction pooler (port 6543) works too.
+        # No server-side prepared statements, so a transaction-mode connection pooler works too.
         return psycopg.connect(self.url, prepare_threshold=None, connect_timeout=5)
 
     def _ensure_table(self) -> None:
@@ -122,13 +121,6 @@ class PostgresEventLog:
 
         with self._connect() as db, db.cursor(row_factory=dict_row) as cur:
             return list(cur.execute("SELECT * FROM app.events ORDER BY id"))
-
-
-def libpq_url(url: str) -> str:
-    """Drops Prisma's `pgbouncer=true` (the team's Supabase URL in etl/.env.example carries it), which libpq rejects."""
-    parts = urlsplit(url)
-    query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True) if k != "pgbouncer"]
-    return urlunsplit(parts._replace(query=urlencode(query)))
 
 
 def open_event_log(database_url: str | None, sqlite_path: Path) -> EventLog | PostgresEventLog:

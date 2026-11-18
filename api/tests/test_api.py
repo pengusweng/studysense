@@ -160,9 +160,3 @@ def test_event_log_uses_postgres_only_when_a_database_url_is_set(tmp_path, monke
     log = events.open_event_log("postgresql://nobody@127.0.0.1:1/none", tmp_path / "e.sqlite3")
     assert isinstance(log, events.PostgresEventLog) and log._ready is False
 
-
-def test_prisma_only_url_parameter_is_dropped():
-    from api.events import libpq_url
-
-    url = "postgresql://postgres.ref:pw@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require"
-    assert libpq_url(url) == "postgresql://postgres.ref:pw@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?sslmode=require"
