@@ -47,3 +47,16 @@ for measured results and limitations.
 python -m ml.experiment all
 python -m pytest ml/tests -q
 ```
+
+## API
+
+The [`api/`](api/README.md) module is a FastAPI service the web app calls. It
+replays SSAQS participant-days through the trained model, runs the response
+rules, and logs check-in and feedback events.
+
+```powershell
+# From the repository root, after `python -m ml.experiment all`
+pip install -r api/requirements.txt
+docker compose up -d db   # optional: Postgres for the event log on port 6000 (see api/README.md)
+uvicorn api.main:app --reload
+```

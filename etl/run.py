@@ -65,7 +65,7 @@ def execute_dry_run() -> int:
             with conn.cursor() as cur:
                 cur.execute("SELECT current_database(), version();")
                 db_name, db_ver = cur.fetchone()
-                print(f"  Connected DB       : {db_name} (PostgreSQL 17+ on Supabase)")
+                print(f"  Connected DB       : {db_name} ({db_ver.split(',')[0]})")
 
                 # Check existing table counts
                 print("\n  Current Database State:")

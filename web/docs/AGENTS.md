@@ -266,7 +266,7 @@ From `web/package.json` and `web/README.md` on `development`:
 - Path alias `@/*` → `web/src/*`
 - No styling library, component library, state library, or test runner installed. The scaffold uses inline `style` props. Ask before adding dependencies.
 - Scripts: `npm run dev`, `npm run build`, `npm run start`, `npm run lint`
-- Environment: `NEXT_PUBLIC_API_URL` (example value `http://localhost:8000`), copied from `.env.example` to `.env.local`
+- Environment: `API_URL` (default `http://127.0.0.1:8000`), where `next.config.ts` forwards the browser's `/api/...` calls. Optional `NEXT_PUBLIC_API_URL` makes the browser call an API directly instead (it then needs CORS)
 
 **Folder layout**
 
@@ -313,7 +313,14 @@ Things that affect the UI:
 - `reported_stress_*` and `reported_anxiety_*` are the ground-truth labels. They are model targets. Do not show them as if the student just entered them, and do not feed them to inference.
 - The data is per day. There is no minute-level or live signal for the UI to show.
 
-**No backend API exists in the repo.** The scaffold called `GET /daily-features` and `POST /self-reports` against `NEXT_PUBLIC_API_URL` (the self-report call went with `/self-report`; `src/lib/http.ts` is kept for the real API), but nothing serves them, and no model-serving endpoint is defined. Treat all API shapes as undecided.
+**The backend is `api/` (FastAPI, see `api/README.md`).** The web app calls it as `/api/...` on its own origin through `src/lib/http.ts`, and `next.config.ts` forwards those calls to `API_URL`, so CORS and the browser's address never get in the way:
+
+- `GET /demo/days`: replayable days, meaning those with at least one of the model's 17 inputs (`lib/demoRecordService.ts`).
+- `GET /predictions/{participant}/{date}`: `predict_profile` output in the `prediction_contract.json` shape. A 404 means no prediction (`services/estimateService.ts`).
+- `POST /response`: the rule-based response (`services/responseService.ts`). If the API can't be reached, help asked for still opens the support list (`responseFallback.ts`).
+- `POST /events`: check-in and feedback events, sent only when consent is yes (`lib/eventLog.ts`).
+
+The API reads `ml/data/daily_features.csv` and the model artifact, both built by `python -m ml.experiment all`. It never reads the `reported_*` columns.
 
 ---
 
@@ -343,9 +350,9 @@ Do not settle these silently. Ask, or take the conservative option and say so.
 2. **Physiological summaries.** The Module 2 document says the interface can show physiological summaries and the predicted category. Issue #4 rules out stress percentages, clinical graphs, and invented analytics. Default: show only real replayed values, labelled as demo data, and keep them secondary to the study task.
 3. **Which wearable to name.** The concept document discusses Garmin and Apple Watch and cites Garmin research. The dataset is Fitbit Inspire 3. Default: describe the source as offline SSAQS demo data and avoid implying any live device.
 4. **Rules for LSLA, LSHA, and HSLA.** Only HSHA cases are spelled out. The rule-to-interface mapping is meant to follow "Group 3 Scaffold #3" and be agreed with the Affective Research lead.
-5. **Where response rules run.** Client, backend, or both is undecided, as is the whole API contract.
+5. ~~**Where response rules run.**~~ **Resolved 2026-11-18:** on the backend (`api/rules.py`, ported from the client). The API contract is in `api/README.md`.
 6. **How uncertainty reaches the UI.** No model output format is defined. Do not display a number for it.
-7. **Persistence.** Whether consent, preferences, check-ins, and feedback are stored, and where, is undecided. Design for a "not persisted" state.
+7. ~~**Persistence.**~~ **Resolved 2026-11-18:** consent, preferences, session status and the demo record stay in sessionStorage for the visit. Check-in outcomes and feedback are also sent to the API's append-only event log (local SQLite, `api/events.py`), with a random visit id and no name, only when the student agreed to check-ins. Setup and Preferences say so. Do not describe the log as secure production storage (§2 rule 9), and nothing in it feeds back into the model.
 8. **Check-in pattern.** Inline panel, dialog, or sheet.
 9. **Timer, task list, progress.** Unconfirmed.
 10. **Remaining design tokens and brand assets.** See section 9.

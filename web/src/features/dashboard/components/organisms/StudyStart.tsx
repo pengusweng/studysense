@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ButtonLink } from "@/components/atoms/ButtonLink";
 import { TextButton } from "@/components/atoms/TextButton";
 import { SupportPanel } from "@/components/organisms/SupportPanel";
-import { resumeSession, startSession, type SessionStatus } from "@/lib/sessionStatus";
+import { resumeSession, setSessionStatus, type SessionStatus } from "@/lib/sessionStatus";
 import styles from "./StudyStart.module.css";
 
 const STATUS_LINE: Record<SessionStatus, string | null> = {
@@ -50,9 +50,14 @@ export function StudyStart({ status, setupDone, onShowHowItWorks, reopenRef }: P
           Get started
         </ButtonLink>
       )}
-      {/* Pressing start begins the session itself; the Study Session opens already running. */}
+      {/* Starting opens the Study Session's ready screen, where the day's estimate shows before the session begins
+          (its "Start studying" begins it). Resuming goes straight back into the session. */}
       {setupDone && (
-        <ButtonLink href="/study-session" className={styles.primary} onClick={resuming ? (status === "paused" ? resumeSession : undefined) : startSession}>
+        <ButtonLink
+          href="/study-session"
+          className={styles.primary}
+          onClick={resuming ? (status === "paused" ? resumeSession : undefined) : () => setSessionStatus("none")}
+        >
           {resuming ? "Resume session" : "Start a study session"}
         </ButtonLink>
       )}

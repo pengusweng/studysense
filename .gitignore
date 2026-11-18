@@ -229,3 +229,6 @@ ml/data/
 ml/outputs/predictions/
 ml/outputs/splits/
 models/*.joblib
+
+# StudySense API event log (local SQLite)
+api/data/

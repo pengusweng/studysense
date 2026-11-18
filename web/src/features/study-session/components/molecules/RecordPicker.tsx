@@ -92,7 +92,7 @@ export function RecordPicker({ days, current, onChoose, onCancel }: Props) {
         <TextButton onClick={onCancel}>Cancel</TextButton>
       </div>
       <p id={`${id}-hint`} className={styles.hint}>
-        Days listed are the ones with a calculated Fitbit daily stress score. Your choice is kept for this visit only.
+        Days listed are the ones with recorded activity, heart rate variability or sleep data. Your choice is kept for this visit only.
       </p>
     </form>
   );

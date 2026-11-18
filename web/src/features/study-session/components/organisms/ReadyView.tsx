@@ -27,7 +27,7 @@ export function ReadyView({ record, check, days, estimate, onChoose, onStart }: 
         <p className={styles.lede}>Nothing runs until you start. You can pause or end at any time.</p>
         {estimate && (
           <div className={styles.estimate}>
-            <EstimateNote view={estimate} record={record} />
+            <EstimateNote view={estimate} />
           </div>
         )}
         <Button className={styles.primary} onClick={onStart}>

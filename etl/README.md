@@ -1,6 +1,6 @@
 # StudySense ETL Pipeline
 
-> Production-grade Python ETL pipeline ingesting, cleaning, and temporally aligning the **SSAQS dataset** (Students' Stress and Anxiety Questionnaires & Sensors) into PostgreSQL on Supabase.
+> Production-grade Python ETL pipeline ingesting, cleaning, and temporally aligning the **SSAQS dataset** (Students' Stress and Anxiety Questionnaires & Sensors) into PostgreSQL (by default the project's local Docker Postgres).
 
 ---
 
@@ -62,7 +62,7 @@ etl/
 
 ### 3.1. Prerequisites
 - Python 3.12+ (tested on Python 3.14)
-- PostgreSQL 15+ (hosted on Supabase or local instance)
+- PostgreSQL 15+. The default is the repo's Docker Postgres (`docker compose up -d db` from the repo root, host port 6000); any hosted Postgres works too
 
 ### 3.2. Environment Configuration
 Clone the repository and create a Python virtual environment:
@@ -78,13 +78,21 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Create a `.env` file in the `etl/` directory:
+Start the database and create `etl/.env` from the example (never commit `.env`):
+
+```powershell
+# From the repo root
+docker compose up -d db
+copy etl\.env.example etl\.env
+```
 
 ```env
-# Supabase connection strings (never commit .env)
-DATABASE_URL="postgresql://postgres:[PASSWORD]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
-DIRECT_URL="postgresql://postgres:[PASSWORD]@aws-1-ap-southeast-1.pooler.supabase.com:5432/postgres"
+# Local Docker Postgres (docker-compose.yml, host port 6000)
+DATABASE_URL=postgresql://studysense:studysense@127.0.0.1:6000/studysense
+DIRECT_URL=postgresql://studysense:studysense@127.0.0.1:6000/studysense
 ```
+
+The ETL writes to the `raw`, `clean` and `staging` schemas. The API's event log uses its own `app` schema in the same database, so they don't collide. To use a hosted Postgres instead, put its connection strings here; a Prisma-style `?pgbouncer=true` is stripped automatically.
 
 ---
 

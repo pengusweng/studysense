@@ -1,11 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Sheet } from "@/components/molecules/Sheet";
-import { DEFAULT_DEMO_RECORD } from "@/lib/demoRecord";
 import type { ProfileCode } from "@/lib/profiles";
 import { EstimateNote } from "../components/organisms/EstimateNote";
 import { ResponseNote } from "../components/organisms/ResponseNote";
-import { chooseResponse, type ResponseInput } from "../services/responseRules";
+import { getResponse, type ResponseDecision, type ResponseInput } from "../services/responseService";
 import { toEstimateView } from "../estimateView";
 import type { EstimateView, Prediction } from "../types";
 import styles from "./EstimateReview.module.css";
@@ -43,7 +43,7 @@ const CASES: { label: string; note?: string; view: EstimateView }[] = [
   },
   {
     label: "no prediction for this record",
-    note: "What the session shows today: no trained model is in the repo, so no predictions exist yet.",
+    note: "The API has no prediction for the record (it returns 404).",
     view: toEstimateView(null),
   },
   { label: "record can't be replayed", view: { kind: "unavailable", reason: "record" } },
@@ -56,7 +56,7 @@ const NO_ESTIMATE: EstimateView = { kind: "unavailable", reason: "none" };
 /** Each runs the session's own rules; only the inputs are samples. */
 const RESPONSE_CASES: { label: string; input: ResponseInput }[] = [
   { label: "swamped · confident HSHA estimate", input: { estimate: HSHA, checkIn: "swamped", history: [] } },
-  { label: "swamped · no estimate (what the session shows today)", input: { estimate: NO_ESTIMATE, checkIn: "swamped", history: [] } },
+  { label: "swamped · no estimate", input: { estimate: NO_ESTIMATE, checkIn: "swamped", history: [] } },
   {
     label: "swamped · \"Break a task\" dismissed earlier this visit",
     input: { estimate: NO_ESTIMATE, checkIn: "swamped", history: [{ suggestion: "steps", action: "dismiss" }] },
@@ -85,6 +85,16 @@ const noop = () => {};
  * contract-shaped sample through the same mapper the session will use.
  */
 export function EstimateReview() {
+  const [decisions, setDecisions] = useState<ResponseDecision[] | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    Promise.all(RESPONSE_CASES.map((c) => getResponse(c.input))).then((d) => live && setDecisions(d));
+    return () => {
+      live = false;
+    };
+  }, []);
+
   return (
     <Sheet>
       <div className={styles.page}>
@@ -100,19 +110,20 @@ export function EstimateReview() {
             <li key={c.label} className={styles.case}>
               <p className={styles.label}>{c.label}</p>
               {c.note && <p className={styles.note}>{c.note}</p>}
-              <EstimateNote view={c.view} record={DEFAULT_DEMO_RECORD} />
+              <EstimateNote view={c.view} />
             </li>
           ))}
         </ol>
 
         <h2 className={styles.section}>Response, from the session&rsquo;s rules</h2>
         <ol className={styles.cases}>
-          {RESPONSE_CASES.map((c) => {
-            const decision = chooseResponse(c.input);
+          {RESPONSE_CASES.map((c, i) => {
+            const decision = decisions?.[i];
             return (
               <li key={c.label} className={styles.case}>
                 <p className={styles.label}>{c.label}</p>
-                {decision.kind === "offer" && (
+                {!decision && <p className={styles.note}>Asking the API&hellip;</p>}
+                {decision?.kind === "offer" && (
                   <ResponseNote
                     offer={decision}
                     canCorrect={decision.basis !== "correction"}
@@ -122,8 +133,8 @@ export function EstimateReview() {
                     onOtherOptions={noop}
                   />
                 )}
-                {decision.kind === "support" && <p className={styles.note}>Opens the full support list in place.</p>}
-                {decision.kind === "silent" && <p className={styles.note}>{SILENT_LINE[decision.reason]}</p>}
+                {decision?.kind === "support" && <p className={styles.note}>Opens the full support list in place.</p>}
+                {decision?.kind === "silent" && <p className={styles.note}>{SILENT_LINE[decision.reason]}</p>}
               </li>
             );
           })}

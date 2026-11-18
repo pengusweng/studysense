@@ -40,6 +40,10 @@ export function ChoicePage({ value, onChange, onConfirm, onBack, reopened, stora
       <p className={styles.prose} data-enter>
         Either way, you can study, pause, end a session and ask for help.
       </p>
+      <p className={styles.prose} data-enter>
+        If you say yes, your answers and what you do with suggestions are sent to StudySense with no name attached.
+        If you say no, nothing is sent.
+      </p>
 
       <div className={styles.actions} data-enter>
         <Button onClick={onConfirm} disabled={!value} aria-describedby={value ? undefined : "setup-reason"}>

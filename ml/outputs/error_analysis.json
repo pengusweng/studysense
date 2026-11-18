@@ -91,7 +91,7 @@
       {
         "true": "LSLA",
         "predicted": "HSLA",
-        "count": 6
+        "count": 7
       },
       {
         "true": "LSLA",
@@ -101,7 +101,7 @@
     ],
     "boundary_n": 87,
     "boundary_error_rate": 0.7126436781609196,
-    "nonboundary_error_rate": 0.3326226012793177,
+    "nonboundary_error_rate": 0.3347547974413646,
     "participant_metrics": [
       {
         "participant_id": 10,
@@ -111,8 +111,8 @@
       },
       {
         "participant_id": 11,
-        "macro_f1": 0.20634920634920634,
-        "accuracy": 0.6666666666666666,
+        "macro_f1": 0.20161290322580644,
+        "accuracy": 0.6410256410256411,
         "n": 39
       },
       {

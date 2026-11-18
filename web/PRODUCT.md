@@ -33,7 +33,7 @@ Wearable data is evidence, not emotional truth. The same rise in physiological a
 - **Profiles:** four estimated daily profiles: LSLA, LSHA, HSLA and HSHA. Each comes from splitting the 0–100 self-reports at 50. That threshold is operational for the course, not clinical.
 - **Responses:** chosen by rules from predefined templates. There are no generative or LLM responses.
 - **Data:** the MVP replays offline SSAQS records. There is no live sensing, device pairing or wearable API.
-- **Undecided:** the backend API contract, the uncertainty output format, persistence, the check-in pattern, timer and task-list features, and the rules for LSLA, LSHA and HSLA.
+- **Undecided:** the uncertainty output format, the check-in pattern, timer and task-list features, and the rules for LSLA, LSHA and HSLA.
 
 ## Brand Commitments
 

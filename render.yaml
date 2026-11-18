@@ -1,0 +1,19 @@
+# Render Blueprint for the StudySense API (api/README.md, "Deploy on Render").
+# The build runs the ML pipeline from the committed SSAQS CSVs, so the model it serves is rebuilt from the repo
+# on every deploy instead of being committed. The ETL is not hosted: the API does not read its tables.
+services:
+  - type: web
+    name: studysense-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r api/requirements.txt && python -m ml.experiment all
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      # The version the committed evaluation outputs were produced with (ml/outputs/environment.json).
+      - key: PYTHON_VERSION
+        value: 3.12.16
+      # A hosted Postgres connection string (IPv4; Render has no IPv6). Events go to the app.events table.
+      # Left unset, events land in a SQLite file the free plan wipes on restart.
+      - key: DATABASE_URL
+        sync: false

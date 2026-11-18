@@ -2,14 +2,13 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { TextButton } from "@/components/atoms/TextButton";
-import { formatParticipant, formatRecordDate, type DemoRecord } from "@/lib/demoRecord";
 import { ESTIMATE_LEAD, ESTIMATE_MISSING, ESTIMATE_MODEL, ESTIMATE_SOURCE } from "@/lib/estimateExplanation";
 import { profileByCode } from "@/lib/profiles";
 import { ProfileMark } from "../atoms/ProfileMark";
 import type { EstimateView } from "../../types";
 import styles from "./EstimateNote.module.css";
 
-type Props = { view: EstimateView; record: DemoRecord };
+type Props = { view: EstimateView };
 
 type Copy = { statement: ReactNode; hedge?: string; explain?: "estimate" | "missing" };
 
@@ -41,7 +40,7 @@ function copyFor(view: EstimateView): Copy {
           }
         : {
             statement: <>The replayed day may suggest {name}.</>,
-            hedge: "The evidence is thin, so StudySense won’t act on this estimate.",
+            hedge: "It’s a rough guess, so StudySense won’t prompt you or change anything because of it.",
             explain: "estimate",
           };
     }
@@ -53,7 +52,7 @@ function copyFor(view: EstimateView): Copy {
  * pencil only (no Iris, which is the student's hand; no Sage, which marks recorded values), with no numbers.
  * Every state says what it is based on and opens an explanation in place.
  */
-export function EstimateNote({ view, record }: Props) {
+export function EstimateNote({ view }: Props) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
@@ -64,9 +63,8 @@ export function EstimateNote({ view, record }: Props) {
     if (open) panel.current?.focus();
   }, [open]);
 
-  const source = [`SSAQS ${formatParticipant(record.participant)}`, formatRecordDate(record.date), "replayed"];
-  const provenance =
-    view.kind === "estimate" ? [view.profile, `estimated from ${source[0]}`, ...source.slice(1)] : view.kind === "missing" ? source : null;
+  // Which record was replayed is said once, in the demo footnote under Start; here only what the model gave.
+  const provenance = view.kind === "estimate" ? [view.profile, "model estimate"] : null;
 
   return (
     <section className={styles.estimate} data-kind={view.kind} aria-labelledby={`${id}-title`} aria-busy={view.kind === "loading"}>
@@ -96,7 +94,7 @@ export function EstimateNote({ view, record }: Props) {
               aria-controls={`${id}-why`}
               onClick={() => setOpen((o) => !o)}
             >
-              Why is this tentative?
+              How the estimate works
             </TextButton>
           )}
         </div>
@@ -109,7 +107,7 @@ export function EstimateNote({ view, record }: Props) {
           className={styles.panel}
           tabIndex={-1}
           role="region"
-          aria-label="Why the estimate is tentative"
+          aria-label="How the estimate works"
           onKeyDown={(e) => {
             if (e.key !== "Escape") return;
             setOpen(false);

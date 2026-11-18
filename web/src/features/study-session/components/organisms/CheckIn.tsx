@@ -6,9 +6,11 @@ import { TextButton } from "@/components/atoms/TextButton";
 import { AnswerList } from "@/components/molecules/AnswerList";
 import { SupportPanel } from "@/components/organisms/SupportPanel";
 import { recordCheckIn, type CheckInOutcome } from "@/lib/checkIn";
-import { recordFeedback, useFeedbackHistory, type Correction } from "@/lib/feedback";
+import { useDemoRecordValue } from "@/lib/demoRecord";
+import { logEvent } from "@/lib/eventLog";
+import { recordFeedback, useFeedbackHistory, type Correction, type FeedbackEntry } from "@/lib/feedback";
 import type { SupportId } from "@/lib/supportOptions";
-import { chooseResponse, type ResponseDecision } from "../../services/responseRules";
+import { getResponse, type ResponseDecision } from "../../services/responseService";
 import type { EstimateView } from "../../types";
 import { ResponseNote } from "./ResponseNote";
 import styles from "./CheckIn.module.css";
@@ -58,8 +60,12 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
   const quiet = moment === "pause" ? " StudySense will stay quiet for the rest of this session." : "";
   const id = useId();
   const history = useFeedbackHistory();
+  const [record] = useDemoRecordValue();
   const [step, setStep] = useState<Step>("question");
   const [folding, setFolding] = useState(false);
+  /** Waiting on the API's response, so an answer can't be sent twice. */
+  const [deciding, setDeciding] = useState(false);
+  const busy = folding || deciding;
   const [pick, setPick] = useState<Answer | null>(null);
   /** Frozen when shown, so recording feedback can't swap the suggestion mid-fold. */
   const [offer, setOffer] = useState<Offer | null>(null);
@@ -114,31 +120,40 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
     }
   }
 
-  function settle(outcome: Exclude<CheckInOutcome, "no_response">) {
+  /** Kept in this visit's feedback, and logged when the student agreed to check-ins. */
+  function feedback(entry: FeedbackEntry) {
+    recordFeedback(entry);
+    logEvent(record, { kind: "feedback", ...entry });
+  }
+
+  async function settle(outcome: Exclude<CheckInOutcome, "no_response">) {
     // Recorded at once, so resuming mid-fold can't count as no response.
     recordCheckIn(outcome);
+    logEvent(record, { kind: "check_in", checkIn: outcome });
     if (outcome === "skipped" || outcome === "dismissed") return foldTo("closed");
-    show(chooseResponse({ estimate, checkIn: outcome, history }), `Noted.${quiet}`, null);
+    setDeciding(true);
+    const decision = await getResponse({ estimate, checkIn: outcome, history });
+    setDeciding(false);
+    show(decision, `Noted.${quiet}`, null);
   }
 
   function accept(suggestion: SupportId) {
-    recordFeedback({ suggestion, action: "accept" });
+    feedback({ suggestion, action: "accept" });
     foldTo("said", "Noted. More support is in the corner whenever you want it.");
   }
 
   function dismiss(suggestion: SupportId) {
-    recordFeedback({ suggestion, action: "dismiss" });
+    feedback({ suggestion, action: "dismiss" });
     foldTo("closed");
   }
 
-  function correct(suggestion: SupportId, correction: Correction) {
-    recordFeedback({ suggestion, action: "correct", correction });
+  async function correct(suggestion: SupportId, correction: Correction) {
+    feedback({ suggestion, action: "correct", correction });
     setCorrected(true);
-    show(
-      chooseResponse({ estimate, checkIn: "swamped", correction, history }),
-      `Thanks, that’s noted.${quiet}`,
-      "Thanks, that’s noted. Here is everything on offer.",
-    );
+    setDeciding(true);
+    const decision = await getResponse({ estimate, checkIn: "swamped", correction, history });
+    setDeciding(false);
+    show(decision, `Thanks, that’s noted.${quiet}`, "Thanks, that’s noted. Here is everything on offer.");
   }
 
   if (step === "said") {
@@ -157,7 +172,7 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
           ref={response}
           offer={offer}
           canCorrect={!corrected}
-          disabled={folding}
+          disabled={busy}
           onAccept={accept}
           onDismiss={dismiss}
           onCorrect={correct}
@@ -193,7 +208,8 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
     );
   }
 
-  if (step === "closed" || (!due && !folding)) return null;
+  // Kept on screen while the response is decided: the check-in is recorded before the answer arrives.
+  if (step === "closed" || (!due && !busy)) return null;
 
   return (
     <div className={styles.fold} data-folding={folding || undefined}>
@@ -203,14 +219,14 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
         tabIndex={-1}
         aria-label="Optional check-in"
         onKeyDown={(e) => {
-          if (e.key !== "Escape" || folding) return;
+          if (e.key !== "Escape" || busy) return;
           e.stopPropagation();
           settle("dismissed");
         }}
       >
         <AnswerList
           question={moment === "end" ? "How did studying go?" : "How is studying going?"}
-          hint="Optional. Kept for this visit only, apart from the replayed data."
+          hint="Optional. Your answer is recorded with no name attached, apart from the replayed data."
           options={ANSWERS}
           value={pick}
           onChange={setPick}
@@ -218,13 +234,13 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
         <div className={styles.actions}>
           <Button
             variant="secondary"
-            disabled={!pick || folding}
+            disabled={!pick || busy}
             aria-describedby={pick ? undefined : `${id}-reason`}
             onClick={() => pick && settle(pick)}
           >
             Answer
           </Button>
-          <TextButton onClick={() => settle("skipped")} disabled={folding}>
+          <TextButton onClick={() => settle("skipped")} disabled={busy}>
             Skip this question
           </TextButton>
         </div>
@@ -234,12 +250,12 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
         </p>
         <p className={styles.help}>
           Rather have support now?{" "}
-          <TextButton onClick={() => setStep("help")} disabled={folding}>
+          <TextButton onClick={() => setStep("help")} disabled={busy}>
             Ask for help
           </TextButton>
         </p>
         {/* Last in reading order, so the question comes first; shown at the top corner, where a note is set aside. */}
-        <TextButton className={styles.dismiss} onClick={() => settle("dismissed")} disabled={folding}>
+        <TextButton className={styles.dismiss} onClick={() => settle("dismissed")} disabled={busy}>
           Not now
         </TextButton>
       </section>
