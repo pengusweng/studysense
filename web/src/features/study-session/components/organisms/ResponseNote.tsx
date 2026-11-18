@@ -6,7 +6,7 @@ import { TextButton } from "@/components/atoms/TextButton";
 import { AnswerList } from "@/components/molecules/AnswerList";
 import type { Correction } from "@/lib/feedback";
 import { supportOption, type SupportId } from "@/lib/supportOptions";
-import type { ResponseDecision } from "../../services/responseRules";
+import type { ResponseDecision } from "../../services/responseService";
 import styles from "./ResponseNote.module.css";
 
 type Offer = Extract<ResponseDecision, { kind: "offer" }>;

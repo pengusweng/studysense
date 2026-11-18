@@ -1,12 +1,9 @@
 import type { DemoDays } from "./demoRecord";
+import { http } from "./http";
 
-/**
- * Replayable SSAQS days. Loaded lazily so the list never weighs on first paint.
- * Swap the body for an `http` call once a backend serves demo records; callers stay the same.
- */
+/** Replayable SSAQS days, from the API: the days with at least one of the model's 17 inputs. */
 export const demoRecordService = {
-  async getDays(): Promise<DemoDays> {
-    const { SSAQS_DAYS } = await import("./ssaqsDays");
-    return SSAQS_DAYS;
+  getDays(): Promise<DemoDays> {
+    return http<DemoDays>("/demo/days");
   },
 };

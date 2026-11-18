@@ -1,14 +1,16 @@
 import type { DemoRecord } from "@/lib/demoRecord";
+import { http, HttpError } from "@/lib/http";
 import type { Prediction } from "../types";
 
 /**
- * The day's prediction for a demo record, in the shape of ml/outputs/prediction_contract.json.
- *
- * Stopgap: no trained model is in the repo yet, so there is nothing to return and every session shows
- * "No estimate for this session". Replace the body with a lookup of precomputed `predict_profile` output
- * (one per SSAQS participant-day) once the model artifact is available.
+ * The day's prediction for a demo record, in the shape of ml/outputs/prediction_contract.json, from the API's
+ * replay of predict_profile. null when the API has no prediction for the record; throws when it can't be reached.
  */
 export async function getPrediction(record: DemoRecord): Promise<Prediction | null> {
-  void record;
-  return null;
+  try {
+    return await http<Prediction>(`/predictions/${record.participant}/${record.date}`);
+  } catch (error) {
+    if (error instanceof HttpError && error.status === 404) return null;
+    throw error;
+  }
 }

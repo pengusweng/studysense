@@ -4,7 +4,8 @@ import { createSessionValue } from "./sessionValue";
 /**
  * What the student did with each suggestion this visit (issue #7). The next suggestion reads it, so a dismissed
  * one isn't offered again and an accepted one comes first. It informs response selection only: nothing is
- * retrained and nothing is learned. Kept apart from the SSAQS data, for this visit only.
+ * retrained and nothing is learned. Kept apart from the SSAQS data, for this visit only; when the student agreed
+ * to check-ins, each entry is also sent to the API's event log (lib/eventLog.ts).
  */
 export type Correction = "fine" | "more" | "other";
 export type FeedbackAction = "accept" | "dismiss" | "correct";

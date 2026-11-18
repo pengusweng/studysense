@@ -49,8 +49,10 @@ export function PrivacySection({ storageOk, cleared, onClear }: Props) {
       </h2>
       <p className={styles.prose}>
         {storageOk
-          ? "This visit keeps a few things in this browser tab, so the demo can follow your choices. Nothing is sent anywhere, and it all goes when you close the tab."
-          : "Your browser isn’t letting StudySense keep anything, so your choices last for this page only. Nothing is sent anywhere."}
+          ? "This visit keeps a few things in this browser tab, so the demo can follow your choices. They go when you close the tab."
+          : "Your browser isn’t letting StudySense keep anything, so your choices last for this page only."}{" "}
+        If you agreed to check-ins, your answers and what you do with suggestions are also sent to StudySense with no
+        name attached. Clearing here doesn’t remove what was already sent.
       </p>
       <LogTable rows={KEPT} label="What this visit keeps" />
 
