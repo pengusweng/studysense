@@ -32,7 +32,7 @@ LR tests C={0.01,0.1,1,10}, separately standard and balanced weights. RF uses 20
 | Model | CV macro-F1 | Test macro-F1 | Weighted-F1 | Accuracy |
 |---|---:|---:|---:|---:|
 | majority | 0.1894 | 0.1915 | 0.4752 | 0.6205 |
-| logistic_standard | 0.2096 | 0.1974 | 0.4735 | 0.6079 |
+| logistic_standard | 0.2096 | 0.1969 | 0.4726 | 0.6061 |
 | logistic_balanced | 0.2086 | 0.2509 | 0.3490 | 0.3022 |
 | forest_standard | 0.2130 | 0.2184 | 0.4892 | 0.6061 |
 | forest_balanced | 0.2499 | 0.2644 | 0.4700 | 0.4820 |
@@ -45,9 +45,9 @@ Selected by development CV: **forest_balanced**. Selected test Macro-F1 particip
 | majority | LSHA | 0.0000 | 0.0000 | 0.0000 | 61 |
 | majority | HSLA | 0.0000 | 0.0000 | 0.0000 | 55 |
 | majority | HSHA | 0.0000 | 0.0000 | 0.0000 | 95 |
-| logistic_standard | LSLA | 0.6195 | 0.9768 | 0.7582 | 345 |
+| logistic_standard | LSLA | 0.6188 | 0.9739 | 0.7568 | 345 |
 | logistic_standard | LSHA | 0.0000 | 0.0000 | 0.0000 | 61 |
-| logistic_standard | HSLA | 0.1111 | 0.0182 | 0.0312 | 55 |
+| logistic_standard | HSLA | 0.1000 | 0.0182 | 0.0308 | 55 |
 | logistic_standard | HSHA | 0.0000 | 0.0000 | 0.0000 | 95 |
 | logistic_balanced | LSLA | 0.7552 | 0.3130 | 0.4426 | 345 |
 | logistic_balanced | LSHA | 0.1282 | 0.2459 | 0.1685 | 61 |
@@ -73,8 +73,8 @@ Boundary (±5 either mean) error rate: 0.7011494252873564; nonboundary: 0.319829
 
 ### logistic_standard
 
-Most common confusions: [{"true": "HSHA", "predicted": "LSLA", "count": 93}, {"true": "LSHA", "predicted": "LSLA", "count": 60}, {"true": "HSLA", "predicted": "LSLA", "count": 54}, {"true": "LSLA", "predicted": "HSLA", "count": 6}, {"true": "LSLA", "predicted": "LSHA", "count": 2}]
-Boundary (±5 either mean) error rate: 0.7126436781609196; nonboundary: 0.3326226012793177. Boundary n=87.
+Most common confusions: [{"true": "HSHA", "predicted": "LSLA", "count": 93}, {"true": "LSHA", "predicted": "LSLA", "count": 60}, {"true": "HSLA", "predicted": "LSLA", "count": 54}, {"true": "LSLA", "predicted": "HSLA", "count": 7}, {"true": "LSLA", "predicted": "LSHA", "count": 2}]
+Boundary (±5 either mean) error rate: 0.7126436781609196; nonboundary: 0.3347547974413646. Boundary n=87.
 
 ### logistic_balanced
 
@@ -138,7 +138,7 @@ One small cohort and one held-out participant split limit generalization. No ext
 ```
 
 Install ml/requirements-lock.txt for the exact environment. Frozen row indices and development folds are under local ml/outputs/splits; input hashes prevent silently reusing splits with changed data. Participant-level exports/predictions and model binaries are gitignored. The selected artifact is fitted only on development participants, preserving the independent test set.
-Environment: `{"python": "3.12.16", "numpy": "2.5.5", "pandas": "2.3.3", "scikit_learn": "1.7.2", "joblib": "1.6.0", "matplotlib": "3.11.2"}`
+Environment: `{"python": "3.13.2", "numpy": "2.5.5", "pandas": "2.3.3", "scikit_learn": "1.7.2", "joblib": "1.6.0", "matplotlib": "3.11.2"}`
 
 ## Verification
 
