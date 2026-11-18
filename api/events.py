@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -32,8 +34,15 @@ class EventLog:
         with self._connect() as db:
             db.execute(SCHEMA)
 
-    def _connect(self) -> sqlite3.Connection:
-        return sqlite3.connect(self.path)
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        """Commits on success and always closes: sqlite3's own context manager commits but leaves it open."""
+        db = sqlite3.connect(self.path)
+        try:
+            with db:
+                yield db
+        finally:
+            db.close()
 
     def append(self, event: Event) -> None:
         values = [getattr(event, c) for c in COLUMNS]

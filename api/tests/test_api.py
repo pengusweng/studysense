@@ -12,6 +12,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 
 from api.events import EventLog
+from api.schemas import Event
 from api.main import create_app
 from api.settings import Settings
 from ml.contracts import CLASSES, CONTRACT_VERSION, FEATURES
@@ -142,3 +143,10 @@ def test_startup_fails_clearly_without_the_model(settings, tmp_path):
     with pytest.raises(RuntimeError, match="ml.experiment all"):
         with TestClient(create_app(missing)):
             pass
+
+
+def test_event_log_closes_its_connections(tmp_path):
+    log = EventLog(tmp_path / "events.sqlite3")
+    log.append(Event(visit_id=VISIT, kind="check_in", participant=1, date="2025-02-24", check_in="focused"))
+    assert len(log.all()) == 1
+    (tmp_path / "events.sqlite3").unlink()  # fails on Windows while a connection is still open
