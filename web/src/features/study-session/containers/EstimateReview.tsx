@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Sheet } from "@/components/molecules/Sheet";
-import { DEFAULT_DEMO_RECORD } from "@/lib/demoRecord";
 import type { ProfileCode } from "@/lib/profiles";
 import { EstimateNote } from "../components/organisms/EstimateNote";
 import { ResponseNote } from "../components/organisms/ResponseNote";
@@ -111,7 +110,7 @@ export function EstimateReview() {
             <li key={c.label} className={styles.case}>
               <p className={styles.label}>{c.label}</p>
               {c.note && <p className={styles.note}>{c.note}</p>}
-              <EstimateNote view={c.view} record={DEFAULT_DEMO_RECORD} />
+              <EstimateNote view={c.view} />
             </li>
           ))}
         </ol>

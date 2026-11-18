@@ -84,7 +84,7 @@
 
 .estimate > section {
   width: fit-content;
-  max-width: min(36rem, 100%);
+  max-width: min(32rem, 100%);
 }
 
 .body .estimate :global(p) {
