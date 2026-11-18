@@ -6,7 +6,7 @@ import styles from "./HowItWorks.module.css";
 
 const STEPS = [
   "A recorded SSAQS day is replayed in place of a watch.",
-  "Inside the session, you may see a tentative daily estimate.",
+  "Before you start, you may see a tentative daily estimate.",
   "At a natural pause, it may ask one optional question.",
   "Or it stays quiet. Skipping and silence are both fine.",
 ];
