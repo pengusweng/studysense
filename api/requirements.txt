@@ -1,0 +1,5 @@
+# Same versions the model artifact is trained with, so the joblib file loads.
+-r ../ml/requirements-lock.txt
+fastapi==0.163.2
+uvicorn[standard]==0.54.0
+httpx==0.28.1
