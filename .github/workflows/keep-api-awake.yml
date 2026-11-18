@@ -1,0 +1,28 @@
+# Keeps the Render free-plan API from sleeping: it spins down after 15 minutes without traffic, and waking it
+# takes about a minute (api/README.md, "Deploy on Render"). One always-on free service uses at most ~744 of the
+# workspace's 750 free hours a month, so a second free Render service would run the hours out.
+#
+# GitHub runs scheduled workflows only from the default branch (main), may start them a few minutes late, and
+# pauses them after 60 days without repository activity.
+name: Keep API awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping /health
+        env:
+          API_URL: https://studysense-api-szia.onrender.com
+        # Retries cover a cold start; the run fails (and shows red) only if the API is still down after them.
+        run: >
+          curl --fail --silent --show-error --max-time 90
+          --retry 3 --retry-delay 20 --retry-all-errors
+          "$API_URL/health"
