@@ -51,8 +51,8 @@ export function PrivacySection({ storageOk, cleared, onClear }: Props) {
         {storageOk
           ? "This visit keeps a few things in this browser tab, so the demo can follow your choices. They go when you close the tab."
           : "Your browser isn’t letting StudySense keep anything, so your choices last for this page only."}{" "}
-        If you agreed to check-ins, your answers and what you do with suggestions are also sent to StudySense with no
-        name attached. Clearing here doesn’t remove what was already sent.
+        This version does not send new check-in answers or suggestion feedback to the server.
+        Previous versions may have stored events on the server; clearing this browser does not remove those older records.
       </p>
       <LogTable rows={KEPT} label="What this visit keeps" />
 
@@ -66,8 +66,8 @@ export function PrivacySection({ storageOk, cleared, onClear }: Props) {
           onKeyDown={(e) => e.key === "Escape" && cancel()}
         >
           <p id="prefs-clear-text">
-            This clears your choices, check-in answers and feedback, and ends any session in progress. Setup will be
-            offered again.
+            This clears this browser visit's choices, check-in answers and feedback, and ends the session.
+            It does not delete server records saved by older versions. Setup will be offered again.
           </p>
           <div className={styles.actions}>
             <Button

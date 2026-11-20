@@ -98,30 +98,24 @@ def test_malformed_record_is_422(client, path):
 def test_response_runs_the_rules(client):
     body = {"estimate": {"kind": "estimate", "profile": "HSHA", "certainty": "confident"}, "check_in": "swamped",
             "history": [{"suggestion": "steps", "action": "dismiss"}]}
-    assert client.post("/response", json=body).json() == {"kind": "offer", "suggestion": "break",
-                                                          "basis": "check-in+estimate"}
+    assert client.post("/response", json=body).json() == {"kind": "support", "category": None}
 
 
 @pytest.mark.parametrize("body", [
     {"estimate": {"kind": "missing"}, "check_in": "stressed"},
     {"estimate": {"kind": "estimate", "profile": "XX", "certainty": "confident"}, "check_in": "swamped"},
     {"estimate": {"kind": "missing"}, "check_in": "swamped", "correction": "fine", "extra": 1},
+    {"estimate": {"kind": "missing"}, "check_in": "swamped", "academic_need": "diagnose_anxiety"},
 ])
 def test_response_rejects_unknown_values(client, body):
     assert client.post("/response", json=body).status_code == 422
 
 
-def test_events_are_appended(client, settings):
+def test_event_collection_is_disabled_by_default(client, settings):
     base = {"visit_id": VISIT, "participant": 1, "date": "2025-02-24"}
-    assert client.post("/events", json={**base, "kind": "check_in", "check_in": "swamped"}).status_code == 204
-    feedback = {**base, "kind": "feedback", "suggestion": "steps", "action": "correct", "correction": "more"}
-    assert client.post("/events", json=feedback).status_code == 204
-    rows = EventLog(settings.events_db).all()
-    assert [(r["kind"], r["check_in"], r["suggestion"], r["action"], r["correction"]) for r in rows] == [
-        ("check_in", "swamped", None, None, None),
-        ("feedback", None, "steps", "correct", "more"),
-    ]
-    assert all(r["visit_id"] == VISIT and r["received_at"] for r in rows)
+    assert client.post("/events", json={**base, "kind": "check_in", "check_in": "swamped"}).status_code == 403
+    assert client.post("/events", json={**base, "kind": "feedback", "suggestion": "steps", "action": "accept"}).status_code == 403
+    assert not settings.events_db.exists()  # app did not initialize or append an event log
 
 
 @pytest.mark.parametrize("event", [

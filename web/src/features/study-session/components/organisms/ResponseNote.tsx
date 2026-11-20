@@ -13,11 +13,9 @@ type Offer = Extract<ResponseDecision, { kind: "offer" }>;
 
 const LEAD: Record<Offer["basis"], string> = {
   "check-in": "You said a hand would help.",
-  "check-in+estimate": "You said a hand would help, and the replayed day may point the same way.",
   correction: "Thanks, that’s noted. This may suit better.",
 };
 
-/** What the student can say instead, in their own words. Never a profile, never a score. */
 const CORRECTIONS: { id: Correction; label: string }[] = [
   { id: "fine", label: "I’m fine, just busy." },
   { id: "more", label: "It’s more than this." },
@@ -26,9 +24,7 @@ const CORRECTIONS: { id: Correction; label: string }[] = [
 
 type Props = {
   offer: Offer;
-  /** Only one correction per suggestion, so correcting can't loop. */
   canCorrect: boolean;
-  /** Set while the note folds shut, so nothing can be pressed twice. */
   disabled?: boolean;
   onAccept: (suggestion: SupportId) => void;
   onDismiss: (suggestion: SupportId) => void;
@@ -36,10 +32,6 @@ type Props = {
   onOtherOptions: () => void;
 };
 
-/**
- * One rule-picked suggestion (issue #7), with Accept, Dismiss and Correct. Written on the same ruled paper as the
- * check-in it answers: StudySense's voice in print and Pencil; only the student's own pick is circled in Iris.
- */
 export const ResponseNote = forwardRef<HTMLElement, Props>(function ResponseNote(
   { offer, canCorrect, disabled = false, onAccept, onDismiss, onCorrect, onOtherOptions },
   ref,
@@ -58,7 +50,6 @@ export const ResponseNote = forwardRef<HTMLElement, Props>(function ResponseNote
   function cancelCorrecting() {
     setCorrecting(false);
     setFix(null);
-    // The trigger is back once the list closes; focus it on the next frame.
     requestAnimationFrame(() => correctTrigger.current?.focus());
   }
 
@@ -76,14 +67,9 @@ export const ResponseNote = forwardRef<HTMLElement, Props>(function ResponseNote
         else onDismiss(offer.suggestion);
       }}
     >
-      <p id={`${id}-lead`} className={styles.lead}>
-        {LEAD[offer.basis]}
-      </p>
-      <h2 id={`${id}-title`} className={styles.suggestion}>
-        {option.label}
-      </h2>
+      <p id={`${id}-lead`} className={styles.lead}>{LEAD[offer.basis]}</p>
+      <h2 id={`${id}-title`} className={styles.suggestion}>{option.label}</h2>
       <p className={styles.detail}>{option.response}</p>
-
       {correcting ? (
         <div ref={correctBox} className={styles.correct} tabIndex={-1} role="group" aria-label="Correct the suggestion">
           <AnswerList
@@ -99,38 +85,20 @@ export const ResponseNote = forwardRef<HTMLElement, Props>(function ResponseNote
               disabled={!fix || disabled}
               aria-describedby={fix ? undefined : `${id}-reason`}
               onClick={() => fix && onCorrect(offer.suggestion, fix)}
-            >
-              Update
-            </Button>
-            <TextButton onClick={cancelCorrecting} disabled={disabled}>
-              Cancel
-            </TextButton>
+            >Update</Button>
+            <TextButton onClick={cancelCorrecting} disabled={disabled}>Cancel</TextButton>
           </div>
-          <p id={`${id}-reason`} className={styles.reason} data-hidden={fix ? true : undefined} aria-hidden={fix ? true : undefined}>
-            Pick what fits, or cancel.
-          </p>
+          <p id={`${id}-reason`} className={styles.reason} data-hidden={fix ? true : undefined} aria-hidden={fix ? true : undefined}>Pick what fits, or cancel.</p>
         </div>
       ) : (
         <div className={styles.actions}>
-          <Button variant="secondary" onClick={() => onAccept(offer.suggestion)} disabled={disabled}>
-            Accept
-          </Button>
-          <TextButton onClick={() => onDismiss(offer.suggestion)} disabled={disabled}>
-            Dismiss
-          </TextButton>
-          {canCorrect && (
-            <TextButton ref={correctTrigger} onClick={() => setCorrecting(true)} disabled={disabled}>
-              That’s not it
-            </TextButton>
-          )}
+          <Button variant="secondary" onClick={() => onAccept(offer.suggestion)} disabled={disabled}>Accept</Button>
+          <TextButton onClick={() => onDismiss(offer.suggestion)} disabled={disabled}>Dismiss</TextButton>
+          {canCorrect && <TextButton ref={correctTrigger} onClick={() => setCorrecting(true)} disabled={disabled}>That’s not it</TextButton>}
         </div>
       )}
-
       <p className={styles.more}>
-        Something else?{" "}
-        <TextButton onClick={onOtherOptions} disabled={disabled}>
-          See all options
-        </TextButton>
+        Something else?{" "}<TextButton onClick={onOtherOptions} disabled={disabled}>See all options</TextButton>
       </p>
     </section>
   );

@@ -1,4 +1,4 @@
-"""Request and response shapes. Enums match the web app's TypeScript unions, so an unknown value is a 422."""
+"""Strict API schemas for predictions, student-directed responses, and event contracts."""
 from __future__ import annotations
 
 from typing import Annotated, Literal, Union
@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Profile = Literal["LSLA", "LSHA", "HSLA", "HSHA"]
 SupportId = Literal["steps", "break", "shorter", "lighter"]
+AcademicNeed = Literal["understand", "apply", "remember", "organize", "energy", "workload", "unsure", "other"]
 CheckInOutcome = Literal["focused", "swamped", "skipped", "dismissed", "no_response"]
 CheckInState = Literal["unasked", "focused", "swamped", "skipped", "dismissed", "no_response"]
 Correction = Literal["fine", "more", "other"]
@@ -19,8 +20,7 @@ class Strict(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-# --- Predictions: ml/outputs/prediction_contract.json v1.0.0 ---
-
+# Predictions are about historical SSAQS records, not app users.
 class Prediction(Strict):
     predicted_profile: Profile | None
     probabilities: dict[Profile, float | None]
@@ -39,8 +39,6 @@ class Health(Strict):
     contract_version: str
     days: int
 
-
-# --- Response rules: web/src/features/study-session/types.ts EstimateView, responseRules ResponseDecision ---
 
 class EstimateLoading(Strict):
     kind: Literal["loading"]
@@ -76,6 +74,7 @@ class ResponseRequest(Strict):
     estimate: EstimateView
     check_in: CheckInState
     correction: Correction | None = None
+    academic_need: AcademicNeed | None = None
     history: list[FeedbackEntry] = Field(default_factory=list, max_length=200)
 
 
@@ -87,21 +86,20 @@ class Silent(Strict):
 class Offer(Strict):
     kind: Literal["offer"] = "offer"
     suggestion: SupportId
-    basis: Literal["check-in", "check-in+estimate", "correction"]
+    basis: Literal["check-in", "correction"]
 
 
 class Support(Strict):
     kind: Literal["support"] = "support"
+    category: AcademicNeed | None = None
 
 
 ResponseDecision = Annotated[Union[Silent, Offer, Support], Field(discriminator="kind")]
 
 
-# --- Event log ---
-
+# Legacy event schema is retained for compatibility but /events is disabled
+# pending approved retention, consent and deletion policy.
 class Event(Strict):
-    """One check-in outcome or one piece of feedback on a suggestion, sent only when the student opted in."""
-
     visit_id: str = Field(pattern=r"^[0-9a-fA-F-]{36}$")
     kind: Literal["check_in", "feedback"]
     participant: int = Field(ge=1)

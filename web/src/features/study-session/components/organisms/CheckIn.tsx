@@ -10,6 +10,7 @@ import { useDemoRecordValue } from "@/lib/demoRecord";
 import { logEvent } from "@/lib/eventLog";
 import { recordFeedback, useFeedbackHistory, type Correction, type FeedbackEntry } from "@/lib/feedback";
 import type { SupportId } from "@/lib/supportOptions";
+import type { AcademicNeed } from "@/lib/academicSupport";
 import { getResponse, type ResponseDecision } from "../../services/responseService";
 import type { EstimateView } from "../../types";
 import { ResponseNote } from "./ResponseNote";
@@ -73,10 +74,10 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
   /** The one line left behind once the check-in is done. */
   const [said, setSaid] = useState("");
   const [supportIntro, setSupportIntro] = useState<string | null>(null);
+  const [supportCategory, setSupportCategory] = useState<AcademicNeed | null>(null);
   const question = useRef<HTMLElement>(null);
   const response = useRef<HTMLElement>(null);
   const support = useRef<HTMLElement>(null);
-  const returning = useRef(false);
   const foldTimer = useRef<number | undefined>(undefined);
 
   useImperativeHandle(ref, () => ({ focus: () => question.current?.focus() }), []);
@@ -86,10 +87,6 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
   useEffect(() => {
     if (step === "support" || step === "help") support.current?.focus();
     if (step === "response") response.current?.focus();
-    if (step === "question" && returning.current) {
-      returning.current = false;
-      question.current?.focus();
-    }
   }, [step, offer]);
 
   /** Fold the current panel shut, so "Paused." eases back down instead of jumping, then show what follows. */
@@ -114,6 +111,7 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
       setStep("response");
     } else if (decision.kind === "support") {
       setSupportIntro(supportLine);
+      setSupportCategory(decision.category ?? null);
       setStep("support");
     } else {
       foldTo("said", quietLine);
@@ -178,6 +176,7 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
           onCorrect={correct}
           onOtherOptions={() => {
             setSupportIntro(null);
+            setSupportCategory(null);
             setStep("support");
           }}
         />
@@ -193,15 +192,8 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
           <SupportPanel
             ref={support}
             id={`${id}-support`}
-            onClose={() => {
-              // Help asked before answering leaves the question open; otherwise the check-in is done.
-              if (step === "help") {
-                returning.current = true;
-                setStep("question");
-              } else {
-                foldTo("closed");
-              }
-            }}
+            initialCategory={supportCategory}
+            onClose={() => foldTo("closed")}
           />
         </div>
       </div>
@@ -226,7 +218,7 @@ export const CheckIn = forwardRef<CheckInHandle, Props>(function CheckIn(
       >
         <AnswerList
           question={moment === "end" ? "How did studying go?" : "How is studying going?"}
-          hint="Optional. Your answer is recorded with no name attached, apart from the replayed data."
+          hint="Optional. Your answer stays in this browser visit; it is not used to infer your emotions."
           options={ANSWERS}
           value={pick}
           onChange={setPick}
