@@ -1,6 +1,6 @@
 # StudySense: An Empathic Academic Support System
 
-> Multi-modal affective computing system leveraging wearable physiological sensor data and student self-reports to detect, monitor, and alleviate academic stress and anxiety.
+> Research prototype replaying historical SSAQS participant-day records and offering optional, student-directed academic strategies. No live sensing or clinical assessment.
 
 ---
 
@@ -51,8 +51,8 @@ python -m pytest ml/tests -q
 ## API
 
 The [`api/`](api/README.md) module is a FastAPI service the web app calls. It
-replays SSAQS participant-days through the trained model, runs the response
-rules, and logs check-in and feedback events.
+replays SSAQS participant-days through the trained model and runs the response
+rules. Server event collection is disabled pending privacy review.
 
 ```powershell
 # From the repository root, after `python -m ml.experiment all`

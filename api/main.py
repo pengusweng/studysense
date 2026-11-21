@@ -7,10 +7,9 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from functools import lru_cache
 
-from fastapi import FastAPI, HTTPException, Path, Response
+from fastapi import FastAPI, HTTPException, Path
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.events import open_event_log
 from api.features import FeatureStore
 from api.rules import choose_response
 from api.schemas import ISO_DATE, Event, Health, Prediction, ResponseDecision, ResponseRequest
@@ -41,7 +40,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         app.state.model_version = artifact["model_version"]
         app.state.store = store
         app.state.predict = predict
-        app.state.events = open_event_log(settings.database_url, settings.events_db)
         yield
 
     app = FastAPI(title="StudySense API", version="1.0.0", lifespan=lifespan)
@@ -80,9 +78,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return choose_response(request)
 
     @app.post("/events", status_code=204)
-    def log_event(event: Event) -> Response:
-        app.state.events.append(event)
-        return Response(status_code=204)
+    def log_event(event: Event) -> None:
+        # No student-event collection until purpose, consent, access, retention,
+        # and deletion controls are approved. Previously stored logs are untouched.
+        raise HTTPException(status_code=403, detail="Event collection is disabled pending privacy review")
 
     return app
 

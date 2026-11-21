@@ -41,8 +41,8 @@ export function ChoicePage({ value, onChange, onConfirm, onBack, reopened, stora
         Either way, you can study, pause, end a session and ask for help.
       </p>
       <p className={styles.prose} data-enter>
-        If you say yes, your answers and what you do with suggestions are sent to StudySense with no name attached.
-        If you say no, nothing is sent.
+        This choice controls optional check-ins only. In this version, check-in answers and suggestion feedback
+        are not sent to the server. Agreeing to check-ins is not consent to participate in research.
       </p>
 
       <div className={styles.actions} data-enter>

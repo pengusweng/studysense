@@ -5,7 +5,7 @@ A FastAPI service for the web app. It does four things:
 - Replays recorded SSAQS participant-days through the trained profile model.
 - Lists which days can be replayed.
 - Runs the rule-based response.
-- Logs check-in and feedback events.
+- Does not collect student check-in or feedback events while privacy review is pending.
 
 It does not train anything, and nothing in the event log feeds back into the model.
 
@@ -38,19 +38,13 @@ uvicorn api.main:app --reload        # http://localhost:8000, interactive docs a
 python -m pytest api/tests -q
 ```
 
-### Local database (optional)
+### Privacy default
 
-To keep logged events in Postgres instead of the SQLite file, run Postgres in Docker. It listens on host port **6000**, so it won't clash with a Postgres you already have on 5432.
-
-```powershell
-docker compose up -d db                 # Postgres 17; data kept in the studysense-db volume
-copy api\.env.example api\.env          # DATABASE_URL=postgresql://studysense:studysense@127.0.0.1:6000/studysense
-uvicorn api.main:app --reload           # events now go to app.events
-
-docker compose exec db psql -U studysense -c "select * from app.events"
-```
-
-Without `api/.env`, the API uses `api/data/events.sqlite3`. If the database is stopped, the API still starts and serves predictions; only event writes fail until it's back.
+The `/events` API is disabled by default and returns HTTP 403 for valid requests.
+The web client does not transmit new check-in/feedback events. This is an interim
+no-collection policy pending documented consent, access, retention and deletion decisions.
+Previously stored SQLite/PostgreSQL events, if any, are **not** deleted by this change;
+the team must review and address those separately.
 
 ## Endpoints
 
@@ -60,7 +54,7 @@ Without `api/.env`, the API uses `api/data/events.sqlite3`. If the database is s
 | GET | `/demo/days` | `{ "<participant>": ["YYYY-MM-DD", ...] }`. Lists days that have at least one of the 17 model inputs |
 | GET | `/predictions/{participant}/{date}` | The `predict_profile` output (see `ml/outputs/prediction_contract.json`). Returns 404 when the day can't be replayed |
 | POST | `/response` | Body `{estimate, check_in, correction?, history}`. Returns `{kind: "silent", reason}`, `{kind: "offer", suggestion, basis}` or `{kind: "support"}` |
-| POST | `/events` | Body `{visit_id, kind: "check_in" \| "feedback", participant, date, check_in? \| suggestion, action, correction?}`. Returns 204 |
+| POST | `/events` | Disabled pending privacy review. Valid bodies return 403; invalid schemas return 422. |
 
 Unknown or inconsistent values return 422. The enums match the web app's TypeScript types.
 
@@ -80,21 +74,15 @@ Set these as environment variables. Defaults are relative to the repo.
 
 - Questionnaire scores (`reported_*`) are training targets. `FeatureStore` never reads them, so no endpoint can return them.
 - Under the current policy (`confidence_threshold: 1.01`), every prediction is `uncertain`. That is expected, and the response rules never act on an uncertain estimate.
-- Events are sent only when the student agreed to check-ins. The log is for analysis (a local SQLite file, or `app.events` in Postgres when deployed), not secure production storage.
+- Check-in permission is not research participation consent. No new event collection is enabled in this version.
 - The model file is loaded only from `MODEL_PATH`, never from a request. Only load joblib files you trust.
-
-To read the event log:
-
-```powershell
-python -c "from api.events import EventLog; from pathlib import Path; print(*EventLog(Path('api/data/events.sqlite3')).all(), sep='\n')"
-```
 
 ## Deploy on Render (free)
 
 `render.yaml` at the repo root is a Render Blueprint for this API. The build installs `api/requirements.txt` and runs `python -m ml.experiment all`, which retrains the model from the committed SSAQS CSVs. That way the deployed model always matches the committed code and data, and no model file is committed. The build takes a few minutes longer as a result.
 
 1. Push the branch, then in Render go to **New → Blueprint** and pick the repo and branch.
-2. When it asks for `DATABASE_URL`, paste a hosted Postgres connection string that's reachable over IPv4 (Render has no IPv6). The Docker database below only runs on your machine, so it can't be used here. The API creates `app.events` on its first write. Leave it empty to run without keeping events.
+2. `DATABASE_URL` is not needed for event logging in this privacy-disabled version. Do not enable collection during deployment without an approved data-handling policy.
 3. Once it's live, check `https://<service>.onrender.com/health`.
 4. Point the web app at it: set `API_URL=https://<service>.onrender.com` on the web host before its build.
 

@@ -1,13 +1,12 @@
-"""The rule-based response (web/docs/AGENTS.md §7), ported from the web app's responseRules.ts.
+"""Deterministic, student-directed academic support decisions.
 
-Least intrusive by default: nothing is offered unless the student asked for a hand, in the check-in or in a
-correction. An estimate alone never prompts. Responses are predefined templates picked by rules (rule 11).
+The SSAQS estimate describes a historical participant-day. It is never evidence
+about the current student's needs and never influences their support choice.
 """
 from __future__ import annotations
 
 from api.schemas import (
     Correction,
-    EstimateView,
     FeedbackEntry,
     Offer,
     ResponseDecision,
@@ -17,51 +16,43 @@ from api.schemas import (
     SupportId,
 )
 
-# "A hand would help": first a smaller step, then a short break (the two named for HSHA in §7).
 HAND_ORDER: list[SupportId] = ["steps", "break", "shorter", "lighter"]
-# "It's more than this": something lighter first, then easing the pace.
 MORE_ORDER: list[SupportId] = ["lighter", "shorter", "break", "steps"]
 
 
-def pick(order: list[SupportId], history: list[FeedbackEntry]) -> SupportId:
-    """The next interaction uses the feedback: skip what was dismissed, put what was accepted first."""
-    dismissed = {e.suggestion for e in history if e.action == "dismiss"}
-    accepted = {e.suggestion for e in history if e.action == "accept"}
-    candidates = [s for s in order if s not in dismissed] or order
-    return next((s for s in candidates if s in accepted), candidates[0])
-
-
-def estimate_agrees(estimate: EstimateView) -> bool:
-    """Only a confident HSHA estimate counts as agreeing evidence; uncertain or missing evidence never does."""
-    return estimate.kind == "estimate" and estimate.certainty == "confident" and estimate.profile == "HSHA"
+def pick(order: list[SupportId], history: list[FeedbackEntry]) -> SupportId | None:
+    """Choose an unrefused option, returning None when all were dismissed."""
+    dismissed = {entry.suggestion for entry in history if entry.action == "dismiss"}
+    accepted = {entry.suggestion for entry in history if entry.action == "accept"}
+    candidates = [suggestion for suggestion in order if suggestion not in dismissed]
+    if not candidates:
+        return None
+    return next((suggestion for suggestion in candidates if suggestion in accepted), candidates[0])
 
 
 def choose_response(request: ResponseRequest) -> ResponseDecision:
-    correction: Correction | None = request.correction
-    history = request.history
-
-    # A correction speaks over everything else: the student knows their situation better than the replayed day.
-    if correction == "fine":
+    # The student's current refusal always overrides anything else.
+    if request.correction == "fine":
         return Silent(reason="flow")
+    # A direct, current request for academic help overrides a previous check-in.
+    # Historical data are never used to select this category.
+    if request.academic_need is not None:
+        return Support(category=request.academic_need)
+    if request.check_in == "focused":
+        return Silent(reason="flow")
+    if request.check_in in ("skipped", "dismissed", "no_response"):
+        return Silent(reason="declined")
+
+    correction: Correction | None = request.correction
     if correction == "other":
         return Support()
     if correction == "more":
-        return Offer(suggestion=pick(MORE_ORDER, history), basis="correction")
+        suggestion = pick(MORE_ORDER, request.history)
+        return Offer(suggestion=suggestion, basis="correction") if suggestion is not None else Support()
 
-    check_in = request.check_in
-    # Comfortable and focused preserves flow, even against an elevated estimate (§7 row 2).
-    if check_in == "focused":
-        return Silent(reason="flow")
-    # Declined in any form: continue, and never repeat the prompt (§7 row 5).
-    if check_in in ("skipped", "dismissed", "no_response"):
-        return Silent(reason="declined")
-    # Not asked, or opted out: an estimate on its own never interrupts. Abstaining is the least intrusive way to
-    # handle uncertain or contradictory evidence (§7 row 3).
-    if check_in == "unasked":
-        return Silent(reason="abstain")
-    # Swamped: support is offered whatever the profile, including none (§7 row 4). LSLA, LSHA and HSLA have no
-    # specific rules yet (§14.4), so they take this generic path.
-    return Offer(
-        suggestion=pick(HAND_ORDER, history),
-        basis="check-in+estimate" if estimate_agrees(request.estimate) else "check-in",
-    )
+    # No automatic offer during study. A help-seeking check-in opens the
+    # optional academic-needs question instead of choosing a break or task.
+    if request.check_in == "swamped":
+        return Support()
+
+    return Silent(reason="abstain")
