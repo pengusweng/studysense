@@ -4,7 +4,9 @@
  */
 div.sheet {
   position: relative;
-  overflow: hidden;
+  /* Allow the entire study session to grow and scroll on short/zoomed screens (#13).
+     TideField clips its animated ruling inside its own decorative layer. */
+  overflow: visible;
   min-height: calc(100dvh - 4rem);
   margin-bottom: calc(-1 * var(--proposal-space-6));
   border-radius: 0;

@@ -1,5 +1,4 @@
-/* Lifted above its later siblings (the demo note): their entrance animations make each one its own
-   stacking layer, so the slip's own z-index alone could not clear them. */
+/* The support trigger stays in the notebook's reading order. */
 .corner {
   position: relative;
   z-index: 5;
@@ -11,14 +10,27 @@
   text-align: right;
 }
 
-/* Paper resting on the sheet: the one place this screen lifts something. */
+/* Portal to body: independent of sheet overflow, animated ancestor transforms and viewport height. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background: rgb(0 0 0 / 0.55);
+}
+
+/* A bounded, independently scrollable sheet; actions remain reachable at short heights and high zoom. */
 .slip {
-  position: absolute;
-  top: calc(100% + var(--proposal-space-2));
-  right: 0;
-  z-index: 5;
-  width: min(30rem, calc(100vw - 2rem));
-  padding: 0 var(--proposal-space-4) var(--proposal-space-2);
+  width: min(36rem, 100%);
+  max-height: calc(100vh - 1.5rem);
+  max-height: calc(100dvh - 1.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: var(--proposal-space-4);
   border-radius: var(--proposal-radius-page);
   background: var(--paper-raised);
   box-shadow:
@@ -28,31 +40,22 @@
 
 .slip > section {
   margin-top: 0;
+  padding-top: 0;
   border-top: 0;
+}
+
+/* The session body centres its paragraphs; the support slip reads left to right. */
+.slip :global(p) {
+  text-align: left;
 }
 
 @media (max-width: 640px) {
   .line {
     text-align: left;
   }
-
-  .slip {
-    right: auto;
-    left: 0;
-  }
 }
 
-/* The session body centres its paragraphs; the slip reads as a list, left to right. */
-.corner .slip :global(p) {
-  text-align: left;
-}
-
-/* Hung from the start edge, e.g. on a left-aligned page. */
+/* Hung from the start edge, e.g. on a left-aligned setup page. */
 .corner[data-align="start"] .line {
   text-align: left;
-}
-
-.corner[data-align="start"] .slip {
-  right: auto;
-  left: 0;
 }

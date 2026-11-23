@@ -44,7 +44,19 @@
 .response { min-height: 1.55em; margin: var(--proposal-space-3) 0 0; }
 .response:empty { display: none; }
 .note { margin: var(--proposal-space-3) 0; font-size: var(--proposal-text-sm); color: var(--proposal-pencil); }
-.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; margin-top: var(--proposal-space-3); }
+/* Keep exit/back actions visible while the bounded support dialog scrolls. */
+.actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: var(--proposal-space-3);
+  padding-block: var(--proposal-space-2);
+  background: var(--paper-raised);
+}
 
 @media (prefers-reduced-motion: reduce) { .panel { animation: none; } }
 @keyframes unfold { from { opacity: 0; transform: translateY(-6px); } }
